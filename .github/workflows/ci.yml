@@ -1,0 +1,48 @@
+name: WpSecureOs CI Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    name: Test on PHP ${{ matrix.php-version }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version:
+          - '7.4'
+          - '8.0'
+          - '8.1'
+          - '8.2'
+          - '8.3'
+          - '8.4'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: zip, json, mbstring, curl
+          coverage: none
+
+      - name: Check PHP Syntax (Lint)
+        run: |
+          find . -name "*.php" ! -path "./vendor/*" ! -path "./tests/fixtures/*" -exec php -l {} +
+
+      - name: Run Automated Test Suite
+        run: |
+          php tests/run-tests.php
+
+      - name: Security Scan (Secret Redaction & Clean Package Check)
+        run: |
+          # Verify no accidental private keys or raw passwords in source
+          ! grep -rEi 'BEGIN (RSA|OPENSSH|DSA|EC) PRIVATE KEY' . --exclude-dir={.git,.github}
+          ! grep -rEi 'AKIA[0-9A-Z]{16}' . --exclude-dir={.git,.github}

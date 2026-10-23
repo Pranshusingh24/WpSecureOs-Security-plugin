@@ -1,0 +1,65 @@
+name: WpSecureOs Release Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: Build & Publish Release Artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: zip, json, mbstring, curl
+          coverage: none
+
+      - name: Run Quality Gate Tests
+        run: |
+          php tests/run-tests.php
+
+      - name: Build Production WordPress Plugin ZIP
+        run: |
+          mkdir -p dist/wpsecureos
+          
+          # Copy production files and folders
+          cp wpsecureos.php dist/wpsecureos/
+          cp uninstall.php dist/wpsecureos/
+          cp readme.txt dist/wpsecureos/
+          cp composer.json dist/wpsecureos/
+          cp -r assets dist/wpsecureos/
+          cp -r includes dist/wpsecureos/
+          cp -r templates dist/wpsecureos/
+          cp -r languages dist/wpsecureos/
+          
+          # Create zip archive from dist directory
+          cd dist
+          zip -r ../wpsecureos.zip wpsecureos
+          cd ..
+          
+          # Compute cryptographic SHA-256 checksum
+          sha256sum wpsecureos.zip > checksums.sha256
+          echo "Release archive created: wpsecureos.zip"
+          cat checksums.sha256
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            wpsecureos.zip
+            checksums.sha256
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true

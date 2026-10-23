@@ -1,0 +1,26 @@
+{
+  "name": "wpsecureos/wpsecureos",
+  "description": "Enterprise-grade WordPress Security, Continuous Validation, Safe Updates, and Recovery Platform.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Pranshu Singh",
+      "homepage": "https://wpsecureos.com/"
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5 || ^10.0"
+  },
+  "autoload": {
+    "classmap": [
+      "includes/"
+    ]
+  },
+  "scripts": {
+    "test": "php tests/run-tests.php"
+  }
+}
