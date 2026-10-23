@@ -33,3 +33,6 @@ wp-content/
 .env.*
 *.pem
 *.key
+
+# Internal Documentation
+docs/
