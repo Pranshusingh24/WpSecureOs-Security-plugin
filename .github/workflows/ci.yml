@@ -2,9 +2,9 @@ name: WpSecureOs CI Pipeline
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, Development ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, Development ]
 
 jobs:
   test:
