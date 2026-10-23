@@ -61,6 +61,7 @@
 	box-sizing: border-box;
 	line-height: 1.5;
 	-webkit-font-smoothing: antialiased;
+	max-width: 100%;
 }
 
 .wpsecureos-wrap * {
@@ -74,6 +75,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 16px;
 	background: var(--safe-surface);
 	border: 1px solid var(--safe-border);
 	border-radius: var(--safe-radius);
@@ -86,11 +89,13 @@
 	display: flex;
 	align-items: center;
 	gap: 14px;
+	min-width: 240px;
 }
 
 .wpsecureos-brand img {
 	width: 36px;
 	height: 36px;
+	flex-shrink: 0;
 }
 
 .wpsecureos-brand-title {
@@ -119,12 +124,14 @@
 	font-size: 13px;
 	color: var(--safe-text-muted);
 	margin: 0;
+	line-height: 1.4;
 }
 
 .wpsecureos-header-actions {
 	display: flex;
 	align-items: center;
-	gap: 16px;
+	flex-wrap: wrap;
+	gap: 12px;
 }
 
 .wpsecureos-live-status {
@@ -166,6 +173,7 @@
    ========================================================================== */
 .wpsecureos-nav-tabs {
 	display: flex;
+	align-items: center;
 	background: var(--safe-surface);
 	border: 1px solid var(--safe-border);
 	border-radius: var(--safe-radius);
@@ -173,6 +181,22 @@
 	margin-bottom: 24px;
 	gap: 6px;
 	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(14, 165, 233, 0.4) transparent;
+}
+
+.wpsecureos-nav-tabs::-webkit-scrollbar {
+	height: 4px;
+}
+
+.wpsecureos-nav-tabs::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.wpsecureos-nav-tabs::-webkit-scrollbar-thumb {
+	background: rgba(14, 165, 233, 0.3);
+	border-radius: 9999px;
 }
 
 .wpsecureos-nav-tab {
@@ -273,8 +297,24 @@
 }
 
 /* ==========================================================================
-   Content Panels & Tables
+   Content Panels, Responsive Grids & Tables
    ========================================================================== */
+.wpsecureos-two-col {
+	display: grid;
+	grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+	gap: 24px;
+	align-items: start;
+	width: 100%;
+}
+
+.wpsecureos-equal-cols {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 20px;
+	align-items: start;
+	width: 100%;
+}
+
 .wpsecureos-panel {
 	background: var(--safe-surface);
 	border: 1px solid var(--safe-border);
@@ -282,12 +322,16 @@
 	padding: 24px;
 	margin-bottom: 24px;
 	box-shadow: var(--safe-shadow);
+	min-width: 0;
+	overflow: hidden;
 }
 
 .wpsecureos-panel-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 14px;
 	padding-bottom: 16px;
 	margin-bottom: 20px;
 	border-bottom: 1px solid var(--safe-border);
@@ -303,8 +347,40 @@
 	gap: 10px;
 }
 
+/* Responsive Table Wrapper */
+.wpsecureos-table-responsive {
+	width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	margin-bottom: 16px;
+	border-radius: var(--safe-radius-sm);
+	border: 1px solid var(--safe-border);
+	background: var(--safe-surface);
+	scrollbar-width: thin;
+	scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+.wpsecureos-table-responsive::-webkit-scrollbar {
+	height: 6px;
+}
+
+.wpsecureos-table-responsive::-webkit-scrollbar-track {
+	background: #f1f5f9;
+	border-radius: 4px;
+}
+
+.wpsecureos-table-responsive::-webkit-scrollbar-thumb {
+	background: #cbd5e1;
+	border-radius: 4px;
+}
+
+.wpsecureos-table-responsive::-webkit-scrollbar-thumb:hover {
+	background: #94a3b8;
+}
+
 .wpsecureos-table {
 	width: 100%;
+	min-width: 620px;
 	border-collapse: collapse;
 	font-size: 13px;
 }
@@ -319,6 +395,7 @@
 	text-transform: uppercase;
 	font-size: 11px;
 	letter-spacing: 0.05em;
+	white-space: nowrap;
 }
 
 .wpsecureos-table td {
@@ -329,6 +406,31 @@
 
 .wpsecureos-table tr:hover td {
 	background: #f8fafc;
+}
+
+/* Code & File Path Column */
+.wpsecureos-code-path {
+	font-family: var(--safe-font-mono);
+	font-size: 12px;
+	color: #b91c1c;
+	word-break: break-all;
+	overflow-wrap: anywhere;
+	min-width: 180px;
+	max-width: 400px;
+	line-height: 1.45;
+}
+
+/* Filter Form */
+.wpsecureos-filter-form {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.wpsecureos-filter-form input[type="text"] {
+	width: 220px;
+	max-width: 100%;
 }
 
 /* ==========================================================================
@@ -693,4 +795,241 @@
 	align-items: center;
 	gap: 10px;
 	border-left: 4px solid var(--safe-cyan);
+}
+
+/* ==========================================================================
+   Responsive Breakpoints & Layout Adaptations
+   ========================================================================== */
+
+/* 1. Large Screens & Laptops (<= 1200px) */
+@media (max-width: 1200px) {
+	.wpsecureos-two-col {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 20px;
+	}
+}
+
+/* 2. Tablets & Medium Screens (<= 1024px) */
+@media (max-width: 1024px) {
+	.wpsecureos-header {
+		padding: 18px 20px;
+	}
+
+	.wpsecureos-nav-tabs {
+		flex-wrap: wrap;
+		gap: 6px;
+		padding: 8px;
+	}
+
+	.wpsecureos-nav-tab {
+		flex: 1 1 auto;
+		justify-content: center;
+		text-align: center;
+		padding: 9px 14px;
+		font-size: 12px;
+	}
+
+	.wpsecureos-header-actions {
+		justify-content: flex-start;
+	}
+}
+
+/* 3. WordPress Admin Mobile Breakpoint (<= 782px) */
+@media (max-width: 782px) {
+	.wpsecureos-wrap {
+		margin: 12px 10px 0 0;
+	}
+
+	.wpsecureos-header {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 14px;
+		padding: 16px;
+		margin-bottom: 18px;
+	}
+
+	.wpsecureos-brand {
+		width: 100%;
+	}
+
+	.wpsecureos-header-actions {
+		width: 100%;
+		flex-wrap: wrap;
+		gap: 10px;
+		justify-content: flex-start;
+	}
+
+	.wpsecureos-equal-cols {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 16px;
+	}
+
+	.wpsecureos-panel {
+		padding: 18px 16px;
+		margin-bottom: 18px;
+		border-radius: 10px;
+	}
+
+	.wpsecureos-panel-header {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 12px;
+		padding-bottom: 14px;
+		margin-bottom: 16px;
+	}
+
+	.wpsecureos-panel-header > * {
+		width: 100%;
+	}
+
+	.wpsecureos-filter-form {
+		width: 100%;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 8px;
+	}
+
+	.wpsecureos-filter-form select,
+	.wpsecureos-filter-form input[type="text"],
+	.wpsecureos-filter-form button {
+		width: 100% !important;
+	}
+
+	.wpsecureos-grid {
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 14px;
+		margin-bottom: 18px;
+	}
+
+	.wpsecureos-modal-box {
+		width: 95%;
+		max-height: 90vh;
+		margin: 10px;
+	}
+
+	.wpsecureos-modal-header,
+	.wpsecureos-modal-body,
+	.wpsecureos-modal-footer {
+		padding: 16px;
+	}
+
+	.wpsecureos-stepper {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		padding-bottom: 8px;
+		justify-content: flex-start;
+		gap: 16px;
+	}
+
+	.wpsecureos-step-item {
+		min-width: 70px;
+	}
+
+	.wpsecureos-terminal {
+		padding: 14px;
+		font-size: 11px;
+	}
+
+	.wpsecureos-admin-notice {
+		margin: 10px 10px 10px 0 !important;
+	}
+}
+
+/* 4. Small Mobile Phones (<= 540px) */
+@media (max-width: 540px) {
+	.wpsecureos-header {
+		padding: 14px;
+	}
+
+	.wpsecureos-brand {
+		align-items: flex-start;
+		gap: 10px;
+	}
+
+	.wpsecureos-brand img {
+		width: 28px;
+		height: 28px;
+	}
+
+	.wpsecureos-brand-title {
+		font-size: 16px;
+		flex-wrap: wrap;
+		gap: 6px;
+	}
+
+	.wpsecureos-brand-subtitle {
+		font-size: 11px;
+	}
+
+	.wpsecureos-header-actions {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.wpsecureos-header-actions .safe-btn,
+	.wpsecureos-header-actions .wpsecureos-live-status {
+		width: 100%;
+		justify-content: center;
+		text-align: center;
+	}
+
+	.wpsecureos-nav-tabs {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 6px;
+	}
+
+	.wpsecureos-nav-tab {
+		padding: 8px 8px;
+		font-size: 11px;
+		justify-content: center;
+		gap: 5px;
+	}
+
+	.wpsecureos-nav-tab span.dashicons {
+		font-size: 15px;
+		width: 15px;
+		height: 15px;
+	}
+
+	.wpsecureos-grid {
+		grid-template-columns: 1fr;
+		gap: 12px;
+	}
+
+	.wpsecureos-kpi-card {
+		padding: 16px;
+	}
+
+	.wpsecureos-kpi-value {
+		font-size: 22px;
+	}
+
+	.visual-diff-canvas {
+		height: 220px;
+	}
+
+	.diff-preview-overlay {
+		font-size: 11px;
+		text-align: center;
+		padding: 10px;
+	}
+
+	.wpsecureos-toast {
+		left: 16px;
+		right: 16px;
+		bottom: 16px;
+		justify-content: center;
+		text-align: center;
+	}
+
+	.wpsecureos-wrap input[type="text"],
+	.wpsecureos-wrap input[type="password"],
+	.wpsecureos-wrap input[type="url"],
+	.wpsecureos-wrap input[type="number"],
+	.wpsecureos-wrap select,
+	.wpsecureos-wrap textarea {
+		width: 100% !important;
+		max-width: 100% !important;
+	}
 }

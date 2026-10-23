@@ -44,44 +44,46 @@ $latest_backup = WpSecureOs_Backup_Adapter::get_latest_verified_backup();
 			</p>
 		</div>
 	<?php else : ?>
-		<table class="wpsecureos-table">
-			<thead>
-				<tr>
-					<th><?php esc_html_e( 'Archive Name', 'wpsecureos' ); ?></th>
-					<th><?php esc_html_e( 'Size', 'wpsecureos' ); ?></th>
-					<th><?php esc_html_e( 'SHA-256 Checksum', 'wpsecureos' ); ?></th>
-					<th><?php esc_html_e( 'Integrity Test', 'wpsecureos' ); ?></th>
-					<th><?php esc_html_e( 'Created At', 'wpsecureos' ); ?></th>
-					<th><?php esc_html_e( 'Verification Notes', 'wpsecureos' ); ?></th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ( $backups as $b ) : ?>
+		<div class="wpsecureos-table-responsive">
+			<table class="wpsecureos-table">
+				<thead>
 					<tr>
-						<td>
-							<strong style="font-family:var(--safe-font-mono); font-size:12px; color:#0f172a;">
-								<?php echo esc_html( $b['backup_name'] ); ?>
-							</strong>
-						</td>
-						<td><span class="mono-tag"><?php echo esc_html( size_format( $b['archive_size'] ) ); ?></span></td>
-						<td style="font-family:var(--safe-font-mono); font-size:11px; color:#64748b;">
-							<?php echo esc_html( substr( $b['checksum_sha256'], 0, 16 ) ); ?>...
-						</td>
-						<td>
-							<span class="safe-badge <?php echo $b['is_verified'] ? 'badge-clean' : 'badge-critical'; ?>">
-								<?php echo $b['is_verified'] ? esc_html__( 'VERIFIED', 'wpsecureos' ) : esc_html__( 'UNVERIFIED', 'wpsecureos' ); ?>
-							</span>
-						</td>
-						<td style="font-size:12px; color:#64748b;">
-							<?php echo esc_html( $b['created_at'] ); ?>
-						</td>
-						<td style="font-size:12px; color:#475569;">
-							<?php echo esc_html( $b['verification_notes'] ); ?>
-						</td>
+						<th><?php esc_html_e( 'Archive Name', 'wpsecureos' ); ?></th>
+						<th><?php esc_html_e( 'Size', 'wpsecureos' ); ?></th>
+						<th><?php esc_html_e( 'SHA-256 Checksum', 'wpsecureos' ); ?></th>
+						<th><?php esc_html_e( 'Integrity Test', 'wpsecureos' ); ?></th>
+						<th><?php esc_html_e( 'Created At', 'wpsecureos' ); ?></th>
+						<th><?php esc_html_e( 'Verification Notes', 'wpsecureos' ); ?></th>
 					</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					<?php foreach ( $backups as $b ) : ?>
+						<tr>
+							<td>
+								<strong style="font-family:var(--safe-font-mono); font-size:12px; color:#0f172a; white-space:nowrap;">
+									<?php echo esc_html( $b['backup_name'] ); ?>
+								</strong>
+							</td>
+							<td><span class="mono-tag"><?php echo esc_html( size_format( $b['archive_size'] ) ); ?></span></td>
+							<td style="font-family:var(--safe-font-mono); font-size:11px; color:#64748b; white-space:nowrap;">
+								<?php echo esc_html( substr( $b['checksum_sha256'], 0, 16 ) ); ?>...
+							</td>
+							<td>
+								<span class="safe-badge <?php echo $b['is_verified'] ? 'badge-clean' : 'badge-critical'; ?>" style="white-space:nowrap;">
+									<?php echo $b['is_verified'] ? esc_html__( 'VERIFIED', 'wpsecureos' ) : esc_html__( 'UNVERIFIED', 'wpsecureos' ); ?>
+								</span>
+							</td>
+							<td style="font-size:12px; color:#64748b; white-space:nowrap;">
+								<?php echo esc_html( $b['created_at'] ); ?>
+							</td>
+							<td style="font-size:12px; color:#475569;">
+								<?php echo esc_html( $b['verification_notes'] ); ?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+		</div>
 	<?php endif; ?>
 </div>
 
@@ -109,7 +111,7 @@ $latest_backup = WpSecureOs_Backup_Adapter::get_latest_verified_backup();
 		</p>
 	</div>
 
-	<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+	<div class="wpsecureos-equal-cols">
 		<!-- Step A: Code Rollback -->
 		<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:18px;">
 			<h4 style="margin:0 0 10px 0; font-size:14px; font-weight:700; color:#0f172a;">

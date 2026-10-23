@@ -31,7 +31,7 @@ $total_pages = $logs_data['total_pages'];
 		</div>
 
 		<!-- Filter Bar -->
-		<form method="GET" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>" style="display:flex; gap:10px; align-items:center;">
+		<form method="GET" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>" class="wpsecureos-filter-form">
 			<input type="hidden" name="page" value="wpsecureos-logs" />
 
 			<select name="severity" style="font-size:12px; height:34px;">
@@ -42,9 +42,9 @@ $total_pages = $logs_data['total_pages'];
 				<option value="low" <?php selected( $severity, 'low' ); ?>><?php esc_html_e( 'Low / Routine', 'wpsecureos' ); ?></option>
 			</select>
 
-			<input type="text" name="search" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Search message, IP, component...', 'wpsecureos' ); ?>" style="font-size:12px; height:34px; width:200px;" />
+			<input type="text" name="search" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e( 'Search message, IP, component...', 'wpsecureos' ); ?>" style="font-size:12px; height:34px;" />
 
-			<button type="submit" class="safe-btn safe-btn-outline" style="padding:6px 12px; font-size:12px;">
+			<button type="submit" class="safe-btn safe-btn-outline" style="padding:6px 14px; font-size:12px;">
 				<?php esc_html_e( 'Filter', 'wpsecureos' ); ?>
 			</button>
 		</form>
@@ -58,48 +58,50 @@ $total_pages = $logs_data['total_pages'];
 			</p>
 		</div>
 	<?php else : ?>
-		<table class="wpsecureos-table">
-			<thead>
-				<tr>
-					<th><?php esc_html_e( 'Timestamp', 'wpsecureos' ); ?></th>
-					<th><?php esc_html_e( 'Severity', 'wpsecureos' ); ?></th>
-					<th><?php esc_html_e( 'Component', 'wpsecureos' ); ?></th>
-					<th><?php esc_html_e( 'Event Type', 'wpsecureos' ); ?></th>
-					<th><?php esc_html_e( 'Message & Redacted Metadata', 'wpsecureos' ); ?></th>
-					<th><?php esc_html_e( 'Actor IP', 'wpsecureos' ); ?></th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ( $events as $ev ) : ?>
-					<?php
-					$sev_cls = 'badge-low';
-					if ( 'critical' === $ev['severity'] ) $sev_cls = 'badge-critical';
-					if ( 'high' === $ev['severity'] )     $sev_cls = 'badge-high';
-					if ( 'medium' === $ev['severity'] )   $sev_cls = 'badge-medium';
-					?>
+		<div class="wpsecureos-table-responsive">
+			<table class="wpsecureos-table">
+				<thead>
 					<tr>
-						<td style="font-size:12px; color:#64748b; white-space:nowrap; font-family:var(--safe-font-mono);">
-							<?php echo esc_html( $ev['created_at'] ); ?>
-						</td>
-						<td>
-							<span class="safe-badge <?php echo esc_attr( $sev_cls ); ?>">
-								<?php echo esc_html( strtoupper( $ev['severity'] ) ); ?>
-							</span>
-						</td>
-						<td><strong><?php echo esc_html( $ev['component_ref'] ); ?></strong></td>
-						<td><span class="mono-tag"><?php echo esc_html( $ev['event_type'] ); ?></span></td>
-						<td style="font-size:13px; color:#334155;">
-							<?php echo esc_html( $ev['message'] ); ?>
-						</td>
-						<td><span class="mono-tag"><?php echo esc_html( $ev['ip_address'] ); ?></span></td>
+						<th><?php esc_html_e( 'Timestamp', 'wpsecureos' ); ?></th>
+						<th><?php esc_html_e( 'Severity', 'wpsecureos' ); ?></th>
+						<th><?php esc_html_e( 'Component', 'wpsecureos' ); ?></th>
+						<th><?php esc_html_e( 'Event Type', 'wpsecureos' ); ?></th>
+						<th><?php esc_html_e( 'Message & Redacted Metadata', 'wpsecureos' ); ?></th>
+						<th><?php esc_html_e( 'Actor IP', 'wpsecureos' ); ?></th>
 					</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					<?php foreach ( $events as $ev ) : ?>
+						<?php
+						$sev_cls = 'badge-low';
+						if ( 'critical' === $ev['severity'] ) $sev_cls = 'badge-critical';
+						if ( 'high' === $ev['severity'] )     $sev_cls = 'badge-high';
+						if ( 'medium' === $ev['severity'] )   $sev_cls = 'badge-medium';
+						?>
+						<tr>
+							<td style="font-size:12px; color:#64748b; white-space:nowrap; font-family:var(--safe-font-mono);">
+								<?php echo esc_html( $ev['created_at'] ); ?>
+							</td>
+							<td>
+								<span class="safe-badge <?php echo esc_attr( $sev_cls ); ?>" style="white-space:nowrap;">
+									<?php echo esc_html( strtoupper( $ev['severity'] ) ); ?>
+								</span>
+							</td>
+							<td><strong><?php echo esc_html( $ev['component_ref'] ); ?></strong></td>
+							<td><span class="mono-tag" style="white-space:nowrap;"><?php echo esc_html( $ev['event_type'] ); ?></span></td>
+							<td style="font-size:13px; color:#334155; min-width:200px;">
+								<?php echo esc_html( $ev['message'] ); ?>
+							</td>
+							<td><span class="mono-tag" style="white-space:nowrap;"><?php echo esc_html( $ev['ip_address'] ); ?></span></td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+		</div>
 
 		<!-- Pagination -->
 		<?php if ( $total_pages > 1 ) : ?>
-			<div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+			<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:20px;">
 				<span style="font-size:12px; color:#64748b;">
 					<?php printf( /* translators: 1: Current page, 2: Total pages */ esc_html__( 'Page %1$d of %2$d', 'wpsecureos' ), (int) $page, (int) $total_pages ); ?>
 				</span>

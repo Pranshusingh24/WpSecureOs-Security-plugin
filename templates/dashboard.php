@@ -100,7 +100,7 @@ $integrity = WpSecureOs_Integrity_Monitor::run_integrity_check();
 </div>
 
 <!-- System Posture & Pending Updates Grid -->
-<div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px;">
+<div class="wpsecureos-two-col">
 
 	<!-- Left: Pending Candidate Updates & Safe Deployment -->
 	<div class="wpsecureos-panel">
@@ -125,59 +125,61 @@ $integrity = WpSecureOs_Integrity_Monitor::run_integrity_check();
 				</p>
 			</div>
 		<?php else : ?>
-			<table class="wpsecureos-table">
-				<thead>
-					<tr>
-						<th><?php esc_html_e( 'Component', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Type', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Version Jump', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Risk Level', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Action', 'wpsecureos' ); ?></th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php foreach ( array_slice( $updates, 0, 5 ) as $u ) : ?>
-						<?php
-						$risk = $u['assessment']['overall_risk'];
-						$badge_cls = 'badge-medium';
-						if ( false !== stripos( $risk, 'high' ) ) {
-							$badge_cls = 'badge-critical';
-						} elseif ( false !== stripos( $risk, 'low' ) ) {
-							$badge_cls = 'badge-clean';
-						}
-						?>
+			<div class="wpsecureos-table-responsive">
+				<table class="wpsecureos-table">
+					<thead>
 						<tr>
-							<td>
-								<strong><?php echo esc_html( $u['name'] ); ?></strong>
-								<div style="color:#64748b; font-size:11px;"><?php echo esc_html( $u['slug'] ); ?></div>
-							</td>
-							<td>
-								<span class="mono-tag"><?php echo esc_html( strtoupper( $u['type'] ) ); ?></span>
-							</td>
-							<td>
-								<span class="mono-tag"><?php echo esc_html( $u['installed_version'] ); ?></span> &rarr;
-								<span class="mono-tag" style="background:#e0f2fe; color:#0369a1; border-color:#bae6fd;"><?php echo esc_html( $u['new_version'] ); ?></span>
-							</td>
-							<td>
-								<span class="safe-badge <?php echo esc_attr( $badge_cls ); ?>">
-									<?php echo esc_html( $risk ); ?>
-								</span>
-							</td>
-							<td>
-								<button type="button"
-									class="safe-btn safe-btn-primary btn-start-pipeline"
-									style="padding:5px 12px; font-size:12px;"
-									data-type="<?php echo esc_attr( $u['type'] ); ?>"
-									data-slug="<?php echo esc_attr( $u['slug'] ); ?>"
-									data-name="<?php echo esc_attr( $u['name'] ); ?>"
-									data-version="<?php echo esc_attr( $u['new_version'] ); ?>">
-									<?php esc_html_e( 'Safe Deploy', 'wpsecureos' ); ?>
-								</button>
-							</td>
+							<th><?php esc_html_e( 'Component', 'wpsecureos' ); ?></th>
+							<th><?php esc_html_e( 'Type', 'wpsecureos' ); ?></th>
+							<th><?php esc_html_e( 'Version Jump', 'wpsecureos' ); ?></th>
+							<th><?php esc_html_e( 'Risk Level', 'wpsecureos' ); ?></th>
+							<th><?php esc_html_e( 'Action', 'wpsecureos' ); ?></th>
 						</tr>
-					<?php endforeach; ?>
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						<?php foreach ( array_slice( $updates, 0, 5 ) as $u ) : ?>
+							<?php
+							$risk = $u['assessment']['overall_risk'];
+							$badge_cls = 'badge-medium';
+							if ( false !== stripos( $risk, 'high' ) ) {
+								$badge_cls = 'badge-critical';
+							} elseif ( false !== stripos( $risk, 'low' ) ) {
+								$badge_cls = 'badge-clean';
+							}
+							?>
+							<tr>
+								<td>
+									<strong><?php echo esc_html( $u['name'] ); ?></strong>
+									<div style="color:#64748b; font-size:11px;"><?php echo esc_html( $u['slug'] ); ?></div>
+								</td>
+								<td>
+									<span class="mono-tag"><?php echo esc_html( strtoupper( $u['type'] ) ); ?></span>
+								</td>
+								<td>
+									<span class="mono-tag"><?php echo esc_html( $u['installed_version'] ); ?></span> &rarr;
+									<span class="mono-tag" style="background:#e0f2fe; color:#0369a1; border-color:#bae6fd;"><?php echo esc_html( $u['new_version'] ); ?></span>
+								</td>
+								<td>
+									<span class="safe-badge <?php echo esc_attr( $badge_cls ); ?>">
+										<?php echo esc_html( $risk ); ?>
+									</span>
+								</td>
+								<td>
+									<button type="button"
+										class="safe-btn safe-btn-primary btn-start-pipeline"
+										style="padding:5px 12px; font-size:12px;"
+										data-type="<?php echo esc_attr( $u['type'] ); ?>"
+										data-slug="<?php echo esc_attr( $u['slug'] ); ?>"
+										data-name="<?php echo esc_attr( $u['name'] ); ?>"
+										data-version="<?php echo esc_attr( $u['new_version'] ); ?>">
+										<?php esc_html_e( 'Safe Deploy', 'wpsecureos' ); ?>
+									</button>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
 		<?php endif; ?>
 	</div>
 
