@@ -11,7 +11,7 @@
 define( 'WPSECUREOS_TESTING', true );
 define( 'ABSPATH', dirname( __DIR__ ) . '/' );
 define( 'WPSECUREOS_PLUGIN_DIR', dirname( __DIR__ ) . '/' );
-define( 'WPSECUREOS_VERSION', '1.0.0' );
+define( 'WPSECUREOS_VERSION', '1.1.0-beta' );
 
 if ( ! defined( 'OBJECT' ) ) define( 'OBJECT', 'OBJECT' );
 if ( ! defined( 'ARRAY_A' ) ) define( 'ARRAY_A', 'ARRAY_A' );
