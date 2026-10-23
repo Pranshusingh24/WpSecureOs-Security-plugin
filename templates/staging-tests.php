@@ -88,12 +88,12 @@ $staging    = WpSecureOs_Staging_Adapter::prepare_staging_environment();
 	</div>
 
 	<div class="wpsecureos-table-responsive">
-		<table class="wpsecureos-table">
+		<table class="wpsecureos-table wpsecureos-datatable display responsive" id="wpsecureos-smoke-tests-table" style="width:100%;">
 			<thead>
 				<tr>
-					<th><?php esc_html_e( 'Smoke Test Suite', 'wpsecureos' ); ?></th>
-					<th><?php esc_html_e( 'Result', 'wpsecureos' ); ?></th>
-					<th><?php esc_html_e( 'Details & Evidence', 'wpsecureos' ); ?></th>
+					<th data-priority="1"><?php esc_html_e( 'Smoke Test Suite', 'wpsecureos' ); ?></th>
+					<th data-priority="1"><?php esc_html_e( 'Result', 'wpsecureos' ); ?></th>
+					<th data-priority="2"><?php esc_html_e( 'Details & Evidence', 'wpsecureos' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>

@@ -86,13 +86,13 @@ $php_runtime     = WpSecureOs_Php_Advisor::analyze_current_runtime();
 		</p>
 	<?php else : ?>
 		<div class="wpsecureos-table-responsive">
-			<table class="wpsecureos-table">
+			<table class="wpsecureos-table wpsecureos-datatable display responsive" id="wpsecureos-uploads-table" style="width:100%;">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Relative Path', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'File Size', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Last Modified', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Recommendation', 'wpsecureos' ); ?></th>
+						<th data-priority="1"><?php esc_html_e( 'Relative Path', 'wpsecureos' ); ?></th>
+						<th data-priority="2"><?php esc_html_e( 'File Size', 'wpsecureos' ); ?></th>
+						<th data-priority="3"><?php esc_html_e( 'Last Modified', 'wpsecureos' ); ?></th>
+						<th data-priority="1"><?php esc_html_e( 'Recommendation', 'wpsecureos' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -133,15 +133,15 @@ $php_runtime     = WpSecureOs_Php_Advisor::analyze_current_runtime();
 		</p>
 	<?php else : ?>
 		<div class="wpsecureos-table-responsive">
-			<table class="wpsecureos-table">
+			<table class="wpsecureos-table wpsecureos-datatable display responsive" id="wpsecureos-vulns-table" style="width:100%;">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Component', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'CVE / Advisory ID', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Severity', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Affected Range', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Fixed In', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Advisory Reference', 'wpsecureos' ); ?></th>
+						<th data-priority="1"><?php esc_html_e( 'Component', 'wpsecureos' ); ?></th>
+						<th data-priority="2"><?php esc_html_e( 'CVE / Advisory ID', 'wpsecureos' ); ?></th>
+						<th data-priority="2"><?php esc_html_e( 'Severity', 'wpsecureos' ); ?></th>
+						<th data-priority="3"><?php esc_html_e( 'Affected Range', 'wpsecureos' ); ?></th>
+						<th data-priority="3"><?php esc_html_e( 'Fixed In', 'wpsecureos' ); ?></th>
+						<th data-priority="1"><?php esc_html_e( 'Advisory Reference', 'wpsecureos' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -190,13 +190,13 @@ $php_runtime     = WpSecureOs_Php_Advisor::analyze_current_runtime();
 	</div>
 
 	<div class="wpsecureos-table-responsive">
-		<table class="wpsecureos-table">
+		<table class="wpsecureos-table wpsecureos-datatable display responsive" id="wpsecureos-hardening-table" style="width:100%;">
 			<thead>
 				<tr>
-					<th><?php esc_html_e( 'Security Check', 'wpsecureos' ); ?></th>
-					<th><?php esc_html_e( 'Status', 'wpsecureos' ); ?></th>
-					<th><?php esc_html_e( 'Finding Description', 'wpsecureos' ); ?></th>
-					<th><?php esc_html_e( 'Remediation Guide', 'wpsecureos' ); ?></th>
+					<th data-priority="1"><?php esc_html_e( 'Security Check', 'wpsecureos' ); ?></th>
+					<th data-priority="2"><?php esc_html_e( 'Status', 'wpsecureos' ); ?></th>
+					<th data-priority="3"><?php esc_html_e( 'Finding Description', 'wpsecureos' ); ?></th>
+					<th data-priority="4"><?php esc_html_e( 'Remediation Guide', 'wpsecureos' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>

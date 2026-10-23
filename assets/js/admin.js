@@ -8,6 +8,52 @@
 	var WpSecureOs = {
 		init: function() {
 			this.bindEvents();
+			this.initDataTables();
+		},
+
+		initDataTables: function() {
+			if (!$.fn.DataTable) {
+				return;
+			}
+
+			$('.wpsecureos-datatable').each(function() {
+				var $table = $(this);
+				if ($.fn.DataTable.isDataTable(this)) {
+					return;
+				}
+
+				// Determine if last column is Action button to prevent sorting on it
+				var lastHeader = $table.find('thead th:last-child').text().trim().toLowerCase();
+				var columnDefs = [];
+				if (lastHeader === 'action') {
+					columnDefs.push({ targets: -1, orderable: false, searchable: false });
+				}
+
+				$table.DataTable({
+					responsive: true,
+					autoWidth: false,
+					pageLength: 10,
+					lengthMenu: [5, 10, 25, 50],
+					columnDefs: columnDefs,
+					order: [], // preserve server rendering order
+					language: {
+						search: '<span class="dashicons dashicons-search" style="font-size:16px; margin-right:4px;"></span>',
+						searchPlaceholder: 'Filter records...',
+						lengthMenu: 'Show _MENU_ entries',
+						info: 'Showing _START_ to _END_ of _TOTAL_ items',
+						infoEmpty: 'Showing 0 items',
+						infoFiltered: '(filtered from _MAX_ total records)',
+						emptyTable: 'No matching records in active view',
+						zeroRecords: 'No matching records found',
+						paginate: {
+							first: '«',
+							previous: '‹',
+							next: '›',
+							last: '»'
+						}
+					}
+				});
+			});
 		},
 
 		bindEvents: function() {

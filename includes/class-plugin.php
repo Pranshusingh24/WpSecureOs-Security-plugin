@@ -86,19 +86,49 @@ class WpSecureOs_Plugin {
 			WPSECUREOS_VERSION
 		);
 
-		// WpSecureOs UI Style
+		// DataTables Core & Responsive CSS
+		wp_enqueue_style(
+			'wpsecureos-datatables-css',
+			WPSECUREOS_PLUGIN_URL . 'assets/vendor/datatables/jquery.dataTables.min.css',
+			array(),
+			WPSECUREOS_VERSION
+		);
+		wp_enqueue_style(
+			'wpsecureos-datatables-responsive-css',
+			WPSECUREOS_PLUGIN_URL . 'assets/vendor/datatables/responsive.dataTables.min.css',
+			array( 'wpsecureos-datatables-css' ),
+			WPSECUREOS_VERSION
+		);
+
+		// WpSecureOs UI Style (Loaded after DataTables to apply cyber-slate & electric-cyan custom styling)
 		wp_enqueue_style(
 			'wpsecureos-admin-css',
 			WPSECUREOS_PLUGIN_URL . 'assets/css/admin.css',
-			array(),
+			array( 'wpsecureos-datatables-responsive-css' ),
 			WPSECUREOS_VERSION
+		);
+
+		// DataTables Core & Responsive JS
+		wp_enqueue_script(
+			'wpsecureos-datatables-js',
+			WPSECUREOS_PLUGIN_URL . 'assets/vendor/datatables/jquery.dataTables.min.js',
+			array( 'jquery' ),
+			WPSECUREOS_VERSION,
+			true
+		);
+		wp_enqueue_script(
+			'wpsecureos-datatables-responsive-js',
+			WPSECUREOS_PLUGIN_URL . 'assets/vendor/datatables/dataTables.responsive.min.js',
+			array( 'jquery', 'wpsecureos-datatables-js' ),
+			WPSECUREOS_VERSION,
+			true
 		);
 
 		// WpSecureOs UI Interactive Script
 		wp_enqueue_script(
 			'wpsecureos-admin-js',
 			WPSECUREOS_PLUGIN_URL . 'assets/js/admin.js',
-			array( 'jquery' ),
+			array( 'jquery', 'wpsecureos-datatables-responsive-js' ),
 			WPSECUREOS_VERSION,
 			true
 		);
