@@ -38,7 +38,7 @@ class WpSecureOs_Admin_Notices {
 		if ( $critical_count > 0 && ! in_array( 'critical_vuln_notice', $dismissed, true ) ) {
 			?>
 			<div class="notice notice-error is-dismissible wpsecureos-admin-notice" data-notice-id="critical_vuln_notice">
-				<div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 0;">
+				<div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 6px 0;">
 					<div>
 						<strong style="color: #ef4444; text-transform: uppercase; letter-spacing: 0.05em; font-size: 11px; margin-right: 8px;">[WpSecureOs Alert]</strong>
 						<span>

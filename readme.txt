@@ -4,7 +4,7 @@ Tags: security, updates, staging, backup, vulnerability scanner, integrity, safe
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.1.0-beta
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,14 @@ No. A WordPress plugin running inside PHP cannot safely recompile or patch the h
 No. WpSecureOs treats unexpected PHP files in upload folders as security signals for human review, never deleting them automatically to prevent false-positive data loss.
 
 == Changelog ==
+
+= 1.1.0-beta =
+* Beta Release.
+* Full responsive design across all viewports: mobile phones, tablets, laptops, and desktop displays.
+* Isolated WordPress admin notices with standard screen-reader heading and wp-header-end anchor.
+* Responsive horizontal touch-scrolling wrappers for all security and update data tables.
+* Clean tab wrapping and adaptive 2-column mobile grid navigation.
+* Responsive filter forms, modal viewports, and audit trails.
 
 = 1.0.0 =
 * Initial enterprise release.

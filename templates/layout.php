@@ -26,16 +26,18 @@ foreach ( $vulns as $items ) {
 $updates_count = count( $pending_updates );
 ?>
 <div class="wrap wpsecureos-wrap">
+	<h1 class="wp-heading-inline screen-reader-text"><?php esc_html_e( 'WpSecureOs Security Platform', 'wpsecureos' ); ?></h1>
+	<hr class="wp-header-end">
 
 	<!-- WpSecureOs Header -->
 	<header class="wpsecureos-header">
 		<div class="wpsecureos-brand">
 			<img src="<?php echo esc_url( WPSECUREOS_PLUGIN_URL . 'assets/images/logo.svg' ); ?>" alt="WpSecureOs Logo" />
 			<div>
-				<h1 class="wpsecureos-brand-title">
+				<div class="wpsecureos-brand-title" role="heading" aria-level="1">
 					WpSecureOs
 					<span class="badge-version">v<?php echo esc_html( WPSECUREOS_VERSION ); ?></span>
-				</h1>
+				</div>
 				<p class="wpsecureos-brand-subtitle">
 					<?php esc_html_e( 'Enterprise-grade WordPress Security, Continuous Validation, Safe Updates, and Recovery Platform', 'wpsecureos' ); ?>
 				</p>

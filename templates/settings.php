@@ -30,7 +30,7 @@ if ( isset( $_POST['wpsecureos_enroll_central'] ) ) {
 $critical_urls_text = ! empty( $settings['critical_urls'] ) ? implode( "\n", (array) $settings['critical_urls'] ) : home_url( '/' );
 ?>
 
-<div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px;">
+<div class="wpsecureos-two-col">
 
 	<!-- Left: Core Plugin Configuration -->
 	<div class="wpsecureos-panel">
