@@ -1,8 +1,8 @@
-=== WpSecureOs — WordPress Security, Safe Updates & Recovery Platform ===
+=== WpSecureOs ===
 Contributors: pranshusingh, wpsecureos
-Tags: security, updates, staging, backup, vulnerability scanner, integrity, safe updates
-Requires at least: 6.0
-Tested up to: 6.7
+Tags: security, safe updates, staging, backup, vulnerability scanner
+Requires at least: 6.2
+Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 1.1.0
 License: GPL-2.0-or-later
@@ -46,6 +46,18 @@ No. A WordPress plugin running inside PHP cannot safely recompile or patch the h
 = Will suspicious files in my uploads directory be deleted automatically? =
 No. WpSecureOs treats unexpected PHP files in upload folders as security signals for human review, never deleting them automatically to prevent false-positive data loss.
 
+= Where are screenshots and visual assets located? =
+Plugin screenshots are stored in the WordPress.org Subversion `/assets/` directory and within the plugin's `assets/images/` folder.
+
+== Screenshots ==
+
+1. Overview Dashboard — Unified telemetry displaying real-time security posture, core checksum verification status, pending updates risk signals, and runtime health.
+2. License & Subscription Telemetry — Cryptographic license activation, site quota management, and plan tiers.
+3. Security & File Integrity — Official WordPress core checksums validation against api.wordpress.org signatures and uploads directory executable script detection.
+4. Platform Settings & Integrations — Threat intelligence feed configuration, staging visual regression tolerance thresholds, and fleet central control plane pairing.
+5. Staging Sandbox & Automated Smoke Tests — Isolated test environment posture (email suppression, indexing prevention, mock checkout) and automated REST API and WooCommerce checkout tests.
+6. Explainable Update Risk Assessment — Multi-factor risk engine showing Security Urgency, Deployment Confidence, granular risk factors, and guided safe deployment workflows.
+
 == Changelog ==
 
 = 1.1.0 =
@@ -74,3 +86,8 @@ No. WpSecureOs treats unexpected PHP files in upload folders as security signals
 * Visual regression and automated smoke test runner.
 * Verified backups and recovery runbook.
 * Modern dark telemetry console and interactive pipeline runner.
+
+== Upgrade Notice ==
+
+= 1.1.0 =
+Production Release: Enhanced licensing architecture, cryptographic verification, and complete responsive telemetry console. Recommended update for all installations.

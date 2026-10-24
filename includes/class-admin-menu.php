@@ -158,7 +158,9 @@ class WpSecureOs_Admin_Menu {
 			$current_tab = $template_name;
 			include WPSECUREOS_PLUGIN_DIR . 'templates/layout.php';
 		} else {
-			echo '<div class="notice notice-error"><p>' . esc_html( sprintf( __( 'Template %s not found.', 'wpsecureos' ), $template_name ) ) . '</p></div>';
+			/* translators: %s: Template file name */
+			$error_message = sprintf( __( 'Template %s not found.', 'wpsecureos' ), $template_name );
+			echo '<div class="notice notice-error"><p>' . esc_html( $error_message ) . '</p></div>';
 		}
 	}
 }

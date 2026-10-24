@@ -63,9 +63,6 @@ class WpSecureOs_Plugin {
 		// Interactive Admin AJAX Actions
 		add_action( 'wp_ajax_wpsecureos_action', array( $this, 'handle_ajax_action' ) );
 
-		// Authenticated Update Delivery
-		WpSecureOs_Updater::init();
-
 		// Cron Schedule Handler
 		add_action( 'wpsecureos_daily_security_scan', array( 'WpSecureOs_Security_Scanner', 'run_scan' ) );
 	}

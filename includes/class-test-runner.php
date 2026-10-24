@@ -52,7 +52,7 @@ class WpSecureOs_Test_Runner {
 			);
 		}
 
-		$idempotency_key = md5( $component_type . ':' . $slug . ':' . $new_version . ':' . date( 'Ymd' ) );
+		$idempotency_key = md5( $component_type . ':' . $slug . ':' . $new_version . ':' . gmdate( 'Ymd' ) );
 
 		global $wpdb;
 		$table_jobs = $wpdb->prefix . 'wpsecureos_jobs';
@@ -192,6 +192,7 @@ class WpSecureOs_Test_Runner {
 		if ( self::STATE_APPROVAL_REQUIRED !== $job['status'] ) {
 			return array(
 				'success' => false,
+				/* translators: %s: Pipeline job state */
 				'message' => sprintf( __( 'Cannot deploy job in current state: %s. Staging tests and backup must pass first.', 'wpsecureos' ), $job['status'] ),
 			);
 		}
