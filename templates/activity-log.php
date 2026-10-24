@@ -59,15 +59,15 @@ $total_pages = $logs_data['total_pages'];
 		</div>
 	<?php else : ?>
 		<div class="wpsecureos-table-responsive">
-			<table class="wpsecureos-table">
+			<table class="wpsecureos-table wpsecureos-datatable display responsive" id="wpsecureos-logs-table" style="width:100%;">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Timestamp', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Severity', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Component', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Event Type', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Message & Redacted Metadata', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Actor IP', 'wpsecureos' ); ?></th>
+						<th data-priority="1"><?php esc_html_e( 'Timestamp', 'wpsecureos' ); ?></th>
+						<th data-priority="1"><?php esc_html_e( 'Severity', 'wpsecureos' ); ?></th>
+						<th data-priority="2"><?php esc_html_e( 'Component', 'wpsecureos' ); ?></th>
+						<th data-priority="3"><?php esc_html_e( 'Event Type', 'wpsecureos' ); ?></th>
+						<th data-priority="2"><?php esc_html_e( 'Message & Redacted Metadata', 'wpsecureos' ); ?></th>
+						<th data-priority="3"><?php esc_html_e( 'Actor IP', 'wpsecureos' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>

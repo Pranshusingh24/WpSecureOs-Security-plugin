@@ -126,14 +126,14 @@ $integrity = WpSecureOs_Integrity_Monitor::run_integrity_check();
 			</div>
 		<?php else : ?>
 			<div class="wpsecureos-table-responsive">
-				<table class="wpsecureos-table">
+				<table class="wpsecureos-table wpsecureos-datatable display responsive" id="wpsecureos-dashboard-updates-table" style="width:100%;">
 					<thead>
 						<tr>
-							<th><?php esc_html_e( 'Component', 'wpsecureos' ); ?></th>
-							<th><?php esc_html_e( 'Type', 'wpsecureos' ); ?></th>
-							<th><?php esc_html_e( 'Version Jump', 'wpsecureos' ); ?></th>
-							<th><?php esc_html_e( 'Risk Level', 'wpsecureos' ); ?></th>
-							<th><?php esc_html_e( 'Action', 'wpsecureos' ); ?></th>
+							<th data-priority="1"><?php esc_html_e( 'Component', 'wpsecureos' ); ?></th>
+							<th data-priority="3"><?php esc_html_e( 'Type', 'wpsecureos' ); ?></th>
+							<th data-priority="2"><?php esc_html_e( 'Version Jump', 'wpsecureos' ); ?></th>
+							<th data-priority="2"><?php esc_html_e( 'Risk Level', 'wpsecureos' ); ?></th>
+							<th data-priority="1"><?php esc_html_e( 'Action', 'wpsecureos' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>

@@ -104,9 +104,46 @@ class WpSecureOs_Rest_Controller {
 				'permission_callback' => array( __CLASS__, 'check_view_security_permission' ),
 			)
 		);
+
+		// 9. GET /license
+		register_rest_route(
+			self::NAMESPACE,
+			'/license',
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( __CLASS__, 'get_license' ),
+				'permission_callback' => array( __CLASS__, 'check_view_permission' ),
+			)
+		);
+
+		// 10. POST /license/activate
+		register_rest_route(
+			self::NAMESPACE,
+			'/license/activate',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( __CLASS__, 'activate_license' ),
+				'permission_callback' => array( __CLASS__, 'check_manage_settings_permission' ),
+			)
+		);
+
+		// 11. POST /license/deactivate
+		register_rest_route(
+			self::NAMESPACE,
+			'/license/deactivate',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( __CLASS__, 'deactivate_license' ),
+				'permission_callback' => array( __CLASS__, 'check_manage_settings_permission' ),
+			)
+		);
 	}
 
 	// Permission Callbacks
+	public static function check_manage_settings_permission( $request ) {
+		return current_user_can( WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS );
+	}
+
 	public static function check_view_permission( $request ) {
 		return current_user_can( WpSecureOs_Capabilities::CAP_VIEW_DASHBOARD );
 	}
@@ -224,5 +261,26 @@ class WpSecureOs_Rest_Controller {
 
 		$logs = WpSecureOs_Event_Logger::get_events( $page, $per_page, $severity, $search );
 		return rest_ensure_response( $logs );
+	}
+
+	public static function get_license( $request ) {
+		$license = WpSecureOs_License_Manager::get_license();
+		return rest_ensure_response( array(
+			'success' => true,
+			'license' => $license,
+		) );
+	}
+
+	public static function activate_license( $request ) {
+		$key    = sanitize_text_field( $request->get_param( 'license_key' ) );
+		$result = WpSecureOs_License_Manager::activate( $key );
+		$status = ! empty( $result['success'] ) ? 200 : 400;
+		return new WP_REST_Response( $result, $status );
+	}
+
+	public static function deactivate_license( $request ) {
+		$result = WpSecureOs_License_Manager::deactivate();
+		$status = ! empty( $result['success'] ) ? 200 : 400;
+		return new WP_REST_Response( $result, $status );
 	}
 }

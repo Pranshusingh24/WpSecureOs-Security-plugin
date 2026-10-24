@@ -43,15 +43,15 @@ $updates = WpSecureOs_Update_Provider::get_updates_with_assessment();
 		</div>
 	<?php else : ?>
 		<div class="wpsecureos-table-responsive">
-			<table class="wpsecureos-table">
+			<table class="wpsecureos-table wpsecureos-datatable display responsive" id="wpsecureos-updates-table" style="width:100%;">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Component', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Installed -> Target', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Security Urgency', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Deployment Confidence', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Explainable Risk Factors', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Action', 'wpsecureos' ); ?></th>
+						<th data-priority="1"><?php esc_html_e( 'Component', 'wpsecureos' ); ?></th>
+						<th data-priority="2"><?php esc_html_e( 'Installed -> Target', 'wpsecureos' ); ?></th>
+						<th data-priority="3"><?php esc_html_e( 'Security Urgency', 'wpsecureos' ); ?></th>
+						<th data-priority="4"><?php esc_html_e( 'Deployment Confidence', 'wpsecureos' ); ?></th>
+						<th data-priority="5"><?php esc_html_e( 'Explainable Risk Factors', 'wpsecureos' ); ?></th>
+						<th data-priority="1"><?php esc_html_e( 'Action', 'wpsecureos' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>

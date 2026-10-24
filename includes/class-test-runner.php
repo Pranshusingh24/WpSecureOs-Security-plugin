@@ -43,6 +43,15 @@ class WpSecureOs_Test_Runner {
 			);
 		}
 
+		// Verify subscription entitlement for automated staging pipeline
+		if ( ! WpSecureOs_Plan_Entitlements::can( 'staging_pipeline' ) ) {
+			return array(
+				'success' => false,
+				'state'   => self::STATE_FAILED,
+				'message' => __( 'Automated Staging Pipeline requires an active WpSecureOs Pro, Agency, or Business subscription.', 'wpsecureos' ),
+			);
+		}
+
 		$idempotency_key = md5( $component_type . ':' . $slug . ':' . $new_version . ':' . date( 'Ymd' ) );
 
 		global $wpdb;

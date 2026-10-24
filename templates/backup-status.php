@@ -45,15 +45,15 @@ $latest_backup = WpSecureOs_Backup_Adapter::get_latest_verified_backup();
 		</div>
 	<?php else : ?>
 		<div class="wpsecureos-table-responsive">
-			<table class="wpsecureos-table">
+			<table class="wpsecureos-table wpsecureos-datatable display responsive" id="wpsecureos-backups-table" style="width:100%;">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Archive Name', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Size', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'SHA-256 Checksum', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Integrity Test', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Created At', 'wpsecureos' ); ?></th>
-						<th><?php esc_html_e( 'Verification Notes', 'wpsecureos' ); ?></th>
+						<th data-priority="1"><?php esc_html_e( 'Archive Name', 'wpsecureos' ); ?></th>
+						<th data-priority="2"><?php esc_html_e( 'Size', 'wpsecureos' ); ?></th>
+						<th data-priority="3"><?php esc_html_e( 'SHA-256 Checksum', 'wpsecureos' ); ?></th>
+						<th data-priority="1"><?php esc_html_e( 'Integrity Test', 'wpsecureos' ); ?></th>
+						<th data-priority="2"><?php esc_html_e( 'Created At', 'wpsecureos' ); ?></th>
+						<th data-priority="4"><?php esc_html_e( 'Verification Notes', 'wpsecureos' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>

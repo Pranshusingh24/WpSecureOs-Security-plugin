@@ -13,6 +13,9 @@ $inventory     = WpSecureOs_Inventory::get_inventory();
 $vulns         = WpSecureOs_Security_Scanner::get_known_vulnerabilities();
 $pending_updates = WpSecureOs_Update_Provider::get_updates_with_assessment();
 $latest_backup = WpSecureOs_Backup_Adapter::get_latest_verified_backup();
+$license_info  = WpSecureOs_License_Manager::get_license();
+$plan_badge    = isset( $license_info['plan'] ) ? strtoupper( $license_info['plan'] ) : 'FREE';
+$plan_slug     = isset( $license_info['plan'] ) ? strtolower( $license_info['plan'] ) : 'free';
 
 $critical_vulns_count = 0;
 foreach ( $vulns as $items ) {
@@ -37,6 +40,7 @@ $updates_count = count( $pending_updates );
 				<div class="wpsecureos-brand-title" role="heading" aria-level="1">
 					WpSecureOs
 					<span class="badge-version">v<?php echo esc_html( WPSECUREOS_VERSION ); ?></span>
+					<span class="badge-plan badge-<?php echo esc_attr( $plan_slug ); ?>"><?php echo esc_html( $plan_badge ); ?></span>
 				</div>
 				<p class="wpsecureos-brand-subtitle">
 					<?php esc_html_e( 'Enterprise-grade WordPress Security, Continuous Validation, Safe Updates, and Recovery Platform', 'wpsecureos' ); ?>
@@ -101,6 +105,11 @@ $updates_count = count( $pending_updates );
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=wpsecureos-settings' ) ); ?>" class="wpsecureos-nav-tab <?php echo ( 'settings' === $current_tab ) ? 'active' : ''; ?>">
 			<span class="dashicons dashicons-admin-settings"></span>
 			<?php esc_html_e( 'Settings', 'wpsecureos' ); ?>
+		</a>
+		<a href="<?php echo esc_url( admin_url( 'admin.php?page=wpsecureos-license' ) ); ?>" class="wpsecureos-nav-tab <?php echo ( 'pricing-license' === $current_tab ) ? 'active' : ''; ?>">
+			<span class="dashicons dashicons-money-alt"></span>
+			<?php esc_html_e( 'License & Plans', 'wpsecureos' ); ?>
+			<span class="tab-badge badge-<?php echo esc_attr( $plan_slug ); ?>"><?php echo esc_html( $plan_badge ); ?></span>
 		</a>
 	</nav>
 

@@ -63,6 +63,9 @@ class WpSecureOs_Plugin {
 		// Interactive Admin AJAX Actions
 		add_action( 'wp_ajax_wpsecureos_action', array( $this, 'handle_ajax_action' ) );
 
+		// Authenticated Update Delivery
+		WpSecureOs_Updater::init();
+
 		// Cron Schedule Handler
 		add_action( 'wpsecureos_daily_security_scan', array( 'WpSecureOs_Security_Scanner', 'run_scan' ) );
 	}
@@ -86,19 +89,49 @@ class WpSecureOs_Plugin {
 			WPSECUREOS_VERSION
 		);
 
-		// WpSecureOs UI Style
+		// DataTables Core & Responsive CSS
+		wp_enqueue_style(
+			'wpsecureos-datatables-css',
+			WPSECUREOS_PLUGIN_URL . 'assets/vendor/datatables/jquery.dataTables.min.css',
+			array(),
+			WPSECUREOS_VERSION
+		);
+		wp_enqueue_style(
+			'wpsecureos-datatables-responsive-css',
+			WPSECUREOS_PLUGIN_URL . 'assets/vendor/datatables/responsive.dataTables.min.css',
+			array( 'wpsecureos-datatables-css' ),
+			WPSECUREOS_VERSION
+		);
+
+		// WpSecureOs UI Style (Loaded after DataTables to apply cyber-slate & electric-cyan custom styling)
 		wp_enqueue_style(
 			'wpsecureos-admin-css',
 			WPSECUREOS_PLUGIN_URL . 'assets/css/admin.css',
-			array(),
+			array( 'wpsecureos-datatables-responsive-css' ),
 			WPSECUREOS_VERSION
+		);
+
+		// DataTables Core & Responsive JS
+		wp_enqueue_script(
+			'wpsecureos-datatables-js',
+			WPSECUREOS_PLUGIN_URL . 'assets/vendor/datatables/jquery.dataTables.min.js',
+			array( 'jquery' ),
+			WPSECUREOS_VERSION,
+			true
+		);
+		wp_enqueue_script(
+			'wpsecureos-datatables-responsive-js',
+			WPSECUREOS_PLUGIN_URL . 'assets/vendor/datatables/dataTables.responsive.min.js',
+			array( 'jquery', 'wpsecureos-datatables-js' ),
+			WPSECUREOS_VERSION,
+			true
 		);
 
 		// WpSecureOs UI Interactive Script
 		wp_enqueue_script(
 			'wpsecureos-admin-js',
 			WPSECUREOS_PLUGIN_URL . 'assets/js/admin.js',
-			array( 'jquery' ),
+			array( 'jquery', 'wpsecureos-datatables-responsive-js' ),
 			WPSECUREOS_VERSION,
 			true
 		);
@@ -190,6 +223,39 @@ class WpSecureOs_Plugin {
 				$idempotency_key = isset( $_POST['idempotency_key'] ) ? sanitize_text_field( wp_unslash( $_POST['idempotency_key'] ) ) : '';
 				$reason          = isset( $_POST['reason'] ) ? sanitize_textarea_field( wp_unslash( $_POST['reason'] ) ) : '';
 				$result          = WpSecureOs_Test_Runner::execute_emergency_override( $idempotency_key, $reason );
+				wp_send_json_success( $result );
+				break;
+
+			case 'activate_license':
+				if ( ! current_user_can( WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS ) ) {
+					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing wpsecureos_manage_settings capability.', 'wpsecureos' ) ), 403 );
+				}
+				$license_key = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
+				$result      = WpSecureOs_License_Manager::activate( $license_key );
+				if ( ! empty( $result['success'] ) ) {
+					wp_send_json_success( $result );
+				} else {
+					wp_send_json_error( $result );
+				}
+				break;
+
+			case 'deactivate_license':
+				if ( ! current_user_can( WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS ) ) {
+					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing wpsecureos_manage_settings capability.', 'wpsecureos' ) ), 403 );
+				}
+				$result = WpSecureOs_License_Manager::deactivate();
+				if ( ! empty( $result['success'] ) ) {
+					wp_send_json_success( $result );
+				} else {
+					wp_send_json_error( $result );
+				}
+				break;
+
+			case 'refresh_license':
+				if ( ! current_user_can( WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS ) ) {
+					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing wpsecureos_manage_settings capability.', 'wpsecureos' ) ), 403 );
+				}
+				$result = WpSecureOs_License_Manager::validate_license();
 				wp_send_json_success( $result );
 				break;
 
