@@ -4,10 +4,10 @@
  * Plugin URI:        https://wpsecureos.com/
  * Description:       Enterprise-grade WordPress Security, Continuous Validation, Safe Updates, and Recovery Platform.
  * Version:           1.1.0-beta
- * Requires at least: 6.0
+ * Requires at least: 6.2
  * Requires PHP:      7.4
  * Author:            Pranshu Singh
- * Author URI:        https://wpsecureos.com/
+ * Author URI:        https://pranshusingh19.github.io/pranshu_portfolio/
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       wpsecureos
@@ -27,7 +27,7 @@ define( 'WPSECUREOS_PLUGIN_FILE', __FILE__ );
 define( 'WPSECUREOS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WPSECUREOS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'WPSECUREOS_MIN_PHP', '7.4' );
-define( 'WPSECUREOS_MIN_WP', '6.0' );
+define( 'WPSECUREOS_MIN_WP', '6.2' );
 
 /**
  * Autoloader for WpSecureOs classes.

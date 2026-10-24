@@ -17,7 +17,8 @@ desktop.ini
 composer.lock
 
 # Test & Temporary Dumps
-tests/fixtures/
+tests/
+/tests/
 /tmp/
 *.log
 error_log
