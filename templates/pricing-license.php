@@ -216,7 +216,16 @@ $plan_obj     = WpSecureOs_Plan_Entitlements::get_plan( $current_plan );
 					</div>
 					<div class="pricing-site-limit">
 						<span class="dashicons dashicons-admin-site-alt3"></span>
-						<strong><?php echo (int) $p['site_limit'] === 0 ? esc_html__( 'Unlimited Sites', 'wpsecureos' ) : sprintf( esc_html__( '%d Site License', 'wpsecureos' ), (int) $p['site_limit'] ); ?></strong>
+						<strong>
+							<?php
+							if ( (int) $p['site_limit'] === 0 ) {
+								esc_html_e( 'Unlimited Sites', 'wpsecureos' );
+							} else {
+								/* translators: %d: Number of sites */
+								printf( esc_html__( '%d Site License', 'wpsecureos' ), (int) $p['site_limit'] );
+							}
+							?>
+						</strong>
 					</div>
 
 					<div class="pricing-features-list">
@@ -237,7 +246,10 @@ $plan_obj     = WpSecureOs_Plan_Entitlements::get_plan( $current_plan );
 							</button>
 						<?php else : ?>
 							<a href="<?php echo esc_url( 'https://wpsecureos-plugin.netlify.app/checkout/?plan=' . $slug . '&domain=' . urlencode( WpSecureOs_License_Manager::get_site_domain() ) ); ?>" target="_blank" class="safe-btn safe-btn-primary" style="width: 100%; justify-content: center;">
-								<?php printf( esc_html__( 'Upgrade to %s', 'wpsecureos' ), esc_html( ucfirst( $slug ) ) ); ?>
+								<?php
+								/* translators: %s: Plan name */
+								printf( esc_html__( 'Upgrade to %s', 'wpsecureos' ), esc_html( ucfirst( $slug ) ) );
+								?>
 							</a>
 						<?php endif; ?>
 					</div>

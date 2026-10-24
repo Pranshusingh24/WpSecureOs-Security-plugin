@@ -173,7 +173,7 @@ class WpSecureOs_Integrity_Monitor {
 			$suspicious[] = array(
 				'path'        => $relative,
 				'size'        => filesize( $f ),
-				'modified_at' => date( 'Y-m-d H:i:s', filemtime( $f ) ),
+				'modified_at' => gmdate( 'Y-m-d H:i:s', filemtime( $f ) ),
 				'reason'      => __( 'Executable script located in public uploads directory.', 'wpsecureos' ),
 			);
 		}

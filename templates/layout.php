@@ -35,7 +35,7 @@ $updates_count = count( $pending_updates );
 	<!-- WpSecureOs Header -->
 	<header class="wpsecureos-header">
 		<div class="wpsecureos-brand">
-			<img src="<?php echo esc_url( WPSECUREOS_PLUGIN_URL . 'assets/images/logo.svg' ); ?>" alt="WpSecureOs Logo" />
+			<img src="<?php echo esc_url( WPSECUREOS_PLUGIN_URL . 'assets/images/wpsecureos-security-logo.png' ); ?>" alt="WpSecureOs Logo" />
 			<div>
 				<div class="wpsecureos-brand-title" role="heading" aria-level="1">
 					WpSecureOs
@@ -135,10 +135,10 @@ $updates_count = count( $pending_updates );
 				<span class="mono-tag" style="background: rgba(255,255,255,0.05); color: #94a3b8; border-color: rgba(255,255,255,0.1);">LIVE ENGINE</span>
 			</div>
 			<div id="wpsecureos-live-terminal">
-				<div class="terminal-line"><span class="term-time">[<?php echo esc_html( date( 'H:i:s' ) ); ?>]</span> <span class="term-info">WpSecureOs agent initialized. System environment indexed: PHP <?php echo esc_html( PHP_VERSION ); ?>, WP <?php echo esc_html( get_bloginfo( 'version' ) ); ?>.</span></div>
-				<div class="terminal-line"><span class="term-time">[<?php echo esc_html( date( 'H:i:s' ) ); ?>]</span> <span class="term-success">Continuous Offensive Validation listener armed. Ready for assessment.</span></div>
+				<div class="terminal-line"><span class="term-time">[<?php echo esc_html( gmdate( 'H:i:s' ) ); ?>]</span> <span class="term-info">WpSecureOs agent initialized. System environment indexed: PHP <?php echo esc_html( PHP_VERSION ); ?>, WP <?php echo esc_html( get_bloginfo( 'version' ) ); ?>.</span></div>
+				<div class="terminal-line"><span class="term-time">[<?php echo esc_html( gmdate( 'H:i:s' ) ); ?>]</span> <span class="term-success">Continuous Offensive Validation listener armed. Ready for assessment.</span></div>
 				<?php if ( $latest_backup ) : ?>
-					<div class="terminal-line"><span class="term-time">[<?php echo esc_html( date( 'H:i:s', strtotime( $latest_backup['created_at'] ) ) ); ?>]</span> <span class="term-success">Verified backup snapshot present: <?php echo esc_html( $latest_backup['backup_name'] ); ?> (SHA-256 confirmed).</span></div>
+					<div class="terminal-line"><span class="term-time">[<?php echo esc_html( gmdate( 'H:i:s', strtotime( $latest_backup['created_at'] ) ) ); ?>]</span> <span class="term-success">Verified backup snapshot present: <?php echo esc_html( $latest_backup['backup_name'] ); ?> (SHA-256 confirmed).</span></div>
 				<?php endif; ?>
 			</div>
 		</div>

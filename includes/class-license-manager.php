@@ -393,7 +393,7 @@ class WpSecureOs_License_Manager {
 	 */
 	public static function get_site_domain() {
 		$url  = home_url( '/' );
-		$host = parse_url( $url, PHP_URL_HOST );
+		$host = wp_parse_url( $url, PHP_URL_HOST );
 		return strtolower( trim( $host ?: 'localhost' ) );
 	}
 

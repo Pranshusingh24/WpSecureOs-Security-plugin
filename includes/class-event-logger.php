@@ -82,17 +82,24 @@ class WpSecureOs_Event_Logger {
 		$offset       = ( $page - 1 ) * $per_page;
 
 		// Count total
-		$count_sql = "SELECT COUNT(id) FROM {$table} WHERE {$where_clause}";
 		if ( ! empty( $args ) ) {
-			$count_sql = $wpdb->prepare( $count_sql, $args );
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
+			$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$table} WHERE {$where_clause}", $args ) );
+		} else {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$total = (int) $wpdb->get_var( "SELECT COUNT(id) FROM {$table} WHERE 1=1" );
 		}
-		$total = (int) $wpdb->get_var( $count_sql );
 
 		// Query records
-		$query_sql = "SELECT * FROM {$table} WHERE {$where_clause} ORDER BY id DESC LIMIT %d OFFSET %d";
 		$query_args = array_merge( $args, array( $per_page, $offset ) );
-		$prepared   = $wpdb->prepare( $query_sql, $query_args );
-		$rows       = $wpdb->get_results( $prepared, ARRAY_A );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM {$table} WHERE {$where_clause} ORDER BY id DESC LIMIT %d OFFSET %d",
+				$query_args
+			),
+			ARRAY_A
+		);
 
 		return array(
 			'items'       => $rows ? $rows : array(),

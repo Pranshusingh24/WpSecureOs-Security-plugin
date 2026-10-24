@@ -28,6 +28,7 @@ error_log
 *.tar.gz
 *.sha256
 /dist/
+/wporg-svn/
 /build.php
 /build.ps1
 /wpsecureos-backups/

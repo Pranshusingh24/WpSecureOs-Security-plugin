@@ -70,6 +70,7 @@ class WpSecureOs_Php_Advisor {
 			'status'      => 'unknown',
 			'label'       => __( 'Unknown Lifecycle Status', 'wpsecureos' ),
 			'severity'    => 'medium',
+			/* translators: %s: PHP version */
 			'description' => sprintf( __( 'PHP version %s is not recognized in official lifecycle table.', 'wpsecureos' ), PHP_VERSION ),
 		);
 
