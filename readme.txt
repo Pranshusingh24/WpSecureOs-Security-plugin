@@ -4,7 +4,7 @@ Tags: security, updates, staging, backup, vulnerability scanner, integrity, safe
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.1.0-beta
+Stable tag: 1.1.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,16 @@ No. A WordPress plugin running inside PHP cannot safely recompile or patch the h
 No. WpSecureOs treats unexpected PHP files in upload folders as security signals for human review, never deleting them automatically to prevent false-positive data loss.
 
 == Changelog ==
+
+= 1.1.0 =
+* Production Release: Pricing, Subscription, and License Management System.
+* Support for Free, Pro, Agency, and Business tier entitlements.
+* Core security preservation invariant: emergency recovery runbooks and file integrity scans remain permanently active upon expiry.
+* Cryptographic Ed25519 and HMAC-SHA256 license signature verification.
+* Authenticated plugin update delivery engine hooked into WordPress update transients.
+* Customer license management screen with interactive pricing matrix and telemetry cards.
+* 7-day offline grace period for uninterrupted operation during network outages.
+* Brand identity enhancements with SVG vector logos, security favicons, and updated metadata.
 
 = 1.1.0-beta =
 * Beta Release.

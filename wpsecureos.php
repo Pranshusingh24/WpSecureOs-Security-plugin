@@ -3,7 +3,7 @@
  * Plugin Name:       WpSecureOs
  * Plugin URI:        https://wpsecureos.com/
  * Description:       Enterprise-grade WordPress Security, Continuous Validation, Safe Updates, and Recovery Platform.
- * Version:           1.1.0-beta
+ * Version:           1.1.0
  * Requires at least: 6.2
  * Requires PHP:      7.4
  * Author:            Pranshu Singh
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Plugin constants.
-define( 'WPSECUREOS_VERSION', '1.1.0-beta' );
+define( 'WPSECUREOS_VERSION', '1.1.0' );
 define( 'WPSECUREOS_PLUGIN_FILE', __FILE__ );
 define( 'WPSECUREOS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WPSECUREOS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
