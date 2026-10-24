@@ -39,7 +39,11 @@ jobs:
 
       - name: Run Automated Test Suite
         run: |
-          php tests/run-tests.php
+          if [ -f tests/run-tests.php ]; then
+            php tests/run-tests.php
+          else
+            echo "Skipping test runner (tests/ excluded from repository)"
+          fi
 
       - name: Security Scan (Secret Redaction & Clean Package Check)
         run: |

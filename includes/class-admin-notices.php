@@ -83,6 +83,44 @@ class WpSecureOs_Admin_Notices {
 			</div>
 			<?php
 		}
+
+		// Check License Grace Period Notice
+		if ( WpSecureOs_License_Manager::is_in_grace_period() && ! in_array( 'license_grace_notice', $dismissed, true ) ) {
+			$lic = WpSecureOs_License_Manager::get_license();
+			?>
+			<div class="notice notice-info is-dismissible wpsecureos-admin-notice" data-notice-id="license_grace_notice">
+				<p>
+					<strong style="color: #0ea5e9;">[WpSecureOs License]</strong>
+					<?php
+					printf(
+						/* translators: %s: Expiration date of grace period */
+						esc_html__( 'Licensing server check is temporarily delayed. Offline grace period active until %s. All security monitoring, backups, and reports remain 100%% functional.', 'wpsecureos' ),
+						'<strong>' . esc_html( substr( $lic['grace_period_until'], 0, 10 ) ) . '</strong>'
+					);
+					?>
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=wpsecureos-license' ) ); ?>" style="margin-left: 8px; font-weight: 600;">
+						<?php esc_html_e( 'Check Status', 'wpsecureos' ); ?> &rarr;
+					</a>
+				</p>
+			</div>
+			<?php
+		}
+
+		// Check License Expired Notice
+		$lic_status = WpSecureOs_License_Manager::get_license()['status'];
+		if ( 'expired' === $lic_status && ! in_array( 'license_expired_notice', $dismissed, true ) ) {
+			?>
+			<div class="notice notice-warning is-dismissible wpsecureos-admin-notice" data-notice-id="license_expired_notice">
+				<p>
+					<strong style="color: #f59e0b;">[WpSecureOs Subscription]</strong>
+					<?php esc_html_e( 'Your WpSecureOs Pro/Agency subscription has expired. Automated staging runs are paused. All core security scans, checksum verification, and recovery rollback tools remain fully active.', 'wpsecureos' ); ?>
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=wpsecureos-license' ) ); ?>" style="margin-left: 8px; font-weight: 600;">
+						<?php esc_html_e( 'Renew Subscription', 'wpsecureos' ); ?> &rarr;
+					</a>
+				</p>
+			</div>
+			<?php
+		}
 	}
 
 	/**

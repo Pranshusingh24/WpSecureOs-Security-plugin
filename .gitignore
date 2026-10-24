@@ -26,6 +26,10 @@ error_log
 # Backups & Archives
 *.zip
 *.tar.gz
+*.sha256
+/dist/
+/build.php
+/build.ps1
 /wpsecureos-backups/
 wp-content/
 

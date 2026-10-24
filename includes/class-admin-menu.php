@@ -99,6 +99,16 @@ class WpSecureOs_Admin_Menu {
 			'wpsecureos-settings',
 			array( __CLASS__, 'render_settings_page' )
 		);
+
+		// 9. Submenu: License & Plans
+		add_submenu_page(
+			'wpsecureos',
+			__( 'License & Plans — WpSecureOs', 'wpsecureos' ),
+			__( 'License & Plans', 'wpsecureos' ),
+			WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS,
+			'wpsecureos-license',
+			array( __CLASS__, 'render_license_page' )
+		);
 	}
 
 	/**
@@ -130,6 +140,10 @@ class WpSecureOs_Admin_Menu {
 
 	public static function render_settings_page() {
 		self::render_template( 'settings' );
+	}
+
+	public static function render_license_page() {
+		self::render_template( 'pricing-license' );
 	}
 
 	/**

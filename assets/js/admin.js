@@ -122,6 +122,24 @@
 					});
 				}
 			});
+
+			// 10. Activate License
+			$(document).on('click', '#btn-activate-license', function(e) {
+				e.preventDefault();
+				self.activateLicense($(this));
+			});
+
+			// 11. Deactivate License
+			$(document).on('click', '#btn-deactivate-license', function(e) {
+				e.preventDefault();
+				self.deactivateLicense($(this));
+			});
+
+			// 12. Refresh / Sync License Status
+			$(document).on('click', '#btn-refresh-license', function(e) {
+				e.preventDefault();
+				self.refreshLicense($(this));
+			});
 		},
 
 		showToast: function(msg, isError) {
@@ -319,6 +337,89 @@
 			var line = '<div class="terminal-line"><span class="term-time">[' + time + ']</span> <span class="' + cls + '">' + msg + '</span></div>';
 			$term.append(line);
 			$term.scrollTop($term[0].scrollHeight);
+		},
+
+		activateLicense: function($btn) {
+			var self = this;
+			var key = $('#wpsecureos_license_key').val().trim();
+			var $feedback = $('#license-ajax-feedback');
+
+			if (!key) {
+				$feedback.removeClass('success').addClass('error').text('Please enter a valid license key.').fadeIn();
+				return;
+			}
+
+			$btn.prop('disabled', true).addClass('loading');
+			$feedback.hide();
+			self.appendTerminalLog('Connecting to licensing server for cryptographic validation...', 'info');
+
+			$.post(wpsecureos_vars.ajax_url, {
+				action: 'wpsecureos_action',
+				sub_action: 'activate_license',
+				license_key: key,
+				nonce: wpsecureos_vars.nonce
+			}, function(res) {
+				$btn.prop('disabled', false).removeClass('loading');
+				if (res.success && res.data.success) {
+					$feedback.removeClass('error').addClass('success').text(res.data.message).fadeIn();
+					self.appendTerminalLog('License validated successfully: ' + (res.data.data ? res.data.data.plan_name : 'Active'), 'success');
+					setTimeout(function() {
+						location.reload();
+					}, 1200);
+				} else {
+					var msg = (res.data && res.data.message) ? res.data.message : 'Activation failed.';
+					$feedback.removeClass('success').addClass('error').text(msg).fadeIn();
+					self.appendTerminalLog('License activation error: ' + msg, 'error');
+				}
+			}).fail(function() {
+				$btn.prop('disabled', false).removeClass('loading');
+				$feedback.removeClass('success').addClass('error').text('Network communication error with server.').fadeIn();
+			});
+		},
+
+		deactivateLicense: function($btn) {
+			var self = this;
+			if (!confirm('Are you sure you want to deactivate this license? This will release the site seat and revert to the Community Free plan.')) {
+				return;
+			}
+
+			$btn.prop('disabled', true).addClass('loading');
+			self.appendTerminalLog('Deactivating license and releasing domain seat...', 'warn');
+
+			$.post(wpsecureos_vars.ajax_url, {
+				action: 'wpsecureos_action',
+				sub_action: 'deactivate_license',
+				nonce: wpsecureos_vars.nonce
+			}, function(res) {
+				if (res.success) {
+					self.appendTerminalLog('Seat released. Site returned to Free edition.', 'info');
+					location.reload();
+				} else {
+					$btn.prop('disabled', false).removeClass('loading');
+					alert('Deactivation error: ' + (res.data ? res.data.message : 'Unknown error'));
+				}
+			});
+		},
+
+		refreshLicense: function($btn) {
+			var self = this;
+			$btn.prop('disabled', true).addClass('loading');
+			self.appendTerminalLog('Syncing entitlements with central server...', 'info');
+
+			$.post(wpsecureos_vars.ajax_url, {
+				action: 'wpsecureos_action',
+				sub_action: 'refresh_license',
+				nonce: wpsecureos_vars.nonce
+			}, function(res) {
+				$btn.prop('disabled', false).removeClass('loading');
+				if (res.success && res.data.valid) {
+					self.appendTerminalLog('License status refreshed: ACTIVE', 'success');
+					location.reload();
+				} else {
+					self.appendTerminalLog('License status: ' + (res.data ? res.data.status : 'checked'), 'warn');
+					location.reload();
+				}
+			});
 		}
 	};
 

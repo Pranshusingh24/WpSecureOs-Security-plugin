@@ -63,6 +63,9 @@ class WpSecureOs_Plugin {
 		// Interactive Admin AJAX Actions
 		add_action( 'wp_ajax_wpsecureos_action', array( $this, 'handle_ajax_action' ) );
 
+		// Authenticated Update Delivery
+		WpSecureOs_Updater::init();
+
 		// Cron Schedule Handler
 		add_action( 'wpsecureos_daily_security_scan', array( 'WpSecureOs_Security_Scanner', 'run_scan' ) );
 	}
@@ -220,6 +223,39 @@ class WpSecureOs_Plugin {
 				$idempotency_key = isset( $_POST['idempotency_key'] ) ? sanitize_text_field( wp_unslash( $_POST['idempotency_key'] ) ) : '';
 				$reason          = isset( $_POST['reason'] ) ? sanitize_textarea_field( wp_unslash( $_POST['reason'] ) ) : '';
 				$result          = WpSecureOs_Test_Runner::execute_emergency_override( $idempotency_key, $reason );
+				wp_send_json_success( $result );
+				break;
+
+			case 'activate_license':
+				if ( ! current_user_can( WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS ) ) {
+					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing wpsecureos_manage_settings capability.', 'wpsecureos' ) ), 403 );
+				}
+				$license_key = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
+				$result      = WpSecureOs_License_Manager::activate( $license_key );
+				if ( ! empty( $result['success'] ) ) {
+					wp_send_json_success( $result );
+				} else {
+					wp_send_json_error( $result );
+				}
+				break;
+
+			case 'deactivate_license':
+				if ( ! current_user_can( WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS ) ) {
+					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing wpsecureos_manage_settings capability.', 'wpsecureos' ) ), 403 );
+				}
+				$result = WpSecureOs_License_Manager::deactivate();
+				if ( ! empty( $result['success'] ) ) {
+					wp_send_json_success( $result );
+				} else {
+					wp_send_json_error( $result );
+				}
+				break;
+
+			case 'refresh_license':
+				if ( ! current_user_can( WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS ) ) {
+					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing wpsecureos_manage_settings capability.', 'wpsecureos' ) ), 403 );
+				}
+				$result = WpSecureOs_License_Manager::validate_license();
 				wp_send_json_success( $result );
 				break;
 
