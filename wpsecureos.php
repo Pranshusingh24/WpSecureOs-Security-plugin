@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       WpSecureOs
- * Plugin URI:        https://wpsecureos.com/
+ * Plugin URI:        https://wpsecureos-plugin.netlify.app/
  * Description:       Enterprise-grade WordPress Security, Continuous Validation, Safe Updates, and Recovery Platform.
  * Version:           1.1.0
  * Requires at least: 6.2

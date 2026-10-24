@@ -74,7 +74,7 @@ class WpSecureOs_Updater {
 		$obj->slug        = 'wpsecureos';
 		$obj->plugin      = self::$plugin_basename;
 		$obj->new_version = $data['version'];
-		$obj->url         = 'https://wpsecureos.com/';
+		$obj->url         = 'https://wpsecureos-plugin.netlify.app/';
 		$obj->package     = ! empty( $data['package'] ) ? $data['package'] : '';
 		$obj->requires    = ! empty( $data['requires_wp'] ) ? $data['requires_wp'] : '6.2';
 		$obj->requires_php= ! empty( $data['requires_php'] ) ? $data['requires_php'] : '7.4';
@@ -134,8 +134,8 @@ class WpSecureOs_Updater {
 		$res->name         = 'WpSecureOs Enterprise';
 		$res->slug         = 'wpsecureos';
 		$res->version      = isset( $data['version'] ) ? $data['version'] : $installed_ver;
-		$res->author       = '<a href="https://wpsecureos.com/">Pranshu Singh</a>';
-		$res->homepage     = 'https://wpsecureos.com/';
+		$res->author       = '<a href="https://wpsecureos-plugin.netlify.app/">Pranshu Singh</a>';
+		$res->homepage     = 'https://wpsecureos-plugin.netlify.app/';
 		$res->requires     = isset( $data['requires_wp'] ) ? $data['requires_wp'] : '6.2';
 		$res->requires_php = isset( $data['requires_php'] ) ? $data['requires_php'] : '7.4';
 		$res->download_link= isset( $data['package'] ) ? $data['package'] : '';

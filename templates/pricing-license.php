@@ -170,7 +170,7 @@ $plan_obj     = WpSecureOs_Plan_Entitlements::get_plan( $current_plan );
 				</div>
 
 				<div class="license-card-footer">
-					<a href="https://wpsecureos.com/account/" target="_blank" class="safe-btn safe-btn-dark safe-btn-sm" style="width: 100%; justify-content: center;">
+					<a href="https://wpsecureos-plugin.netlify.app/account/" target="_blank" class="safe-btn safe-btn-dark safe-btn-sm" style="width: 100%; justify-content: center;">
 						<span class="dashicons dashicons-external"></span>
 						<?php esc_html_e( 'Manage Customer Billing Portal', 'wpsecureos' ); ?>
 					</a>
@@ -236,7 +236,7 @@ $plan_obj     = WpSecureOs_Plan_Entitlements::get_plan( $current_plan );
 								<?php esc_html_e( 'Active Plan', 'wpsecureos' ); ?>
 							</button>
 						<?php else : ?>
-							<a href="<?php echo esc_url( 'https://wpsecureos.com/checkout/?plan=' . $slug . '&domain=' . urlencode( WpSecureOs_License_Manager::get_site_domain() ) ); ?>" target="_blank" class="safe-btn safe-btn-primary" style="width: 100%; justify-content: center;">
+							<a href="<?php echo esc_url( 'https://wpsecureos-plugin.netlify.app/checkout/?plan=' . $slug . '&domain=' . urlencode( WpSecureOs_License_Manager::get_site_domain() ) ); ?>" target="_blank" class="safe-btn safe-btn-primary" style="width: 100%; justify-content: center;">
 								<?php printf( esc_html__( 'Upgrade to %s', 'wpsecureos' ), esc_html( ucfirst( $slug ) ) ); ?>
 							</a>
 						<?php endif; ?>
