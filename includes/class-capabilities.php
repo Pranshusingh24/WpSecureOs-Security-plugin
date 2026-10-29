@@ -54,6 +54,37 @@ class MaxSafe_Capabilities {
 	}
 
 	/**
+	 * Dynamically grant all MaxSafe & legacy capabilities to any user with manage_options (Administrator).
+	 *
+	 * @param array $allcaps All capabilities of user.
+	 * @param array $caps    Required capabilities.
+	 * @param array $args    Arguments passed to current_user_can.
+	 * @param WP_User $user  User object.
+	 * @return array
+	 */
+	public static function filter_user_has_cap( $allcaps, $caps, $args, $user ) {
+		if ( ! empty( $allcaps['manage_options'] ) ) {
+			foreach ( array_keys( self::get_all_capabilities() ) as $cap ) {
+				$allcaps[ $cap ] = true;
+			}
+			$legacy_caps = array(
+				'wpsecureos_view_dashboard',
+				'wpsecureos_view_security',
+				'wpsecureos_manage_settings',
+				'wpsecureos_run_scan',
+				'wpsecureos_prepare_update',
+				'wpsecureos_approve_production',
+				'wpsecureos_manage_recovery',
+			);
+			foreach ( $legacy_caps as $old_cap ) {
+				$allcaps[ $old_cap ] = true;
+			}
+		}
+		return $allcaps;
+	}
+
+
+	/**
 	 * Remove capabilities on total cleanup if required.
 	 */
 	public static function remove_capabilities() {

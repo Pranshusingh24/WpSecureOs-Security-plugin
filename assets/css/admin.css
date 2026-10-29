@@ -64,7 +64,7 @@
 	max-width: 100%;
 }
 
-.maxsafe-wrap, .wpsecureos-wrap * {
+.maxsafe-wrap *, .wpsecureos-wrap * {
 	box-sizing: border-box;
 }
 
@@ -92,7 +92,7 @@
 	min-width: 240px;
 }
 
-.maxsafe-brand, .wpsecureos-brand img {
+.maxsafe-brand img, .wpsecureos-brand img {
 	width: 36px;
 	height: 36px;
 	flex-shrink: 0;
@@ -109,7 +109,7 @@
 	gap: 8px;
 }
 
-.maxsafe-brand-title, .wpsecureos-brand-title span.badge-version {
+.maxsafe-brand-title span.badge-version, .wpsecureos-brand-title span.badge-version {
 	font-family: var(--safe-font-mono);
 	font-size: 11px;
 	background: var(--safe-cyan-bg);
@@ -188,15 +188,15 @@
 	scrollbar-color: rgba(14, 165, 233, 0.4) transparent;
 }
 
-.maxsafe-nav-tabs, .wpsecureos-nav-tabs::-webkit-scrollbar {
+.maxsafe-nav-tabs::-webkit-scrollbar, .wpsecureos-nav-tabs::-webkit-scrollbar {
 	height: 4px;
 }
 
-.maxsafe-nav-tabs, .wpsecureos-nav-tabs::-webkit-scrollbar-track {
+.maxsafe-nav-tabs::-webkit-scrollbar-track, .wpsecureos-nav-tabs::-webkit-scrollbar-track {
 	background: transparent;
 }
 
-.maxsafe-nav-tabs, .wpsecureos-nav-tabs::-webkit-scrollbar-thumb {
+.maxsafe-nav-tabs::-webkit-scrollbar-thumb, .wpsecureos-nav-tabs::-webkit-scrollbar-thumb {
 	background: rgba(14, 165, 233, 0.3);
 	border-radius: 9999px;
 }
@@ -215,19 +215,19 @@
 	white-space: nowrap;
 }
 
-.maxsafe-nav-tab, .wpsecureos-nav-tab:hover {
+.maxsafe-nav-tab:hover, .wpsecureos-nav-tab:hover {
 	color: var(--safe-text);
 	background: #f1f5f9;
 	text-decoration: none;
 }
 
-.maxsafe-nav-tab, .wpsecureos-nav-tab.active {
+.maxsafe-nav-tab.active, .wpsecureos-nav-tab.active {
 	background: #0f172a;
 	color: #ffffff;
 	box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
 }
 
-.maxsafe-nav-tab, .wpsecureos-nav-tab .tab-badge {
+.maxsafe-nav-tab .tab-badge, .wpsecureos-nav-tab .tab-badge {
 	font-family: var(--safe-font-mono);
 	font-size: 10px;
 	padding: 1px 6px;
@@ -237,7 +237,7 @@
 	font-weight: 700;
 }
 
-.maxsafe-nav-tab, .wpsecureos-nav-tab.active .tab-badge {
+.maxsafe-nav-tab.active .tab-badge, .wpsecureos-nav-tab.active .tab-badge {
 	background: #ef4444;
 	color: #ffffff;
 }
@@ -262,7 +262,7 @@
 	overflow: hidden;
 }
 
-.maxsafe-kpi-card, .wpsecureos-kpi-card::before {
+.maxsafe-kpi-card::before, .wpsecureos-kpi-card::before {
 	content: '';
 	position: absolute;
 	top: 0;
@@ -272,15 +272,15 @@
 	background: var(--safe-cyan);
 }
 
-.maxsafe-kpi-card, .wpsecureos-kpi-card.critical::before {
+.maxsafe-kpi-card.critical::before, .wpsecureos-kpi-card.critical::before {
 	background: var(--sev-critical);
 }
 
-.maxsafe-kpi-card, .wpsecureos-kpi-card.warning::before {
+.maxsafe-kpi-card.warning::before, .wpsecureos-kpi-card.warning::before {
 	background: var(--sev-high);
 }
 
-.maxsafe-kpi-card, .wpsecureos-kpi-card.success::before {
+.maxsafe-kpi-card.success::before, .wpsecureos-kpi-card.success::before {
 	background: var(--sev-clean);
 }
 
@@ -371,21 +371,21 @@
 	scrollbar-color: #cbd5e1 #f8fafc;
 }
 
-.maxsafe-table-responsive, .wpsecureos-table-responsive::-webkit-scrollbar {
+.maxsafe-table-responsive::-webkit-scrollbar, .wpsecureos-table-responsive::-webkit-scrollbar {
 	height: 6px;
 }
 
-.maxsafe-table-responsive, .wpsecureos-table-responsive::-webkit-scrollbar-track {
+.maxsafe-table-responsive::-webkit-scrollbar-track, .wpsecureos-table-responsive::-webkit-scrollbar-track {
 	background: #f1f5f9;
 	border-radius: 4px;
 }
 
-.maxsafe-table-responsive, .wpsecureos-table-responsive::-webkit-scrollbar-thumb {
+.maxsafe-table-responsive::-webkit-scrollbar-thumb, .wpsecureos-table-responsive::-webkit-scrollbar-thumb {
 	background: #cbd5e1;
 	border-radius: 4px;
 }
 
-.maxsafe-table-responsive, .wpsecureos-table-responsive::-webkit-scrollbar-thumb:hover {
+.maxsafe-table-responsive::-webkit-scrollbar-thumb:hover, .wpsecureos-table-responsive::-webkit-scrollbar-thumb:hover {
 	background: #94a3b8;
 }
 
@@ -396,7 +396,7 @@
 	font-size: 13px;
 }
 
-.maxsafe-table, .wpsecureos-table th {
+.maxsafe-table th, .wpsecureos-table th {
 	text-align: left;
 	padding: 12px 16px;
 	font-weight: 600;
@@ -409,13 +409,13 @@
 	white-space: nowrap;
 }
 
-.maxsafe-table, .wpsecureos-table td {
+.maxsafe-table td, .wpsecureos-table td {
 	padding: 14px 16px;
 	border-bottom: 1px solid #f1f5f9;
 	vertical-align: middle;
 }
 
-.maxsafe-table, .wpsecureos-table tr:hover td {
+.maxsafe-table tr:hover td, .wpsecureos-table tr:hover td {
 	background: #f8fafc;
 }
 
@@ -439,7 +439,7 @@
 	flex-wrap: wrap;
 }
 
-.maxsafe-filter-form, .wpsecureos-filter-form input[type="text"] {
+.maxsafe-filter-form input[type="text"], .wpsecureos-filter-form input[type="text"] {
 	width: 220px;
 	max-width: 100%;
 }
@@ -507,7 +507,7 @@
 }
 
 /* Base DataTables Structure */
-table.dataTable.maxsafe-datatable, .wpsecureos-datatable {
+table.dataTable.maxsafe-datatable, table.dataTable.wpsecureos-datatable {
 	min-width: 0 !important;
 	width: 100% !important;
 	border-collapse: separate !important;
@@ -944,14 +944,14 @@ table.dataTable>tbody>tr.child span.dtr-data {
 	transition: all 0.3s;
 }
 
-.maxsafe-step-item, .wpsecureos-step-item.active .maxsafe-step-circle, .wpsecureos-step-circle {
+.maxsafe-step-item.active .maxsafe-step-circle, .wpsecureos-step-item.active .wpsecureos-step-circle {
 	background: var(--safe-cyan);
 	border-color: var(--safe-cyan-hover);
 	color: #ffffff;
 	box-shadow: 0 0 0 4px var(--safe-cyan-glow);
 }
 
-.maxsafe-step-item, .wpsecureos-step-item.completed .maxsafe-step-circle, .wpsecureos-step-circle {
+.maxsafe-step-item.completed .maxsafe-step-circle, .wpsecureos-step-item.completed .wpsecureos-step-circle {
 	background: #10b981;
 	border-color: #059669;
 	color: #ffffff;
@@ -964,7 +964,7 @@ table.dataTable>tbody>tr.child span.dtr-data {
 	text-align: center;
 }
 
-.maxsafe-step-item, .wpsecureos-step-item.active .maxsafe-step-label, .wpsecureos-step-label {
+.maxsafe-step-item.active .maxsafe-step-label, .wpsecureos-step-item.active .wpsecureos-step-label {
 	color: var(--safe-text);
 }
 
@@ -1181,7 +1181,7 @@ table.dataTable>tbody>tr.child span.dtr-data {
 		margin-bottom: 16px;
 	}
 
-	.maxsafe-panel-header, .wpsecureos-panel-header>* {
+	.maxsafe-panel-header>*, .wpsecureos-panel-header>* {
 		width: 100%;
 	}
 
@@ -1192,9 +1192,9 @@ table.dataTable>tbody>tr.child span.dtr-data {
 		gap: 8px;
 	}
 
-	.maxsafe-filter-form, .wpsecureos-filter-form select,
-	.maxsafe-filter-form, .wpsecureos-filter-form input[type="text"],
-	.maxsafe-filter-form, .wpsecureos-filter-form button {
+	.maxsafe-filter-form select, .wpsecureos-filter-form select,
+	.maxsafe-filter-form input[type="text"], .wpsecureos-filter-form input[type="text"],
+	.maxsafe-filter-form button, .wpsecureos-filter-form button {
 		width: 100% !important;
 	}
 
@@ -1249,7 +1249,7 @@ table.dataTable>tbody>tr.child span.dtr-data {
 		gap: 10px;
 	}
 
-	.maxsafe-brand, .wpsecureos-brand img {
+	.maxsafe-brand img, .wpsecureos-brand img {
 		width: 28px;
 		height: 28px;
 	}
@@ -1269,8 +1269,8 @@ table.dataTable>tbody>tr.child span.dtr-data {
 		align-items: stretch;
 	}
 
-	.maxsafe-header-actions, .wpsecureos-header-actions .safe-btn,
-	.maxsafe-header-actions, .wpsecureos-header-actions .maxsafe-live-status, .wpsecureos-live-status {
+	.maxsafe-header-actions .safe-btn, .wpsecureos-header-actions .safe-btn,
+	.maxsafe-header-actions .maxsafe-live-status, .wpsecureos-header-actions .wpsecureos-live-status {
 		width: 100%;
 		justify-content: center;
 		text-align: center;
@@ -1289,7 +1289,7 @@ table.dataTable>tbody>tr.child span.dtr-data {
 		gap: 5px;
 	}
 
-	.maxsafe-nav-tab, .wpsecureos-nav-tab span.dashicons {
+	.maxsafe-nav-tab span.dashicons, .wpsecureos-nav-tab span.dashicons {
 		font-size: 15px;
 		width: 15px;
 		height: 15px;
@@ -1326,12 +1326,12 @@ table.dataTable>tbody>tr.child span.dtr-data {
 		text-align: center;
 	}
 
-	.maxsafe-wrap, .wpsecureos-wrap input[type="text"],
-	.maxsafe-wrap, .wpsecureos-wrap input[type="password"],
-	.maxsafe-wrap, .wpsecureos-wrap input[type="url"],
-	.maxsafe-wrap, .wpsecureos-wrap input[type="number"],
-	.maxsafe-wrap, .wpsecureos-wrap select,
-	.maxsafe-wrap, .wpsecureos-wrap textarea {
+	.maxsafe-wrap input[type="text"], .wpsecureos-wrap input[type="text"],
+	.maxsafe-wrap input[type="password"], .wpsecureos-wrap input[type="password"],
+	.maxsafe-wrap input[type="url"], .wpsecureos-wrap input[type="url"],
+	.maxsafe-wrap input[type="number"], .wpsecureos-wrap input[type="number"],
+	.maxsafe-wrap select, .wpsecureos-wrap select,
+	.maxsafe-wrap textarea, .wpsecureos-wrap textarea {
 		width: 100% !important;
 		max-width: 100% !important;
 	}

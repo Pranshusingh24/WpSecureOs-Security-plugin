@@ -44,6 +44,12 @@ class MaxSafe_Plugin {
 		// Admin Menu & Pages
 		add_action( 'admin_menu', array( 'MaxSafe_Admin_Menu', 'register_menu' ) );
 
+		// Capability fallback filter so any administrator always has access
+		add_filter( 'user_has_cap', array( 'MaxSafe_Capabilities', 'filter_user_has_cap' ), 10, 4 );
+
+		// Auto-migration & database table verification check
+		add_action( 'admin_init', array( $this, 'maybe_migrate_or_activate' ) );
+
 		// Settings API
 		add_action( 'admin_init', array( 'MaxSafe_Settings', 'register_settings' ) );
 
@@ -71,6 +77,22 @@ class MaxSafe_Plugin {
 	}
 
 	/**
+	 * Automatically ensure database tables exist, capabilities are registered,
+	 * and legacy options are migrated even if the plugin was upgraded/renamed in-place.
+	 */
+	public function maybe_migrate_or_activate() {
+		$current_version = get_option( 'maxsafe_db_version' );
+		if ( $current_version !== MAXSAFE_VERSION ) {
+			MaxSafe_Activator::activate();
+			update_option( 'maxsafe_db_version', MAXSAFE_VERSION );
+		}
+
+		if ( current_user_can( 'manage_options' ) ) {
+			MaxSafe_Capabilities::register_capabilities();
+		}
+	}
+
+	/**
 	 * Enqueue assets only on MaxSafe admin pages to preserve performance.
 	 *
 	 * @param string $hook_suffix Admin page hook.
@@ -80,6 +102,11 @@ class MaxSafe_Plugin {
 		if ( false === strpos( $hook_suffix, 'maxsafe' ) && false === strpos( $hook_suffix, 'wpsecureos' ) ) {
 			return;
 		}
+
+		$css_file = MAXSAFE_PLUGIN_DIR . 'assets/css/admin.css';
+		$js_file  = MAXSAFE_PLUGIN_DIR . 'assets/js/admin.js';
+		$css_ver  = MAXSAFE_VERSION . '.' . ( file_exists( $css_file ) ? filemtime( $css_file ) : '1' );
+		$js_ver   = MAXSAFE_VERSION . '.' . ( file_exists( $js_file ) ? filemtime( $js_file ) : '1' );
 
 		// Google Fonts: Inter and JetBrains Mono
 		wp_enqueue_style(
@@ -108,7 +135,7 @@ class MaxSafe_Plugin {
 			'maxsafe-admin-css',
 			MAXSAFE_PLUGIN_URL . 'assets/css/admin.css',
 			array( 'maxsafe-datatables-responsive-css' ),
-			MAXSAFE_VERSION
+			$css_ver
 		);
 
 		// DataTables Core & Responsive JS
@@ -132,7 +159,7 @@ class MaxSafe_Plugin {
 			'maxsafe-admin-js',
 			MAXSAFE_PLUGIN_URL . 'assets/js/admin.js',
 			array( 'jquery', 'maxsafe-datatables-responsive-js' ),
-			MAXSAFE_VERSION,
+			$js_ver,
 			true
 		);
 

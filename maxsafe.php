@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       MaxSafe
- * Plugin URI:        https://wpsecureos-plugin.netlify.app/
+ * Plugin URI:        https://maxsafe-plugin.netlify.app/
  * Description:       Enterprise-grade WordPress Security, Continuous Validation, Safe Updates, and Recovery Platform.
  * Version:           1.2.0
  * Requires at least: 6.2
@@ -29,23 +29,46 @@ define( 'MAXSAFE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'MAXSAFE_MIN_PHP', '7.4' );
 define( 'MAXSAFE_MIN_WP', '6.2' );
 
+// Backwards-compatibility constants.
+if ( ! defined( 'WPSECUREOS_VERSION' ) ) {
+	define( 'WPSECUREOS_VERSION', MAXSAFE_VERSION );
+}
+if ( ! defined( 'WPSECUREOS_PLUGIN_FILE' ) ) {
+	define( 'WPSECUREOS_PLUGIN_FILE', MAXSAFE_PLUGIN_FILE );
+}
+if ( ! defined( 'WPSECUREOS_PLUGIN_DIR' ) ) {
+	define( 'WPSECUREOS_PLUGIN_DIR', MAXSAFE_PLUGIN_DIR );
+}
+if ( ! defined( 'WPSECUREOS_PLUGIN_URL' ) ) {
+	define( 'WPSECUREOS_PLUGIN_URL', MAXSAFE_PLUGIN_URL );
+}
+
 /**
- * Autoloader for MaxSafe classes.
+ * Autoloader for MaxSafe and backwards-compatible WpSecureOs classes.
  *
  * @param string $class_name Class name being loaded.
  */
 spl_autoload_register( function ( $class_name ) {
-	if ( 0 !== strpos( $class_name, 'MaxSafe_' ) ) {
+	if ( 0 === strpos( $class_name, 'MaxSafe_' ) ) {
+		$relative_class = substr( $class_name, 8 );
+	} elseif ( 0 === strpos( $class_name, 'WpSecureOs_' ) ) {
+		$relative_class = substr( $class_name, 11 );
+	} else {
 		return;
 	}
 
 	// Format class-name to filename: MaxSafe_Risk_Assessor -> class-risk-assessor.php
-	$relative_class = substr( $class_name, 8 );
-	$file_name      = 'class-' . strtolower( str_replace( '_', '-', $relative_class ) ) . '.php';
-	$file_path      = MAXSAFE_PLUGIN_DIR . 'includes/' . $file_name;
+	$file_name = 'class-' . strtolower( str_replace( '_', '-', $relative_class ) ) . '.php';
+	$file_path = MAXSAFE_PLUGIN_DIR . 'includes/' . $file_name;
 
 	if ( file_exists( $file_path ) ) {
 		require_once $file_path;
+
+		$maxsafe_class = 'MaxSafe_' . $relative_class;
+		$legacy_class  = 'WpSecureOs_' . $relative_class;
+		if ( class_exists( $maxsafe_class ) && ! class_exists( $legacy_class, false ) ) {
+			class_alias( $maxsafe_class, $legacy_class );
+		}
 	}
 } );
 
@@ -107,5 +130,13 @@ function maxsafe_init() {
 	return MaxSafe_Plugin::instance();
 }
 
+// Backwards-compatible bootstrap helper.
+if ( ! function_exists( 'wpsecureos_init' ) ) {
+	function wpsecureos_init() {
+		return maxsafe_init();
+	}
+}
+
 // Launch plugin after plugins loaded.
 add_action( 'plugins_loaded', 'maxsafe_init' );
+
