@@ -2,14 +2,14 @@
 /**
  * Site inventory and environment analyzer.
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WpSecureOs_Inventory {
+class MaxSafe_Inventory {
 
 	/**
 	 * Collect full site inventory safely without exposing credentials.
@@ -19,7 +19,10 @@ class WpSecureOs_Inventory {
 	 */
 	public static function get_inventory( $force_refresh = false ) {
 		if ( ! $force_refresh ) {
-			$cached = get_transient( 'wpsecureos_inventory_cache' );
+			$cached = get_transient( 'maxsafe_inventory_cache' );
+			if ( false === $cached ) {
+				$cached = get_transient( 'wpsecureos_inventory_cache' );
+			}
 			if ( false !== $cached && is_array( $cached ) ) {
 				return $cached;
 			}
@@ -159,7 +162,7 @@ class WpSecureOs_Inventory {
 		);
 
 		// Cache for 10 minutes to minimize database queries.
-		set_transient( 'wpsecureos_inventory_cache', $inventory, 10 * MINUTE_IN_SECONDS );
+		set_transient( 'maxsafe_inventory_cache', $inventory, 10 * MINUTE_IN_SECONDS );
 
 		return $inventory;
 	}

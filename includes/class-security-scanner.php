@@ -2,14 +2,14 @@
 /**
  * Vulnerability intelligence adapter and WordPress hardening scanner.
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WpSecureOs_Security_Scanner {
+class MaxSafe_Security_Scanner {
 
 	/**
 	 * Run full security scan: Hardening posture + Vulnerability intelligence.
@@ -48,7 +48,7 @@ class WpSecureOs_Security_Scanner {
 
 		// Record in scans table
 		global $wpdb;
-		$table_scans = $wpdb->prefix . 'wpsecureos_scans';
+		$table_scans = $wpdb->prefix . 'maxsafe_scans';
 		$wpdb->insert(
 			$table_scans,
 			array(
@@ -57,13 +57,13 @@ class WpSecureOs_Security_Scanner {
 				'started_at'     => current_time( 'mysql' ),
 				'completed_at'   => current_time( 'mysql' ),
 				'summary_json'   => wp_json_encode( $scan_summary ),
-				'source_version' => WPSECUREOS_VERSION,
+				'source_version' => defined( 'MAXSAFE_VERSION' ) ? MAXSAFE_VERSION : '1.1.0',
 			),
 			array( '%s', '%s', '%s', '%s', '%s', '%s' )
 		);
 
 		// Record event
-		WpSecureOs_Event_Logger::log_event(
+		MaxSafe_Event_Logger::log_event(
 			'security_scan_completed',
 			( $scan_summary['critical_findings'] > 0 ) ? 'critical' : 'low',
 			'Security Scanner',
@@ -90,25 +90,25 @@ class WpSecureOs_Security_Scanner {
 		// 1. SSL / HTTPS
 		$is_ssl = is_ssl();
 		$checks['https'] = array(
-			'title'       => __( 'HTTPS / Transport Encryption', 'wpsecureos' ),
+			'title'       => __( 'HTTPS / Transport Encryption', 'maxsafe' ),
 			'status'      => $is_ssl ? 'passed' : 'warning',
 			'severity'    => 'high',
 			'description' => $is_ssl
-				? __( 'Site is enforcing HTTPS. Traffic in transit is encrypted.', 'wpsecureos' )
-				: __( 'Site is not using HTTPS. Passwords and session cookies can be intercepted in transit.', 'wpsecureos' ),
-			'fix_guide'   => __( 'Install an SSL certificate and update Site URL to use https:// in Settings > General.', 'wpsecureos' ),
+				? __( 'Site is enforcing HTTPS. Traffic in transit is encrypted.', 'maxsafe' )
+				: __( 'Site is not using HTTPS. Passwords and session cookies can be intercepted in transit.', 'maxsafe' ),
+			'fix_guide'   => __( 'Install an SSL certificate and update Site URL to use https:// in Settings > General.', 'maxsafe' ),
 		);
 
 		// 2. File Editing in Admin
 		$file_edit_disabled = defined( 'DISALLOW_FILE_EDIT' ) && DISALLOW_FILE_EDIT;
 		$checks['file_edit'] = array(
-			'title'       => __( 'Theme/Plugin File Editor in Admin', 'wpsecureos' ),
+			'title'       => __( 'Theme/Plugin File Editor in Admin', 'maxsafe' ),
 			'status'      => $file_edit_disabled ? 'passed' : 'warning',
 			'severity'    => 'medium',
 			'description' => $file_edit_disabled
-				? __( 'Theme and plugin file editing is disabled in wp-config.php.', 'wpsecureos' )
-				: __( 'File editing is enabled. A compromised administrator account could modify PHP files directly.', 'wpsecureos' ),
-			'fix_guide'   => __( "Add define('DISALLOW_FILE_EDIT', true); to wp-config.php.", 'wpsecureos' ),
+				? __( 'Theme and plugin file editing is disabled in wp-config.php.', 'maxsafe' )
+				: __( 'File editing is enabled. A compromised administrator account could modify PHP files directly.', 'maxsafe' ),
+			'fix_guide'   => __( "Add define('DISALLOW_FILE_EDIT', true); to wp-config.php.", 'maxsafe' ),
 		);
 
 		// 3. Debug Exposure
@@ -116,38 +116,38 @@ class WpSecureOs_Security_Scanner {
 		$debug_log     = defined( 'WP_DEBUG_LOG' ) && WP_DEBUG_LOG;
 		$debug_status  = ( $debug_display ) ? 'failed' : 'passed';
 		$checks['debug_exposure'] = array(
-			'title'       => __( 'PHP Debug Display Exposure', 'wpsecureos' ),
+			'title'       => __( 'PHP Debug Display Exposure', 'maxsafe' ),
 			'status'      => $debug_status,
 			'severity'    => ( 'failed' === $debug_status ) ? 'high' : 'low',
 			'description' => $debug_display
-				? __( 'WP_DEBUG_DISPLAY is enabled. PHP errors containing system paths and database queries may be visible to visitors.', 'wpsecureos' )
-				: __( 'WP_DEBUG_DISPLAY is disabled. Sensitive system errors are hidden from public visitors.', 'wpsecureos' ),
-			'fix_guide'   => __( "Ensure define('WP_DEBUG_DISPLAY', false); is set in wp-config.php on production sites.", 'wpsecureos' ),
+				? __( 'WP_DEBUG_DISPLAY is enabled. PHP errors containing system paths and database queries may be visible to visitors.', 'maxsafe' )
+				: __( 'WP_DEBUG_DISPLAY is disabled. Sensitive system errors are hidden from public visitors.', 'maxsafe' ),
+			'fix_guide'   => __( "Ensure define('WP_DEBUG_DISPLAY', false); is set in wp-config.php on production sites.", 'maxsafe' ),
 		);
 
 		// 4. Default Admin User check
 		$has_default_admin = username_exists( 'admin' );
 		$checks['default_admin'] = array(
-			'title'       => __( 'Default "admin" Username', 'wpsecureos' ),
+			'title'       => __( 'Default "admin" Username', 'maxsafe' ),
 			'status'      => $has_default_admin ? 'warning' : 'passed',
 			'severity'    => 'medium',
 			'description' => $has_default_admin
-				? __( 'A user with the standard username "admin" exists. This makes brute-force attacks significantly easier.', 'wpsecureos' )
-				: __( 'Standard "admin" username is not in use.', 'wpsecureos' ),
-			'fix_guide'   => __( 'Create a new administrative user with a unique name, transfer content, and delete the "admin" user.', 'wpsecureos' ),
+				? __( 'A user with the standard username "admin" exists. This makes brute-force attacks significantly easier.', 'maxsafe' )
+				: __( 'Standard "admin" username is not in use.', 'maxsafe' ),
+			'fix_guide'   => __( 'Create a new administrative user with a unique name, transfer content, and delete the "admin" user.', 'maxsafe' ),
 		);
 
 		// 5. Database Prefix Check
 		global $wpdb;
 		$is_default_prefix = ( 'wp_' === $wpdb->prefix );
 		$checks['db_prefix'] = array(
-			'title'       => __( 'Database Table Prefix', 'wpsecureos' ),
+			'title'       => __( 'Database Table Prefix', 'maxsafe' ),
 			'status'      => $is_default_prefix ? 'info' : 'passed',
 			'severity'    => 'low',
 			'description' => $is_default_prefix
-				? __( 'Using default "wp_" prefix. Custom table prefixes provide an additional layer of defense against automated SQL injection.', 'wpsecureos' )
-				: __( 'Custom database prefix is in use.', 'wpsecureos' ),
-			'fix_guide'   => __( 'Consider updating table prefix during your next planned database maintenance.', 'wpsecureos' ),
+				? __( 'Using default "wp_" prefix. Custom table prefixes provide an additional layer of defense against automated SQL injection.', 'maxsafe' )
+				: __( 'Custom database prefix is in use.', 'maxsafe' ),
+			'fix_guide'   => __( 'Consider updating table prefix during your next planned database maintenance.', 'maxsafe' ),
 		);
 
 		// 6. Security Headers Check
@@ -178,11 +178,11 @@ class WpSecureOs_Security_Scanner {
 
 		$status = ! empty( $headers_present['X-Frame-Options'] ) ? 'passed' : 'info';
 		return array(
-			'title'       => __( 'HTTP Security Headers', 'wpsecureos' ),
+			'title'       => __( 'HTTP Security Headers', 'maxsafe' ),
 			'status'      => $status,
 			'severity'    => 'low',
-			'description' => __( 'Evaluates presence of X-Frame-Options, X-Content-Type-Options, and HSTS headers.', 'wpsecureos' ),
-			'fix_guide'   => __( 'Configure security headers via your web server (Nginx/Apache) or hosting control panel.', 'wpsecureos' ),
+			'description' => __( 'Evaluates presence of X-Frame-Options, X-Content-Type-Options, and HSTS headers.', 'maxsafe' ),
+			'fix_guide'   => __( 'Configure security headers via your web server (Nginx/Apache) or hosting control panel.', 'maxsafe' ),
 		);
 	}
 
@@ -194,20 +194,26 @@ class WpSecureOs_Security_Scanner {
 	 */
 	public static function get_known_vulnerabilities( $force_refresh = false ) {
 		if ( ! $force_refresh ) {
-			$cached = get_transient( 'wpsecureos_vuln_feed_cache' );
+			$cached = get_transient( 'maxsafe_vuln_feed_cache' );
+			if ( false === $cached ) {
+				$cached = get_transient( 'wpsecureos_vuln_feed_cache' );
+			}
 			if ( false !== $cached && is_array( $cached ) ) {
 				return $cached;
 			}
 		}
 
-		$settings = get_option( 'wpsecureos_settings', array() );
+		$settings = get_option( 'maxsafe_settings', array() );
+		if ( empty( $settings ) ) {
+			$settings = get_option( 'wpsecureos_settings', array() );
+		}
 		$api_key  = isset( $settings['vulnerability_feed_api_key'] ) ? trim( $settings['vulnerability_feed_api_key'] ) : '';
 
 		// If user configured a live API key or endpoint, fetch live; otherwise use curated offline intelligence database.
 		$feed_data = self::fetch_vulnerability_feed( $api_key );
 
 		// Match feed CVEs against site inventory
-		$inventory = WpSecureOs_Inventory::get_inventory();
+		$inventory = MaxSafe_Inventory::get_inventory();
 		$matched_vulns = array();
 
 		// Match Core
@@ -234,7 +240,7 @@ class WpSecureOs_Security_Scanner {
 			}
 		}
 
-		set_transient( 'wpsecureos_vuln_feed_cache', $matched_vulns, 6 * HOUR_IN_SECONDS );
+		set_transient( 'maxsafe_vuln_feed_cache', $matched_vulns, 6 * HOUR_IN_SECONDS );
 		return $matched_vulns;
 	}
 

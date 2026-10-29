@@ -2,14 +2,14 @@
 /**
  * Safe Update Pipeline & Orchestration Finite State Machine (FSM).
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WpSecureOs_Test_Runner {
+class MaxSafe_Test_Runner {
 
 	// Pipeline States
 	const STATE_IDLE             = 'idle';
@@ -36,26 +36,26 @@ class WpSecureOs_Test_Runner {
 	 */
 	public static function start_safe_update_pipeline( $component_type, $slug, $new_version ) {
 		// Verify authorization
-		if ( ! current_user_can( WpSecureOs_Capabilities::CAP_PREPARE_UPDATE ) ) {
+		if ( ! current_user_can( MaxSafe_Capabilities::CAP_PREPARE_UPDATE ) && ! current_user_can( 'manage_options' ) ) {
 			return array(
 				'success' => false,
-				'message' => __( 'Insufficient permissions to initiate safe update pipeline.', 'wpsecureos' ),
+				'message' => __( 'Insufficient permissions to initiate safe update pipeline.', 'maxsafe' ),
 			);
 		}
 
 		// Verify subscription entitlement for automated staging pipeline
-		if ( ! WpSecureOs_Plan_Entitlements::can( 'staging_pipeline' ) ) {
+		if ( ! MaxSafe_Plan_Entitlements::can( 'staging_pipeline' ) ) {
 			return array(
 				'success' => false,
 				'state'   => self::STATE_FAILED,
-				'message' => __( 'Automated Staging Pipeline requires an active WpSecureOs Pro, Agency, or Business subscription.', 'wpsecureos' ),
+				'message' => __( 'Automated Staging Pipeline requires an active MaxSafe Pro, Agency, or Business subscription.', 'maxsafe' ),
 			);
 		}
 
 		$idempotency_key = md5( $component_type . ':' . $slug . ':' . $new_version . ':' . gmdate( 'Ymd' ) );
 
 		global $wpdb;
-		$table_jobs = $wpdb->prefix . 'wpsecureos_jobs';
+		$table_jobs = $wpdb->prefix . 'maxsafe_jobs';
 
 		// Step 1: Preflight Checks
 		$preflight = self::run_preflight_checks( $component_type, $slug, $new_version );
@@ -68,23 +68,23 @@ class WpSecureOs_Test_Runner {
 		}
 
 		// Step 2: Backup Creation & Archive Verification Gate
-		$backup_result = WpSecureOs_Backup_Adapter::create_backup( 'full' );
+		$backup_result = MaxSafe_Backup_Adapter::create_backup( 'full' );
 		if ( ! $backup_result['success'] || ! $backup_result['verified'] ) {
 			return array(
 				'success' => false,
 				'state'   => self::STATE_FAILED,
-				'message' => __( 'Pipeline aborted: Pre-update verified backup creation failed.', 'wpsecureos' ),
+				'message' => __( 'Pipeline aborted: Pre-update verified backup creation failed.', 'maxsafe' ),
 			);
 		}
 
 		// Step 3: Staging Sandbox Preparation
-		$staging_prep = WpSecureOs_Staging_Adapter::prepare_staging_environment();
+		$staging_prep = MaxSafe_Staging_Adapter::prepare_staging_environment();
 
 		// Step 4: Apply Update in Staging
-		$staging_update = WpSecureOs_Staging_Adapter::apply_update_in_staging( $component_type, $slug, $new_version );
+		$staging_update = MaxSafe_Staging_Adapter::apply_update_in_staging( $component_type, $slug, $new_version );
 
 		// Step 5: Run Smoke & Visual Tests
-		$test_results = WpSecureOs_Visual_Test_Adapter::run_smoke_and_visual_suite();
+		$test_results = MaxSafe_Visual_Test_Adapter::run_smoke_and_visual_suite();
 
 		// Step 6: Determine State
 		$next_state = $test_results['overall_pass'] ? self::STATE_APPROVAL_REQUIRED : self::STATE_FAILED;
@@ -113,7 +113,7 @@ class WpSecureOs_Test_Runner {
 			array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s' )
 		);
 
-		WpSecureOs_Event_Logger::log_event(
+		MaxSafe_Event_Logger::log_event(
 			'pipeline_state_changed',
 			( self::STATE_APPROVAL_REQUIRED === $next_state ) ? 'low' : 'high',
 			'Update Orchestrator',
@@ -136,8 +136,8 @@ class WpSecureOs_Test_Runner {
 			'backup'          => $backup_result,
 			'can_approve'     => ( self::STATE_APPROVAL_REQUIRED === $next_state ),
 			'message'         => ( self::STATE_APPROVAL_REQUIRED === $next_state )
-				? __( 'Staging tests and backup verified. Ready for administrator approval.', 'wpsecureos' )
-				: __( 'Staging smoke tests or visual threshold checks failed. Production update blocked.', 'wpsecureos' ),
+				? __( 'Staging tests and backup verified. Ready for administrator approval.', 'maxsafe' )
+				: __( 'Staging smoke tests or visual threshold checks failed. Production update blocked.', 'maxsafe' ),
 		);
 	}
 
@@ -150,7 +150,7 @@ class WpSecureOs_Test_Runner {
 		if ( null !== $disk_free && $disk_free < 50 * 1024 * 1024 ) { // 50MB minimum
 			return array(
 				'passed' => false,
-				'error'  => __( 'Preflight failed: Low server disk space (< 50MB available).', 'wpsecureos' ),
+				'error'  => __( 'Preflight failed: Low server disk space (< 50MB available).', 'maxsafe' ),
 			);
 		}
 
@@ -171,21 +171,21 @@ class WpSecureOs_Test_Runner {
 	 * @return array
 	 */
 	public static function approve_and_deploy_production( $idempotency_key ) {
-		if ( ! current_user_can( WpSecureOs_Capabilities::CAP_APPROVE_PRODUCTION ) ) {
+		if ( ! current_user_can( MaxSafe_Capabilities::CAP_APPROVE_PRODUCTION ) && ! current_user_can( 'manage_options' ) ) {
 			return array(
 				'success' => false,
-				'message' => __( 'Unauthorized: You lack wpsecureos_approve_production capability.', 'wpsecureos' ),
+				'message' => __( 'Unauthorized: You lack maxsafe_approve_production capability.', 'maxsafe' ),
 			);
 		}
 
 		global $wpdb;
-		$table_jobs = $wpdb->prefix . 'wpsecureos_jobs';
+		$table_jobs = $wpdb->prefix . 'maxsafe_jobs';
 		$job = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table_jobs} WHERE idempotency_key = %s", $idempotency_key ), ARRAY_A );
 
 		if ( ! $job ) {
 			return array(
 				'success' => false,
-				'message' => __( 'Update job not found.', 'wpsecureos' ),
+				'message' => __( 'Update job not found.', 'maxsafe' ),
 			);
 		}
 
@@ -193,7 +193,7 @@ class WpSecureOs_Test_Runner {
 			return array(
 				'success' => false,
 				/* translators: %s: Pipeline job state */
-				'message' => sprintf( __( 'Cannot deploy job in current state: %s. Staging tests and backup must pass first.', 'wpsecureos' ), $job['status'] ),
+				'message' => sprintf( __( 'Cannot deploy job in current state: %s. Staging tests and backup must pass first.', 'maxsafe' ), $job['status'] ),
 			);
 		}
 
@@ -202,7 +202,7 @@ class WpSecureOs_Test_Runner {
 		$deploy_status = self::execute_wordpress_update( $payload['component_type'], $payload['slug'] );
 
 		// Run post-deploy verification
-		$post_verify = WpSecureOs_Visual_Test_Adapter::run_smoke_checks();
+		$post_verify = MaxSafe_Visual_Test_Adapter::run_smoke_checks();
 		$final_state = ( $deploy_status['success'] && $post_verify['rest_api_functional'] ) ? self::STATE_COMPLETED : self::STATE_RECOVERY_REQUIRED;
 
 		$wpdb->update(
@@ -217,7 +217,7 @@ class WpSecureOs_Test_Runner {
 			array( '%s' )
 		);
 
-		WpSecureOs_Event_Logger::log_event(
+		MaxSafe_Event_Logger::log_event(
 			'production_update_deployed',
 			( self::STATE_COMPLETED === $final_state ) ? 'low' : 'critical',
 			'Update Orchestrator',
@@ -229,14 +229,14 @@ class WpSecureOs_Test_Runner {
 		);
 
 		// Clean up staging
-		WpSecureOs_Staging_Adapter::cleanup_staging();
+		MaxSafe_Staging_Adapter::cleanup_staging();
 
 		return array(
 			'success'     => ( self::STATE_COMPLETED === $final_state ),
 			'state'       => $final_state,
 			'message'     => ( self::STATE_COMPLETED === $final_state )
-				? __( 'Production update successfully deployed and verified live.', 'wpsecureos' )
-				: __( 'Post-deployment verification failed! Consult Recovery Runbook immediately.', 'wpsecureos' ),
+				? __( 'Production update successfully deployed and verified live.', 'maxsafe' )
+				: __( 'Post-deployment verification failed! Consult Recovery Runbook immediately.', 'maxsafe' ),
 			'post_verify' => $post_verify,
 		);
 	}
@@ -245,21 +245,21 @@ class WpSecureOs_Test_Runner {
 	 * Emergency override deployment for zero-day critical patches.
 	 */
 	public static function execute_emergency_override( $idempotency_key, $reason ) {
-		if ( ! current_user_can( WpSecureOs_Capabilities::CAP_APPROVE_PRODUCTION ) ) {
+		if ( ! current_user_can( MaxSafe_Capabilities::CAP_APPROVE_PRODUCTION ) && ! current_user_can( 'manage_options' ) ) {
 			return array(
 				'success' => false,
-				'message' => __( 'Unauthorized: Emergency override requires wpsecureos_approve_production capability.', 'wpsecureos' ),
+				'message' => __( 'Unauthorized: Emergency override requires maxsafe_approve_production capability.', 'maxsafe' ),
 			);
 		}
 
 		if ( empty( trim( $reason ) ) ) {
 			return array(
 				'success' => false,
-				'message' => __( 'A documented operational rationale is mandatory for emergency overrides.', 'wpsecureos' ),
+				'message' => __( 'A documented operational rationale is mandatory for emergency overrides.', 'maxsafe' ),
 			);
 		}
 
-		WpSecureOs_Event_Logger::log_event(
+		MaxSafe_Event_Logger::log_event(
 			'emergency_override_executed',
 			'critical',
 			'Update Orchestrator',

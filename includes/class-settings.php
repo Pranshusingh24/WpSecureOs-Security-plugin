@@ -2,19 +2,29 @@
 /**
  * Settings and options manager.
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WpSecureOs_Settings {
+class MaxSafe_Settings {
 
 	/**
 	 * Register settings using WordPress Settings API.
 	 */
 	public static function register_settings() {
+		register_setting(
+			'maxsafe_settings_group',
+			'maxsafe_settings',
+			array(
+				'type'              => 'array',
+				'sanitize_callback' => array( __CLASS__, 'sanitize_settings' ),
+				'default'           => array(),
+			)
+		);
+		// Legacy setting group support
 		register_setting(
 			'wpsecureos_settings_group',
 			'wpsecureos_settings',
@@ -46,7 +56,10 @@ class WpSecureOs_Settings {
 		$clean['backup_retention_count'] = max( 1, min( 50, $retention ) );
 
 		// Backup Storage Path
-		$clean['backup_storage_path'] = isset( $input['backup_storage_path'] ) ? sanitize_text_field( $input['backup_storage_path'] ) : 'wp-content/uploads/wpsecureos-backups';
+		$clean['backup_storage_path'] = isset( $input['backup_storage_path'] ) ? sanitize_text_field( $input['backup_storage_path'] ) : 'wp-content/uploads/maxsafe-backups';
+		if ( 'wp-content/uploads/wpsecureos-backups' === $clean['backup_storage_path'] ) {
+			$clean['backup_storage_path'] = 'wp-content/uploads/maxsafe-backups';
+		}
 
 		// Staging Mode
 		$clean['staging_mode'] = isset( $input['staging_mode'] ) ? sanitize_text_field( $input['staging_mode'] ) : 'simulated_local';
@@ -79,7 +92,7 @@ class WpSecureOs_Settings {
 		$clean['enable_uploads_scanner'] = ! empty( $input['enable_uploads_scanner'] ) ? 1 : 0;
 
 		// Audit Log
-		WpSecureOs_Event_Logger::log_event(
+		MaxSafe_Event_Logger::log_event(
 			'settings_updated',
 			'low',
 			'Settings',

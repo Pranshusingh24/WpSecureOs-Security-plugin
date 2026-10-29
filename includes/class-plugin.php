@@ -2,26 +2,26 @@
 /**
  * Main plugin orchestrator and singleton coordinator.
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WpSecureOs_Plugin {
+class MaxSafe_Plugin {
 
 	/**
 	 * Singleton instance.
 	 *
-	 * @var WpSecureOs_Plugin
+	 * @var MaxSafe_Plugin
 	 */
 	private static $instance = null;
 
 	/**
 	 * Get singleton instance.
 	 *
-	 * @return WpSecureOs_Plugin
+	 * @return MaxSafe_Plugin
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -42,149 +42,156 @@ class WpSecureOs_Plugin {
 	 */
 	private function init_hooks() {
 		// Admin Menu & Pages
-		add_action( 'admin_menu', array( 'WpSecureOs_Admin_Menu', 'register_menu' ) );
+		add_action( 'admin_menu', array( 'MaxSafe_Admin_Menu', 'register_menu' ) );
 
 		// Settings API
-		add_action( 'admin_init', array( 'WpSecureOs_Settings', 'register_settings' ) );
+		add_action( 'admin_init', array( 'MaxSafe_Settings', 'register_settings' ) );
 
 		// Admin Notices
-		add_action( 'admin_notices', array( 'WpSecureOs_Admin_Notices', 'display_notices' ) );
-		add_action( 'wp_ajax_wpsecureos_dismiss_notice', array( 'WpSecureOs_Admin_Notices', 'ajax_dismiss_notice' ) );
+		add_action( 'admin_notices', array( 'MaxSafe_Admin_Notices', 'display_notices' ) );
+		add_action( 'wp_ajax_maxsafe_dismiss_notice', array( 'MaxSafe_Admin_Notices', 'ajax_dismiss_notice' ) );
+		add_action( 'wp_ajax_wpsecureos_dismiss_notice', array( 'MaxSafe_Admin_Notices', 'ajax_dismiss_notice' ) );
 
 		// Asset Enqueuing
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
 
 		// REST API Routes
-		add_action( 'rest_api_init', array( 'WpSecureOs_Rest_Controller', 'register_routes' ) );
+		add_action( 'rest_api_init', array( 'MaxSafe_Rest_Controller', 'register_routes' ) );
 
 		// Security Event Hooks
-		add_action( 'wp_login_failed', array( 'WpSecureOs_Event_Logger', 'handle_failed_login' ) );
+		add_action( 'wp_login_failed', array( 'MaxSafe_Event_Logger', 'handle_failed_login' ) );
 
 		// Interactive Admin AJAX Actions
+		add_action( 'wp_ajax_maxsafe_action', array( $this, 'handle_ajax_action' ) );
 		add_action( 'wp_ajax_wpsecureos_action', array( $this, 'handle_ajax_action' ) );
 
 		// Cron Schedule Handler
-		add_action( 'wpsecureos_daily_security_scan', array( 'WpSecureOs_Security_Scanner', 'run_scan' ) );
+		add_action( 'maxsafe_daily_security_scan', array( 'MaxSafe_Security_Scanner', 'run_scan' ) );
+		add_action( 'wpsecureos_daily_security_scan', array( 'MaxSafe_Security_Scanner', 'run_scan' ) );
 	}
 
 	/**
-	 * Enqueue assets only on WpSecureOs admin pages to preserve performance.
+	 * Enqueue assets only on MaxSafe admin pages to preserve performance.
 	 *
 	 * @param string $hook_suffix Admin page hook.
 	 */
 	public function enqueue_admin_assets( $hook_suffix ) {
-		// Only enqueue on wpsecureos pages
-		if ( false === strpos( $hook_suffix, 'wpsecureos' ) ) {
+		// Only enqueue on maxsafe pages (support legacy wpsecureos prefix too)
+		if ( false === strpos( $hook_suffix, 'maxsafe' ) && false === strpos( $hook_suffix, 'wpsecureos' ) ) {
 			return;
 		}
 
 		// Google Fonts: Inter and JetBrains Mono
 		wp_enqueue_style(
-			'wpsecureos-google-fonts',
+			'maxsafe-google-fonts',
 			'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap',
 			array(),
-			WPSECUREOS_VERSION
+			MAXSAFE_VERSION
 		);
 
 		// DataTables Core & Responsive CSS
 		wp_enqueue_style(
-			'wpsecureos-datatables-css',
-			WPSECUREOS_PLUGIN_URL . 'assets/vendor/datatables/jquery.dataTables.min.css',
+			'maxsafe-datatables-css',
+			MAXSAFE_PLUGIN_URL . 'assets/vendor/datatables/jquery.dataTables.min.css',
 			array(),
-			WPSECUREOS_VERSION
+			MAXSAFE_VERSION
 		);
 		wp_enqueue_style(
-			'wpsecureos-datatables-responsive-css',
-			WPSECUREOS_PLUGIN_URL . 'assets/vendor/datatables/responsive.dataTables.min.css',
-			array( 'wpsecureos-datatables-css' ),
-			WPSECUREOS_VERSION
+			'maxsafe-datatables-responsive-css',
+			MAXSAFE_PLUGIN_URL . 'assets/vendor/datatables/responsive.dataTables.min.css',
+			array( 'maxsafe-datatables-css' ),
+			MAXSAFE_VERSION
 		);
 
-		// WpSecureOs UI Style (Loaded after DataTables to apply cyber-slate & electric-cyan custom styling)
+		// MaxSafe UI Style
 		wp_enqueue_style(
-			'wpsecureos-admin-css',
-			WPSECUREOS_PLUGIN_URL . 'assets/css/admin.css',
-			array( 'wpsecureos-datatables-responsive-css' ),
-			WPSECUREOS_VERSION
+			'maxsafe-admin-css',
+			MAXSAFE_PLUGIN_URL . 'assets/css/admin.css',
+			array( 'maxsafe-datatables-responsive-css' ),
+			MAXSAFE_VERSION
 		);
 
 		// DataTables Core & Responsive JS
 		wp_enqueue_script(
-			'wpsecureos-datatables-js',
-			WPSECUREOS_PLUGIN_URL . 'assets/vendor/datatables/jquery.dataTables.min.js',
+			'maxsafe-datatables-js',
+			MAXSAFE_PLUGIN_URL . 'assets/vendor/datatables/jquery.dataTables.min.js',
 			array( 'jquery' ),
-			WPSECUREOS_VERSION,
+			MAXSAFE_VERSION,
 			true
 		);
 		wp_enqueue_script(
-			'wpsecureos-datatables-responsive-js',
-			WPSECUREOS_PLUGIN_URL . 'assets/vendor/datatables/dataTables.responsive.min.js',
-			array( 'jquery', 'wpsecureos-datatables-js' ),
-			WPSECUREOS_VERSION,
+			'maxsafe-datatables-responsive-js',
+			MAXSAFE_PLUGIN_URL . 'assets/vendor/datatables/dataTables.responsive.min.js',
+			array( 'jquery', 'maxsafe-datatables-js' ),
+			MAXSAFE_VERSION,
 			true
 		);
 
-		// WpSecureOs UI Interactive Script
+		// MaxSafe UI Interactive Script
 		wp_enqueue_script(
-			'wpsecureos-admin-js',
-			WPSECUREOS_PLUGIN_URL . 'assets/js/admin.js',
-			array( 'jquery', 'wpsecureos-datatables-responsive-js' ),
-			WPSECUREOS_VERSION,
+			'maxsafe-admin-js',
+			MAXSAFE_PLUGIN_URL . 'assets/js/admin.js',
+			array( 'jquery', 'maxsafe-datatables-responsive-js' ),
+			MAXSAFE_VERSION,
 			true
 		);
 
 		// Pass localization and nonces
-		wp_localize_script(
-			'wpsecureos-admin-js',
-			'wpsecureos_vars',
-			array(
-				'ajax_url'   => admin_url( 'admin-ajax.php' ),
-				'rest_url'   => esc_url_raw( rest_url( 'wpsecureos/v1' ) ),
-				'nonce'      => wp_create_nonce( 'wpsecureos_admin_nonce' ),
-				'rest_nonce' => wp_create_nonce( 'wp_rest' ),
-				'strings'    => array(
-					'scanning'            => __( 'Executing continuous offensive validation scan...', 'wpsecureos' ),
-					'scan_complete'       => __( 'Scan completed successfully.', 'wpsecureos' ),
-					'creating_backup'     => __( 'Creating and verifying full-site archive...', 'wpsecureos' ),
-					'backup_verified'     => __( 'Backup archive verified and SHA-256 hash calculated.', 'wpsecureos' ),
-					'starting_pipeline'   => __( 'Initiating Safe Update Pipeline state machine...', 'wpsecureos' ),
-					'approving_deploy'    => __( 'Authorizing production deployment...', 'wpsecureos' ),
-					'action_failed'       => __( 'Operation failed. Check security logs for details.', 'wpsecureos' ),
-					'confirm_override'    => __( 'WARNING: Emergency override bypasses staging smoke tests! You must provide a documented operational rationale. Proceed?', 'wpsecureos' ),
-				),
-			)
+		$vars = array(
+			'ajax_url'   => admin_url( 'admin-ajax.php' ),
+			'rest_url'   => esc_url_raw( rest_url( 'maxsafe/v1' ) ),
+			'nonce'      => wp_create_nonce( 'maxsafe_admin_nonce' ),
+			'rest_nonce' => wp_create_nonce( 'wp_rest' ),
+			'strings'    => array(
+				'scanning'            => __( 'Executing continuous offensive validation scan...', 'maxsafe' ),
+				'scan_complete'       => __( 'Scan completed successfully.', 'maxsafe' ),
+				'creating_backup'     => __( 'Creating and verifying full-site archive...', 'maxsafe' ),
+				'backup_verified'     => __( 'Backup archive verified and SHA-256 hash calculated.', 'maxsafe' ),
+				'starting_pipeline'   => __( 'Initiating Safe Update Pipeline state machine...', 'maxsafe' ),
+				'approving_deploy'    => __( 'Authorizing production deployment...', 'maxsafe' ),
+				'action_failed'       => __( 'Operation failed. Check security logs for details.', 'maxsafe' ),
+				'confirm_override'    => __( 'WARNING: Emergency override bypasses staging smoke tests! You must provide a documented operational rationale. Proceed?', 'maxsafe' ),
+			),
 		);
+
+		wp_localize_script( 'maxsafe-admin-js', 'maxsafe_vars', $vars );
+		// Legacy fallback variable
+		wp_localize_script( 'maxsafe-admin-js', 'wpsecureos_vars', $vars );
 	}
 
 	/**
 	 * Central AJAX dispatcher for instant dashboard interactions.
 	 */
 	public function handle_ajax_action() {
-		check_ajax_referer( 'wpsecureos_admin_nonce', 'nonce' );
+		// Verify either maxsafe or legacy wpsecureos nonce
+		$nonce = isset( $_REQUEST['nonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'maxsafe_admin_nonce' ) && ! wp_verify_nonce( $nonce, 'wpsecureos_admin_nonce' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Security check failed. Please refresh the page.', 'maxsafe' ) ), 403 );
+		}
 
 		$sub_action = isset( $_POST['sub_action'] ) ? sanitize_text_field( wp_unslash( $_POST['sub_action'] ) ) : '';
 
 		switch ( $sub_action ) {
 			case 'run_scan':
-				if ( ! current_user_can( WpSecureOs_Capabilities::CAP_RUN_SCAN ) ) {
-					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing wpsecureos_run_scan capability.', 'wpsecureos' ) ), 403 );
+				if ( ! current_user_can( MaxSafe_Capabilities::CAP_RUN_SCAN ) && ! current_user_can( 'manage_options' ) ) {
+					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing maxsafe_run_scan capability.', 'maxsafe' ) ), 403 );
 				}
-				$security  = WpSecureOs_Security_Scanner::run_scan();
-				$integrity = WpSecureOs_Integrity_Monitor::run_integrity_check();
+				$security  = MaxSafe_Security_Scanner::run_scan();
+				$integrity = MaxSafe_Integrity_Monitor::run_integrity_check();
 				wp_send_json_success(
 					array(
 						'security'  => $security,
 						'integrity' => $integrity,
-						'message'   => __( 'Continuous security and integrity validation completed.', 'wpsecureos' ),
+						'message'   => __( 'Continuous security and integrity validation completed.', 'maxsafe' ),
 					)
 				);
 				break;
 
 			case 'create_backup':
-				if ( ! current_user_can( WpSecureOs_Capabilities::CAP_PREPARE_UPDATE ) ) {
-					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing wpsecureos_prepare_update capability.', 'wpsecureos' ) ), 403 );
+				if ( ! current_user_can( MaxSafe_Capabilities::CAP_PREPARE_UPDATE ) && ! current_user_can( 'manage_options' ) ) {
+					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing maxsafe_prepare_update capability.', 'maxsafe' ) ), 403 );
 				}
-				$backup = WpSecureOs_Backup_Adapter::create_backup( 'full' );
+				$backup = MaxSafe_Backup_Adapter::create_backup( 'full' );
 				if ( $backup['success'] ) {
 					wp_send_json_success( $backup );
 				} else {
@@ -193,42 +200,42 @@ class WpSecureOs_Plugin {
 				break;
 
 			case 'start_pipeline':
-				if ( ! current_user_can( WpSecureOs_Capabilities::CAP_PREPARE_UPDATE ) ) {
-					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing wpsecureos_prepare_update capability.', 'wpsecureos' ) ), 403 );
+				if ( ! current_user_can( MaxSafe_Capabilities::CAP_PREPARE_UPDATE ) && ! current_user_can( 'manage_options' ) ) {
+					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing maxsafe_prepare_update capability.', 'maxsafe' ) ), 403 );
 				}
 				$type    = isset( $_POST['component_type'] ) ? sanitize_text_field( wp_unslash( $_POST['component_type'] ) ) : '';
 				$slug    = isset( $_POST['slug'] ) ? sanitize_text_field( wp_unslash( $_POST['slug'] ) ) : '';
 				$version = isset( $_POST['new_version'] ) ? sanitize_text_field( wp_unslash( $_POST['new_version'] ) ) : '';
 
-				$result = WpSecureOs_Test_Runner::start_safe_update_pipeline( $type, $slug, $version );
+				$result = MaxSafe_Test_Runner::start_safe_update_pipeline( $type, $slug, $version );
 				wp_send_json_success( $result );
 				break;
 
 			case 'approve_deploy':
-				if ( ! current_user_can( WpSecureOs_Capabilities::CAP_APPROVE_PRODUCTION ) ) {
-					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing wpsecureos_approve_production capability.', 'wpsecureos' ) ), 403 );
+				if ( ! current_user_can( MaxSafe_Capabilities::CAP_APPROVE_PRODUCTION ) && ! current_user_can( 'manage_options' ) ) {
+					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing maxsafe_approve_production capability.', 'maxsafe' ) ), 403 );
 				}
 				$idempotency_key = isset( $_POST['idempotency_key'] ) ? sanitize_text_field( wp_unslash( $_POST['idempotency_key'] ) ) : '';
-				$result = WpSecureOs_Test_Runner::approve_and_deploy_production( $idempotency_key );
+				$result = MaxSafe_Test_Runner::approve_and_deploy_production( $idempotency_key );
 				wp_send_json_success( $result );
 				break;
 
 			case 'emergency_override':
-				if ( ! current_user_can( WpSecureOs_Capabilities::CAP_APPROVE_PRODUCTION ) ) {
-					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing wpsecureos_approve_production capability.', 'wpsecureos' ) ), 403 );
+				if ( ! current_user_can( MaxSafe_Capabilities::CAP_APPROVE_PRODUCTION ) && ! current_user_can( 'manage_options' ) ) {
+					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing maxsafe_approve_production capability.', 'maxsafe' ) ), 403 );
 				}
 				$idempotency_key = isset( $_POST['idempotency_key'] ) ? sanitize_text_field( wp_unslash( $_POST['idempotency_key'] ) ) : '';
 				$reason          = isset( $_POST['reason'] ) ? sanitize_textarea_field( wp_unslash( $_POST['reason'] ) ) : '';
-				$result          = WpSecureOs_Test_Runner::execute_emergency_override( $idempotency_key, $reason );
+				$result          = MaxSafe_Test_Runner::execute_emergency_override( $idempotency_key, $reason );
 				wp_send_json_success( $result );
 				break;
 
 			case 'activate_license':
-				if ( ! current_user_can( WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS ) ) {
-					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing wpsecureos_manage_settings capability.', 'wpsecureos' ) ), 403 );
+				if ( ! current_user_can( MaxSafe_Capabilities::CAP_MANAGE_SETTINGS ) && ! current_user_can( 'manage_options' ) ) {
+					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing maxsafe_manage_settings capability.', 'maxsafe' ) ), 403 );
 				}
 				$license_key = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
-				$result      = WpSecureOs_License_Manager::activate( $license_key );
+				$result      = MaxSafe_License_Manager::activate( $license_key );
 				if ( ! empty( $result['success'] ) ) {
 					wp_send_json_success( $result );
 				} else {
@@ -237,10 +244,10 @@ class WpSecureOs_Plugin {
 				break;
 
 			case 'deactivate_license':
-				if ( ! current_user_can( WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS ) ) {
-					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing wpsecureos_manage_settings capability.', 'wpsecureos' ) ), 403 );
+				if ( ! current_user_can( MaxSafe_Capabilities::CAP_MANAGE_SETTINGS ) && ! current_user_can( 'manage_options' ) ) {
+					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing maxsafe_manage_settings capability.', 'maxsafe' ) ), 403 );
 				}
-				$result = WpSecureOs_License_Manager::deactivate();
+				$result = MaxSafe_License_Manager::deactivate();
 				if ( ! empty( $result['success'] ) ) {
 					wp_send_json_success( $result );
 				} else {
@@ -249,15 +256,15 @@ class WpSecureOs_Plugin {
 				break;
 
 			case 'refresh_license':
-				if ( ! current_user_can( WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS ) ) {
-					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing wpsecureos_manage_settings capability.', 'wpsecureos' ) ), 403 );
+				if ( ! current_user_can( MaxSafe_Capabilities::CAP_MANAGE_SETTINGS ) && ! current_user_can( 'manage_options' ) ) {
+					wp_send_json_error( array( 'message' => __( 'Unauthorized: Missing maxsafe_manage_settings capability.', 'maxsafe' ) ), 403 );
 				}
-				$result = WpSecureOs_License_Manager::validate_license();
+				$result = MaxSafe_License_Manager::validate_license();
 				wp_send_json_success( $result );
 				break;
 
 			default:
-				wp_send_json_error( array( 'message' => __( 'Unknown sub-action requested.', 'wpsecureos' ) ), 400 );
+				wp_send_json_error( array( 'message' => __( 'Unknown sub-action requested.', 'maxsafe' ) ), 400 );
 				break;
 		}
 	}

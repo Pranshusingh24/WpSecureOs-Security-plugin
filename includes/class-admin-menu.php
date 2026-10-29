@@ -2,17 +2,17 @@
 /**
  * Admin Menu registration and page rendering router.
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WpSecureOs_Admin_Menu {
+class MaxSafe_Admin_Menu {
 
 	/**
-	 * Register WpSecureOs top-level and submenu items.
+	 * Register MaxSafe top-level and submenu items.
 	 */
 	public static function register_menu() {
 		$icon_svg = 'data:image/svg+xml;base64,' . base64_encode(
@@ -21,10 +21,10 @@ class WpSecureOs_Admin_Menu {
 
 		// 1. Top Level Menu: Overview
 		add_menu_page(
-			__( 'WpSecureOs — Security & Safe Updates', 'wpsecureos' ),
-			'WpSecureOs',
-			WpSecureOs_Capabilities::CAP_VIEW_DASHBOARD,
-			'wpsecureos',
+			__( 'MaxSafe — Security & Safe Updates', 'maxsafe' ),
+			'MaxSafe',
+			MaxSafe_Capabilities::CAP_VIEW_DASHBOARD,
+			'maxsafe',
 			array( __CLASS__, 'render_overview_page' ),
 			$icon_svg,
 			59
@@ -32,81 +32,81 @@ class WpSecureOs_Admin_Menu {
 
 		// 2. Submenu: Overview
 		add_submenu_page(
-			'wpsecureos',
-			__( 'Overview — WpSecureOs', 'wpsecureos' ),
-			__( 'Overview', 'wpsecureos' ),
-			WpSecureOs_Capabilities::CAP_VIEW_DASHBOARD,
-			'wpsecureos',
+			'maxsafe',
+			__( 'Overview — MaxSafe', 'maxsafe' ),
+			__( 'Overview', 'maxsafe' ),
+			MaxSafe_Capabilities::CAP_VIEW_DASHBOARD,
+			'maxsafe',
 			array( __CLASS__, 'render_overview_page' )
 		);
 
 		// 3. Submenu: Updates & Safe Deploy
 		add_submenu_page(
-			'wpsecureos',
-			__( 'Updates & Safe Deploy — WpSecureOs', 'wpsecureos' ),
-			__( 'Updates', 'wpsecureos' ),
-			WpSecureOs_Capabilities::CAP_PREPARE_UPDATE,
-			'wpsecureos-updates',
+			'maxsafe',
+			__( 'Updates & Safe Deploy — MaxSafe', 'maxsafe' ),
+			__( 'Updates', 'maxsafe' ),
+			MaxSafe_Capabilities::CAP_PREPARE_UPDATE,
+			'maxsafe-updates',
 			array( __CLASS__, 'render_updates_page' )
 		);
 
 		// 4. Submenu: Security & File Integrity
 		add_submenu_page(
-			'wpsecureos',
-			__( 'Security & File Integrity — WpSecureOs', 'wpsecureos' ),
-			__( 'Security', 'wpsecureos' ),
-			WpSecureOs_Capabilities::CAP_VIEW_SECURITY,
-			'wpsecureos-security',
+			'maxsafe',
+			__( 'Security & File Integrity — MaxSafe', 'maxsafe' ),
+			__( 'Security', 'maxsafe' ),
+			MaxSafe_Capabilities::CAP_VIEW_SECURITY,
+			'maxsafe-security',
 			array( __CLASS__, 'render_security_page' )
 		);
 
 		// 5. Submenu: Backups & Recovery
 		add_submenu_page(
-			'wpsecureos',
-			__( 'Backups & Recovery — WpSecureOs', 'wpsecureos' ),
-			__( 'Backups', 'wpsecureos' ),
-			WpSecureOs_Capabilities::CAP_MANAGE_RECOVERY,
-			'wpsecureos-backups',
+			'maxsafe',
+			__( 'Backups & Recovery — MaxSafe', 'maxsafe' ),
+			__( 'Backups', 'maxsafe' ),
+			MaxSafe_Capabilities::CAP_MANAGE_RECOVERY,
+			'maxsafe-backups',
 			array( __CLASS__, 'render_backups_page' )
 		);
 
 		// 6. Submenu: Staging & Visual Tests
 		add_submenu_page(
-			'wpsecureos',
-			__( 'Staging & Visual Tests — WpSecureOs', 'wpsecureos' ),
-			__( 'Staging & Tests', 'wpsecureos' ),
-			WpSecureOs_Capabilities::CAP_PREPARE_UPDATE,
-			'wpsecureos-staging',
+			'maxsafe',
+			__( 'Staging & Visual Tests — MaxSafe', 'maxsafe' ),
+			__( 'Staging & Tests', 'maxsafe' ),
+			MaxSafe_Capabilities::CAP_PREPARE_UPDATE,
+			'maxsafe-staging',
 			array( __CLASS__, 'render_staging_page' )
 		);
 
 		// 7. Submenu: Security Activity Log
 		add_submenu_page(
-			'wpsecureos',
-			__( 'Security & Audit Log — WpSecureOs', 'wpsecureos' ),
-			__( 'Activity Log', 'wpsecureos' ),
-			WpSecureOs_Capabilities::CAP_VIEW_SECURITY,
-			'wpsecureos-logs',
+			'maxsafe',
+			__( 'Security & Audit Log — MaxSafe', 'maxsafe' ),
+			__( 'Activity Log', 'maxsafe' ),
+			MaxSafe_Capabilities::CAP_VIEW_SECURITY,
+			'maxsafe-logs',
 			array( __CLASS__, 'render_logs_page' )
 		);
 
 		// 8. Submenu: Settings
 		add_submenu_page(
-			'wpsecureos',
-			__( 'Settings — WpSecureOs', 'wpsecureos' ),
-			__( 'Settings', 'wpsecureos' ),
-			WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS,
-			'wpsecureos-settings',
+			'maxsafe',
+			__( 'Settings — MaxSafe', 'maxsafe' ),
+			__( 'Settings', 'maxsafe' ),
+			MaxSafe_Capabilities::CAP_MANAGE_SETTINGS,
+			'maxsafe-settings',
 			array( __CLASS__, 'render_settings_page' )
 		);
 
 		// 9. Submenu: License & Plans
 		add_submenu_page(
-			'wpsecureos',
-			__( 'License & Plans — WpSecureOs', 'wpsecureos' ),
-			__( 'License & Plans', 'wpsecureos' ),
-			WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS,
-			'wpsecureos-license',
+			'maxsafe',
+			__( 'License & Plans — MaxSafe', 'maxsafe' ),
+			__( 'License & Plans', 'maxsafe' ),
+			MaxSafe_Capabilities::CAP_MANAGE_SETTINGS,
+			'maxsafe-license',
 			array( __CLASS__, 'render_license_page' )
 		);
 	}
@@ -147,19 +147,19 @@ class WpSecureOs_Admin_Menu {
 	}
 
 	/**
-	 * Render template with master WpSecureOs layout wrapper.
+	 * Render template with master MaxSafe layout wrapper.
 	 *
 	 * @param string $template_name
 	 */
 	private static function render_template( $template_name ) {
-		$template_file = WPSECUREOS_PLUGIN_DIR . 'templates/' . $template_name . '.php';
+		$template_file = MAXSAFE_PLUGIN_DIR . 'templates/' . $template_name . '.php';
 		if ( file_exists( $template_file ) ) {
 			// Include master layout which includes the specific template
 			$current_tab = $template_name;
-			include WPSECUREOS_PLUGIN_DIR . 'templates/layout.php';
+			include MAXSAFE_PLUGIN_DIR . 'templates/layout.php';
 		} else {
 			/* translators: %s: Template file name */
-			$error_message = sprintf( __( 'Template %s not found.', 'wpsecureos' ), $template_name );
+			$error_message = sprintf( __( 'Template %s not found.', 'maxsafe' ), $template_name );
 			echo '<div class="notice notice-error"><p>' . esc_html( $error_message ) . '</p></div>';
 		}
 	}

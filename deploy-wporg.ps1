@@ -1,4 +1,4 @@
-# WpSecureOs SVN Deployment Helper for WordPress.org
+# MaxSafe SVN Deployment Helper for WordPress.org
 # Use this script AFTER your plugin is approved at https://wordpress.org/plugins/developers/add/
 
 param(
@@ -9,10 +9,10 @@ param(
 $ErrorActionPreference = "Stop"
 $root = $PSScriptRoot
 $sourceSvn = Join-Path $root "wporg-svn"
-$svnUrl = "https://plugins.svn.wordpress.org/wpsecureos"
+$svnUrl = "https://plugins.svn.wordpress.org/maxsafe"
 
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host " WpSecureOs WordPress.org SVN Deployment Tool " -ForegroundColor White
+Write-Host " MaxSafe WordPress.org SVN Deployment Tool " -ForegroundColor White
 Write-Host "==========================================================" -ForegroundColor Cyan
 
 # Check if svn command line tool is available

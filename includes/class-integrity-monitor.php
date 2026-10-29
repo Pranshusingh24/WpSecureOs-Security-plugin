@@ -2,14 +2,14 @@
 /**
  * Core File Integrity Monitor and Suspicious Executable Scanner.
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WpSecureOs_Integrity_Monitor {
+class MaxSafe_Integrity_Monitor {
 
 	/**
 	 * Run complete integrity verification.
@@ -32,7 +32,7 @@ class WpSecureOs_Integrity_Monitor {
 
 		// Record in custom integrity table
 		global $wpdb;
-		$table_integrity = $wpdb->prefix . 'wpsecureos_integrity';
+		$table_integrity = $wpdb->prefix . 'maxsafe_integrity';
 
 		foreach ( $core_check['modified'] as $m_file ) {
 			$wpdb->replace(
@@ -50,7 +50,7 @@ class WpSecureOs_Integrity_Monitor {
 		}
 
 		if ( ! $summary['is_clean'] ) {
-			WpSecureOs_Event_Logger::log_event(
+			MaxSafe_Event_Logger::log_event(
 				'integrity_violation_detected',
 				'high',
 				'Integrity Monitor',
@@ -78,20 +78,23 @@ class WpSecureOs_Integrity_Monitor {
 		$locale   = ! empty( $wp_local_package ) ? $wp_local_package : get_locale();
 		$api_url  = sprintf( 'https://api.wordpress.org/core/checksums/1.0/?version=%s&locale=%s', rawurlencode( $wp_version ), rawurlencode( $locale ) );
 
-		$checksums = get_transient( 'wpsecureos_core_checksums' );
+		$checksums = get_transient( 'maxsafe_core_checksums' );
+		if ( false === $checksums || ! is_array( $checksums ) ) {
+			$checksums = get_transient( 'wpsecureos_core_checksums' );
+		}
 		if ( false === $checksums || ! is_array( $checksums ) ) {
 			$response = wp_remote_get(
 				$api_url,
 				array(
 					'timeout'    => 15,
-					'user-agent' => 'WpSecureOs/' . WPSECUREOS_VERSION . '; ' . home_url( '/' ),
+					'user-agent' => 'MaxSafe/' . ( defined( 'MAXSAFE_VERSION' ) ? MAXSAFE_VERSION : '1.1.0' ) . '; ' . home_url( '/' ),
 				)
 			);
 
 			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
 				return array(
 					'status'        => 'unknown',
-					'message'       => __( 'Could not reach official api.wordpress.org checksums service.', 'wpsecureos' ),
+					'message'       => __( 'Could not reach official api.wordpress.org checksums service.', 'maxsafe' ),
 					'modified'      => array(),
 					'missing'       => array(),
 					'total_checked' => 0,
@@ -102,7 +105,7 @@ class WpSecureOs_Integrity_Monitor {
 			if ( empty( $body['checksums'] ) || ! is_array( $body['checksums'] ) ) {
 				return array(
 					'status'        => 'unknown',
-					'message'       => __( 'Invalid checksums payload received from official API.', 'wpsecureos' ),
+					'message'       => __( 'Invalid checksums payload received from official API.', 'maxsafe' ),
 					'modified'      => array(),
 					'missing'       => array(),
 					'total_checked' => 0,
@@ -110,7 +113,7 @@ class WpSecureOs_Integrity_Monitor {
 			}
 
 			$checksums = $body['checksums'];
-			set_transient( 'wpsecureos_core_checksums', $checksums, DAY_IN_SECONDS );
+			set_transient( 'maxsafe_core_checksums', $checksums, DAY_IN_SECONDS );
 		}
 
 		$modified = array();
@@ -174,7 +177,7 @@ class WpSecureOs_Integrity_Monitor {
 				'path'        => $relative,
 				'size'        => filesize( $f ),
 				'modified_at' => gmdate( 'Y-m-d H:i:s', filemtime( $f ) ),
-				'reason'      => __( 'Executable script located in public uploads directory.', 'wpsecureos' ),
+				'reason'      => __( 'Executable script located in public uploads directory.', 'maxsafe' ),
 			);
 		}
 

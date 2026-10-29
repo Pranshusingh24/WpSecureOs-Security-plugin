@@ -1,11 +1,22 @@
 /**
- * WpSecureOs Interactive Admin Console
+ * MaxSafe Interactive Admin Console
  */
 
 (function($) {
 	'use strict';
 
-	var WpSecureOs = {
+	var cfg = window.maxsafe_vars || window.wpsecureos_vars || {
+		ajax_url: '',
+		nonce: '',
+		strings: {
+			scan_complete: 'Security and checksum scan completed.',
+			backup_verified: 'Verified backup generated.',
+			action_failed: 'Action failed. Please try again.',
+			confirm_override: 'WARNING: Bypassing automated safety gates may deploy breaking changes to production. Are you sure?'
+		}
+	};
+
+	var MaxSafe = {
 		init: function() {
 			this.bindEvents();
 			this.initDataTables();
@@ -16,7 +27,7 @@
 				return;
 			}
 
-			$('.wpsecureos-datatable').each(function() {
+			$('.maxsafe-datatable, .wpsecureos-datatable').each(function() {
 				var $table = $(this);
 				if ($.fn.DataTable.isDataTable(this)) {
 					return;
@@ -82,9 +93,9 @@
 			});
 
 			// 4. Modal Close
-			$(document).on('click', '.wpsecureos-modal-close, .btn-modal-cancel', function(e) {
+			$(document).on('click', '.maxsafe-modal-close, .wpsecureos-modal-close, .btn-modal-cancel', function(e) {
 				e.preventDefault();
-				$('.wpsecureos-modal-overlay').fadeOut(150);
+				$('.maxsafe-modal-overlay, .wpsecureos-modal-overlay').fadeOut(150);
 			});
 
 			// 5. Execute Pipeline Run
@@ -112,12 +123,13 @@
 			});
 
 			// 9. Dismiss Admin Notice
-			$(document).on('click', '.wpsecureos-admin-notice .notice-dismiss', function() {
-				var noticeId = $(this).closest('.wpsecureos-admin-notice').data('notice-id');
+			$(document).on('click', '.maxsafe-admin-notice .notice-dismiss, .wpsecureos-admin-notice .notice-dismiss', function() {
+				var $notice = $(this).closest('.maxsafe-admin-notice, .wpsecureos-admin-notice');
+				var noticeId = $notice.data('notice-id');
 				if (noticeId) {
-					$.post(wpsecureos_vars.ajax_url, {
-						action: 'wpsecureos_dismiss_notice',
-						nonce: wpsecureos_vars.nonce,
+					$.post(cfg.ajax_url, {
+						action: 'maxsafe_dismiss_notice',
+						nonce: cfg.nonce,
 						notice_id: noticeId
 					});
 				}
@@ -143,9 +155,9 @@
 		},
 
 		showToast: function(msg, isError) {
-			$('.wpsecureos-toast').remove();
+			$('.maxsafe-toast, .wpsecureos-toast').remove();
 			var border = isError ? '#ef4444' : '#0ea5e9';
-			var $toast = $('<div class="wpsecureos-toast" style="border-left-color:' + border + '"><span>' + msg + '</span></div>');
+			var $toast = $('<div class="maxsafe-toast wpsecureos-toast" style="border-left-color:' + border + '"><span>' + msg + '</span></div>');
 			$('body').append($toast);
 			setTimeout(function() {
 				$toast.fadeOut(300, function() { $(this).remove(); });
@@ -159,24 +171,24 @@
 
 			self.appendTerminalLog('Initiating continuous security posture & core checksums scan...', 'info');
 
-			$.post(wpsecureos_vars.ajax_url, {
-				action: 'wpsecureos_action',
+			$.post(cfg.ajax_url, {
+				action: 'maxsafe_action',
 				sub_action: 'run_scan',
-				nonce: wpsecureos_vars.nonce
+				nonce: cfg.nonce
 			}, function(res) {
 				$btn.prop('disabled', false).html(originalText);
 				if (res.success) {
 					self.appendTerminalLog('Security scan completed. Vulnerabilities: ' + res.data.security.total_findings + ' findings.', 'success');
 					self.appendTerminalLog('Core file integrity verification: ' + res.data.integrity.core_status.toUpperCase(), res.data.integrity.is_clean ? 'success' : 'warn');
-					self.showToast(wpsecureos_vars.strings.scan_complete);
+					self.showToast(cfg.strings.scan_complete || 'Scan complete');
 					setTimeout(function() { location.reload(); }, 1200);
 				} else {
 					self.appendTerminalLog('Scan error: ' + (res.data.message || 'Server error'), 'error');
-					self.showToast(wpsecureos_vars.strings.action_failed, true);
+					self.showToast(cfg.strings.action_failed || 'Failed', true);
 				}
 			}).fail(function() {
 				$btn.prop('disabled', false).html(originalText);
-				self.showToast(wpsecureos_vars.strings.action_failed, true);
+				self.showToast(cfg.strings.action_failed || 'Failed', true);
 			});
 		},
 
@@ -187,17 +199,17 @@
 
 			self.appendTerminalLog('Exporting database & building verified ZIP archive manifest...', 'info');
 
-			$.post(wpsecureos_vars.ajax_url, {
-				action: 'wpsecureos_action',
+			$.post(cfg.ajax_url, {
+				action: 'maxsafe_action',
 				sub_action: 'create_backup',
-				nonce: wpsecureos_vars.nonce
+				nonce: cfg.nonce
 			}, function(res) {
 				$btn.prop('disabled', false).html(orig);
 				if (res.success) {
 					self.appendTerminalLog('Archive generated: ' + res.data.backup_name + ' (' + res.data.size + ')', 'success');
 					self.appendTerminalLog('SHA-256 Checksum: ' + res.data.sha256, 'info');
 					self.appendTerminalLog('Archive Integrity Status: ' + (res.data.verified ? 'PASSED & READABLE' : 'FAILED'), res.data.verified ? 'success' : 'error');
-					self.showToast(wpsecureos_vars.strings.backup_verified);
+					self.showToast(cfg.strings.backup_verified || 'Backup verified');
 					setTimeout(function() { location.reload(); }, 1500);
 				} else {
 					self.appendTerminalLog('Backup creation failed: ' + res.data.message, 'error');
@@ -205,7 +217,7 @@
 				}
 			}).fail(function() {
 				$btn.prop('disabled', false).html(orig);
-				self.showToast(wpsecureos_vars.strings.action_failed, true);
+				self.showToast(cfg.strings.action_failed || 'Failed', true);
 			});
 		},
 
@@ -216,7 +228,7 @@
 			$('#modal-pipeline-type').val(type);
 
 			// Reset stepper
-			$('.wpsecureos-step-item').removeClass('active completed');
+			$('.maxsafe-step-item, .wpsecureos-step-item').removeClass('active completed');
 			$('#step-1').addClass('active');
 
 			$('#pipeline-results-box').hide();
@@ -247,13 +259,13 @@
 				$('#step-4').addClass('active');
 			}, 1200);
 
-			$.post(wpsecureos_vars.ajax_url, {
-				action: 'wpsecureos_action',
+			$.post(cfg.ajax_url, {
+				action: 'maxsafe_action',
 				sub_action: 'start_pipeline',
 				component_type: type,
 				slug: slug,
 				new_version: ver,
-				nonce: wpsecureos_vars.nonce
+				nonce: cfg.nonce
 			}, function(res) {
 				$btn.prop('disabled', false).text('Run Pipeline');
 				if (res.success && res.data.success) {
@@ -287,11 +299,11 @@
 			var key = $('#pipeline-idempotency-key').val();
 			$btn.prop('disabled', true).text('Deploying to Production...');
 
-			$.post(wpsecureos_vars.ajax_url, {
-				action: 'wpsecureos_action',
+			$.post(cfg.ajax_url, {
+				action: 'maxsafe_action',
 				sub_action: 'approve_deploy',
 				idempotency_key: key,
-				nonce: wpsecureos_vars.nonce
+				nonce: cfg.nonce
 			}, function(res) {
 				$btn.prop('disabled', false).text('Approve & Deploy to Live');
 				if (res.success && res.data.success) {
@@ -305,18 +317,18 @@
 		},
 
 		openOverrideModal: function() {
-			var proceed = confirm(wpsecureos_vars.strings.confirm_override);
+			var proceed = confirm(cfg.strings.confirm_override || 'Bypass safety gates?');
 			if (!proceed) return;
 
 			var reason = prompt('Document mandatory operational rationale for bypassing staging gates:');
 			if (reason && reason.trim().length > 0) {
 				var key = $('#pipeline-idempotency-key').val();
-				$.post(wpsecureos_vars.ajax_url, {
-					action: 'wpsecureos_action',
+				$.post(cfg.ajax_url, {
+					action: 'maxsafe_action',
 					sub_action: 'emergency_override',
 					idempotency_key: key,
 					reason: reason,
-					nonce: wpsecureos_vars.nonce
+					nonce: cfg.nonce
 				}, function(res) {
 					if (res.success && res.data.success) {
 						alert('Emergency override deployment completed. Logged to audit trail.');
@@ -329,7 +341,7 @@
 		},
 
 		appendTerminalLog: function(msg, level) {
-			var $term = $('#wpsecureos-live-terminal');
+			var $term = $('#maxsafe-live-terminal, #wpsecureos-live-terminal');
 			if (!$term.length) return;
 
 			var time = new Date().toLocaleTimeString();
@@ -341,7 +353,11 @@
 
 		activateLicense: function($btn) {
 			var self = this;
-			var key = $('#wpsecureos_license_key').val().trim();
+			var $keyInput = $('#maxsafe_license_key');
+			if (!$keyInput.length) {
+				$keyInput = $('#wpsecureos_license_key');
+			}
+			var key = $keyInput.val().trim();
 			var $feedback = $('#license-ajax-feedback');
 
 			if (!key) {
@@ -353,11 +369,11 @@
 			$feedback.hide();
 			self.appendTerminalLog('Connecting to licensing server for cryptographic validation...', 'info');
 
-			$.post(wpsecureos_vars.ajax_url, {
-				action: 'wpsecureos_action',
+			$.post(cfg.ajax_url, {
+				action: 'maxsafe_action',
 				sub_action: 'activate_license',
 				license_key: key,
-				nonce: wpsecureos_vars.nonce
+				nonce: cfg.nonce
 			}, function(res) {
 				$btn.prop('disabled', false).removeClass('loading');
 				if (res.success && res.data.success) {
@@ -386,10 +402,10 @@
 			$btn.prop('disabled', true).addClass('loading');
 			self.appendTerminalLog('Deactivating license and releasing domain seat...', 'warn');
 
-			$.post(wpsecureos_vars.ajax_url, {
-				action: 'wpsecureos_action',
+			$.post(cfg.ajax_url, {
+				action: 'maxsafe_action',
 				sub_action: 'deactivate_license',
-				nonce: wpsecureos_vars.nonce
+				nonce: cfg.nonce
 			}, function(res) {
 				if (res.success) {
 					self.appendTerminalLog('Seat released. Site returned to Free edition.', 'info');
@@ -406,10 +422,10 @@
 			$btn.prop('disabled', true).addClass('loading');
 			self.appendTerminalLog('Syncing entitlements with central server...', 'info');
 
-			$.post(wpsecureos_vars.ajax_url, {
-				action: 'wpsecureos_action',
+			$.post(cfg.ajax_url, {
+				action: 'maxsafe_action',
 				sub_action: 'refresh_license',
-				nonce: wpsecureos_vars.nonce
+				nonce: cfg.nonce
 			}, function(res) {
 				$btn.prop('disabled', false).removeClass('loading');
 				if (res.success && res.data.valid) {
@@ -423,8 +439,11 @@
 		}
 	};
 
+	window.MaxSafe = MaxSafe;
+	window.WpSecureOs = MaxSafe;
+
 	$(document).ready(function() {
-		WpSecureOs.init();
+		MaxSafe.init();
 	});
 
 })(jQuery);

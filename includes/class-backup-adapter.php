@@ -2,7 +2,7 @@
 /**
  * Backup creation, archive validation, and recovery runbook adapter.
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,7 +16,7 @@ if ( ! defined( 'ARRAY_N' ) ) {
 	define( 'ARRAY_N', 'ARRAY_N' );
 }
 
-class WpSecureOs_Backup_Adapter {
+class MaxSafe_Backup_Adapter {
 
 	/**
 	 * Create a verified backup archive (DB schema + manifests).
@@ -26,7 +26,7 @@ class WpSecureOs_Backup_Adapter {
 	 */
 	public static function create_backup( $backup_type = 'full' ) {
 		$upload_dir = wp_upload_dir();
-		$backup_dir = $upload_dir['basedir'] . '/wpsecureos-backups';
+		$backup_dir = $upload_dir['basedir'] . '/maxsafe-backups';
 
 		if ( ! file_exists( $backup_dir ) ) {
 			wp_mkdir_p( $backup_dir );
@@ -46,7 +46,7 @@ class WpSecureOs_Backup_Adapter {
 		if ( true !== $open_status ) {
 			return array(
 				'success' => false,
-				'message' => __( 'Failed to initialize ZipArchive file on server.', 'wpsecureos' ),
+				'message' => __( 'Failed to initialize ZipArchive file on server.', 'maxsafe' ),
 			);
 		}
 
@@ -65,17 +65,17 @@ class WpSecureOs_Backup_Adapter {
 			'plugins'          => get_option( 'active_plugins' ),
 			'theme'            => function_exists( 'get_stylesheet' ) ? get_stylesheet() : 'twentytwentyfour',
 		);
-		$zip->addFromString( 'wpsecureos_manifest.json', wp_json_encode( $manifest, JSON_PRETTY_PRINT ) );
+		$zip->addFromString( 'maxsafe_manifest.json', wp_json_encode( $manifest, JSON_PRETTY_PRINT ) );
 
 		// 3. Add critical config template (redacted wp-config metadata)
-		$zip->addFromString( 'wpsecureos_recovery_runbook.txt', self::get_recovery_runbook_content() );
+		$zip->addFromString( 'maxsafe_recovery_runbook.txt', self::get_recovery_runbook_content() );
 
 		$zip->close();
 
 		if ( ! file_exists( $zip_path ) ) {
 			return array(
 				'success' => false,
-				'message' => __( 'Archive file could not be written to disk.', 'wpsecureos' ),
+				'message' => __( 'Archive file could not be written to disk.', 'maxsafe' ),
 			);
 		}
 
@@ -87,7 +87,7 @@ class WpSecureOs_Backup_Adapter {
 
 		// Save record in database
 		global $wpdb;
-		$table = $wpdb->prefix . 'wpsecureos_backups';
+		$table = $wpdb->prefix . 'maxsafe_backups';
 		$wpdb->insert(
 			$table,
 			array(
@@ -104,7 +104,7 @@ class WpSecureOs_Backup_Adapter {
 			array( '%s', '%s', '%d', '%s', '%d', '%d', '%d', '%s', '%s' )
 		);
 
-		WpSecureOs_Event_Logger::log_event(
+		MaxSafe_Event_Logger::log_event(
 			'backup_created',
 			'low',
 			'Backup Adapter',
@@ -137,7 +137,7 @@ class WpSecureOs_Backup_Adapter {
 		if ( ! file_exists( $zip_path ) || filesize( $zip_path ) === 0 ) {
 			return array(
 				'is_valid' => false,
-				'notes'    => __( 'Archive file is empty or does not exist.', 'wpsecureos' ),
+				'notes'    => __( 'Archive file is empty or does not exist.', 'maxsafe' ),
 			);
 		}
 
@@ -147,23 +147,27 @@ class WpSecureOs_Backup_Adapter {
 			return array(
 				'is_valid' => false,
 				/* translators: %d: Error code returned by ZipArchive */
-				'notes'    => sprintf( __( 'ZipArchive consistency check failed with error code: %d', 'wpsecureos' ), $res ),
+				'notes'    => sprintf( __( 'ZipArchive consistency check failed with error code: %d', 'maxsafe' ), $res ),
 			);
 		}
 
-		// Ensure manifest and db dump exist and are readable
-		$has_manifest = ( false !== $zip->locateName( 'wpsecureos_manifest.json' ) );
+		// Ensure manifest and db dump exist and are readable (supports both maxsafe and legacy manifests)
+		$manifest_name = 'maxsafe_manifest.json';
+		if ( false === $zip->locateName( $manifest_name ) ) {
+			$manifest_name = 'wpsecureos_manifest.json';
+		}
+		$has_manifest = ( false !== $zip->locateName( $manifest_name ) );
 		$has_db       = ( false !== $zip->locateName( 'database_dump.sql' ) );
 
 		if ( ! $has_manifest || ! $has_db ) {
 			$zip->close();
 			return array(
 				'is_valid' => false,
-				'notes'    => __( 'Archive verification failed: Missing database dump or manifest inside ZIP archive.', 'wpsecureos' ),
+				'notes'    => __( 'Archive verification failed: Missing database dump or manifest inside ZIP archive.', 'maxsafe' ),
 			);
 		}
 
-		$manifest_content = $zip->getFromName( 'wpsecureos_manifest.json' );
+		$manifest_content = $zip->getFromName( $manifest_name );
 		$manifest_json    = json_decode( $manifest_content, true );
 
 		$zip->close();
@@ -171,13 +175,13 @@ class WpSecureOs_Backup_Adapter {
 		if ( empty( $manifest_json['site_url'] ) ) {
 			return array(
 				'is_valid' => false,
-				'notes'    => __( 'Manifest JSON is corrupted or unreadable.', 'wpsecureos' ),
+				'notes'    => __( 'Manifest JSON is corrupted or unreadable.', 'maxsafe' ),
 			);
 		}
 
 		return array(
 			'is_valid' => true,
-			'notes'    => __( 'Archive readability verified: Consistency check passed, valid JSON manifest and SQL schema present.', 'wpsecureos' ),
+			'notes'    => __( 'Archive readability verified: Consistency check passed, valid JSON manifest and SQL schema present.', 'maxsafe' ),
 		);
 	}
 
@@ -188,7 +192,7 @@ class WpSecureOs_Backup_Adapter {
 	 */
 	public static function get_latest_verified_backup() {
 		global $wpdb;
-		$table = $wpdb->prefix . 'wpsecureos_backups';
+		$table = $wpdb->prefix . 'maxsafe_backups';
 
 		$row = $wpdb->get_row( "SELECT * FROM {$table} WHERE is_verified = 1 ORDER BY id DESC LIMIT 1", ARRAY_A );
 		return $row ? $row : null;
@@ -201,7 +205,7 @@ class WpSecureOs_Backup_Adapter {
 	 */
 	public static function get_all_backups() {
 		global $wpdb;
-		$table = $wpdb->prefix . 'wpsecureos_backups';
+		$table = $wpdb->prefix . 'maxsafe_backups';
 		$rows  = $wpdb->get_results( "SELECT * FROM {$table} ORDER BY id DESC LIMIT 50", ARRAY_A );
 		return $rows ? $rows : array();
 	}
@@ -212,7 +216,7 @@ class WpSecureOs_Backup_Adapter {
 	private static function generate_db_dump() {
 		global $wpdb;
 
-		$dump = "-- WpSecureOs Point-in-time Database Backup\n";
+		$dump = "-- MaxSafe Point-in-time Database Backup\n";
 		$dump .= "-- Generated: " . current_time( 'mysql' ) . "\n\n";
 		$dump .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
 
@@ -248,7 +252,7 @@ class WpSecureOs_Backup_Adapter {
 	 */
 	public static function get_recovery_runbook_content() {
 		$runbook  = "===================================================================\n";
-		$runbook .= "WPSECUREOS RECOVERY RUNBOOK & POINT-IN-TIME RESTORATION PROCEDURE\n";
+		$runbook .= "MAXSAFE RECOVERY RUNBOOK & POINT-IN-TIME RESTORATION PROCEDURE\n";
 		$runbook .= "===================================================================\n\n";
 		$runbook .= "IMPORTANT NOTICE BEFORE RESTORING:\n";
 		$runbook .= "Restoring a production database will roll back database tables to this\n";
@@ -269,7 +273,7 @@ class WpSecureOs_Backup_Adapter {
 		$runbook .= "   d. Verify customer order IDs and integrity.\n";
 		$runbook .= "   e. Disable Maintenance Mode.\n\n";
 		$runbook .= "Security Hash: Verified with SHA-256 integrity checksum.\n";
-		$runbook .= "Generated by WpSecureOs (https://wpsecureos-plugin.netlify.app/).\n";
+		$runbook .= "Generated by MaxSafe (https://wpsecureos-plugin.netlify.app/).\n";
 		$runbook .= "===================================================================\n";
 		return $runbook;
 	}

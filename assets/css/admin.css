@@ -1,5 +1,5 @@
 /**
- * WpSecureOs Admin Stylesheet
+ * MaxSafe Admin Stylesheet
  * Enterprise Cybersecurity Color Palette
  */
 
@@ -52,7 +52,7 @@
 /* ==========================================================================
    Base Scope
    ========================================================================== */
-.wpsecureos-wrap {
+.maxsafe-wrap, .wpsecureos-wrap {
 	font-family: var(--safe-font-sans);
 	color: var(--safe-text);
 	background: var(--safe-bg);
@@ -64,14 +64,14 @@
 	max-width: 100%;
 }
 
-.wpsecureos-wrap * {
+.maxsafe-wrap, .wpsecureos-wrap * {
 	box-sizing: border-box;
 }
 
 /* ==========================================================================
    Header Bar
    ========================================================================== */
-.wpsecureos-header {
+.maxsafe-header, .wpsecureos-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -85,20 +85,20 @@
 	box-shadow: var(--safe-shadow);
 }
 
-.wpsecureos-brand {
+.maxsafe-brand, .wpsecureos-brand {
 	display: flex;
 	align-items: center;
 	gap: 14px;
 	min-width: 240px;
 }
 
-.wpsecureos-brand img {
+.maxsafe-brand, .wpsecureos-brand img {
 	width: 36px;
 	height: 36px;
 	flex-shrink: 0;
 }
 
-.wpsecureos-brand-title {
+.maxsafe-brand-title, .wpsecureos-brand-title {
 	font-size: 18px;
 	font-weight: 700;
 	letter-spacing: -0.02em;
@@ -109,7 +109,7 @@
 	gap: 8px;
 }
 
-.wpsecureos-brand-title span.badge-version {
+.maxsafe-brand-title, .wpsecureos-brand-title span.badge-version {
 	font-family: var(--safe-font-mono);
 	font-size: 11px;
 	background: var(--safe-cyan-bg);
@@ -120,21 +120,21 @@
 	border: 1px solid rgba(14, 165, 233, 0.2);
 }
 
-.wpsecureos-brand-subtitle {
+.maxsafe-brand-subtitle, .wpsecureos-brand-subtitle {
 	font-size: 13px;
 	color: var(--safe-text-muted);
 	margin: 0;
 	line-height: 1.4;
 }
 
-.wpsecureos-header-actions {
+.maxsafe-header-actions, .wpsecureos-header-actions {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
 	gap: 12px;
 }
 
-.wpsecureos-live-status {
+.maxsafe-live-status, .wpsecureos-live-status {
 	display: flex;
 	align-items: center;
 	gap: 8px;
@@ -173,7 +173,7 @@
 /* ==========================================================================
    Navigation Tabs
    ========================================================================== */
-.wpsecureos-nav-tabs {
+.maxsafe-nav-tabs, .wpsecureos-nav-tabs {
 	display: flex;
 	align-items: center;
 	background: var(--safe-surface);
@@ -188,20 +188,20 @@
 	scrollbar-color: rgba(14, 165, 233, 0.4) transparent;
 }
 
-.wpsecureos-nav-tabs::-webkit-scrollbar {
+.maxsafe-nav-tabs, .wpsecureos-nav-tabs::-webkit-scrollbar {
 	height: 4px;
 }
 
-.wpsecureos-nav-tabs::-webkit-scrollbar-track {
+.maxsafe-nav-tabs, .wpsecureos-nav-tabs::-webkit-scrollbar-track {
 	background: transparent;
 }
 
-.wpsecureos-nav-tabs::-webkit-scrollbar-thumb {
+.maxsafe-nav-tabs, .wpsecureos-nav-tabs::-webkit-scrollbar-thumb {
 	background: rgba(14, 165, 233, 0.3);
 	border-radius: 9999px;
 }
 
-.wpsecureos-nav-tab {
+.maxsafe-nav-tab, .wpsecureos-nav-tab {
 	display: inline-flex;
 	align-items: center;
 	gap: 8px;
@@ -215,19 +215,19 @@
 	white-space: nowrap;
 }
 
-.wpsecureos-nav-tab:hover {
+.maxsafe-nav-tab, .wpsecureos-nav-tab:hover {
 	color: var(--safe-text);
 	background: #f1f5f9;
 	text-decoration: none;
 }
 
-.wpsecureos-nav-tab.active {
+.maxsafe-nav-tab, .wpsecureos-nav-tab.active {
 	background: #0f172a;
 	color: #ffffff;
 	box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
 }
 
-.wpsecureos-nav-tab .tab-badge {
+.maxsafe-nav-tab, .wpsecureos-nav-tab .tab-badge {
 	font-family: var(--safe-font-mono);
 	font-size: 10px;
 	padding: 1px 6px;
@@ -237,7 +237,7 @@
 	font-weight: 700;
 }
 
-.wpsecureos-nav-tab.active .tab-badge {
+.maxsafe-nav-tab, .wpsecureos-nav-tab.active .tab-badge {
 	background: #ef4444;
 	color: #ffffff;
 }
@@ -245,14 +245,14 @@
 /* ==========================================================================
    KPI & Stat Cards Grid
    ========================================================================== */
-.wpsecureos-grid {
+.maxsafe-grid, .wpsecureos-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 	gap: 20px;
 	margin-bottom: 24px;
 }
 
-.wpsecureos-kpi-card {
+.maxsafe-kpi-card, .wpsecureos-kpi-card {
 	background: var(--safe-surface);
 	border: 1px solid var(--safe-border);
 	border-radius: var(--safe-radius);
@@ -262,7 +262,7 @@
 	overflow: hidden;
 }
 
-.wpsecureos-kpi-card::before {
+.maxsafe-kpi-card, .wpsecureos-kpi-card::before {
 	content: '';
 	position: absolute;
 	top: 0;
@@ -272,19 +272,19 @@
 	background: var(--safe-cyan);
 }
 
-.wpsecureos-kpi-card.critical::before {
+.maxsafe-kpi-card, .wpsecureos-kpi-card.critical::before {
 	background: var(--sev-critical);
 }
 
-.wpsecureos-kpi-card.warning::before {
+.maxsafe-kpi-card, .wpsecureos-kpi-card.warning::before {
 	background: var(--sev-high);
 }
 
-.wpsecureos-kpi-card.success::before {
+.maxsafe-kpi-card, .wpsecureos-kpi-card.success::before {
 	background: var(--sev-clean);
 }
 
-.wpsecureos-kpi-title {
+.maxsafe-kpi-title, .wpsecureos-kpi-title {
 	font-size: 12px;
 	font-weight: 600;
 	text-transform: uppercase;
@@ -293,7 +293,7 @@
 	margin-bottom: 8px;
 }
 
-.wpsecureos-kpi-value {
+.maxsafe-kpi-value, .wpsecureos-kpi-value {
 	font-family: var(--safe-font-mono);
 	font-size: 28px;
 	font-weight: 700;
@@ -302,7 +302,7 @@
 	margin-bottom: 6px;
 }
 
-.wpsecureos-kpi-desc {
+.maxsafe-kpi-desc, .wpsecureos-kpi-desc {
 	font-size: 12px;
 	color: var(--safe-text-muted);
 }
@@ -310,7 +310,7 @@
 /* ==========================================================================
    Content Panels, Responsive Grids & Tables
    ========================================================================== */
-.wpsecureos-two-col {
+.maxsafe-two-col, .wpsecureos-two-col {
 	display: grid;
 	grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
 	gap: 24px;
@@ -318,7 +318,7 @@
 	width: 100%;
 }
 
-.wpsecureos-equal-cols {
+.maxsafe-equal-cols, .wpsecureos-equal-cols {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 	gap: 20px;
@@ -326,7 +326,7 @@
 	width: 100%;
 }
 
-.wpsecureos-panel {
+.maxsafe-panel, .wpsecureos-panel {
 	background: var(--safe-surface);
 	border: 1px solid var(--safe-border);
 	border-radius: var(--safe-radius);
@@ -337,7 +337,7 @@
 	overflow: hidden;
 }
 
-.wpsecureos-panel-header {
+.maxsafe-panel-header, .wpsecureos-panel-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -348,7 +348,7 @@
 	border-bottom: 1px solid var(--safe-border);
 }
 
-.wpsecureos-panel-title {
+.maxsafe-panel-title, .wpsecureos-panel-title {
 	font-size: 16px;
 	font-weight: 700;
 	margin: 0;
@@ -359,7 +359,7 @@
 }
 
 /* Responsive Table Wrapper */
-.wpsecureos-table-responsive {
+.maxsafe-table-responsive, .wpsecureos-table-responsive {
 	width: 100%;
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
@@ -371,32 +371,32 @@
 	scrollbar-color: #cbd5e1 #f8fafc;
 }
 
-.wpsecureos-table-responsive::-webkit-scrollbar {
+.maxsafe-table-responsive, .wpsecureos-table-responsive::-webkit-scrollbar {
 	height: 6px;
 }
 
-.wpsecureos-table-responsive::-webkit-scrollbar-track {
+.maxsafe-table-responsive, .wpsecureos-table-responsive::-webkit-scrollbar-track {
 	background: #f1f5f9;
 	border-radius: 4px;
 }
 
-.wpsecureos-table-responsive::-webkit-scrollbar-thumb {
+.maxsafe-table-responsive, .wpsecureos-table-responsive::-webkit-scrollbar-thumb {
 	background: #cbd5e1;
 	border-radius: 4px;
 }
 
-.wpsecureos-table-responsive::-webkit-scrollbar-thumb:hover {
+.maxsafe-table-responsive, .wpsecureos-table-responsive::-webkit-scrollbar-thumb:hover {
 	background: #94a3b8;
 }
 
-.wpsecureos-table {
+.maxsafe-table, .wpsecureos-table {
 	width: 100%;
 	min-width: 620px;
 	border-collapse: collapse;
 	font-size: 13px;
 }
 
-.wpsecureos-table th {
+.maxsafe-table, .wpsecureos-table th {
 	text-align: left;
 	padding: 12px 16px;
 	font-weight: 600;
@@ -409,18 +409,18 @@
 	white-space: nowrap;
 }
 
-.wpsecureos-table td {
+.maxsafe-table, .wpsecureos-table td {
 	padding: 14px 16px;
 	border-bottom: 1px solid #f1f5f9;
 	vertical-align: middle;
 }
 
-.wpsecureos-table tr:hover td {
+.maxsafe-table, .wpsecureos-table tr:hover td {
 	background: #f8fafc;
 }
 
 /* Code & File Path Column */
-.wpsecureos-code-path {
+.maxsafe-code-path, .wpsecureos-code-path {
 	font-family: var(--safe-font-mono);
 	font-size: 12px;
 	color: #b91c1c;
@@ -432,14 +432,14 @@
 }
 
 /* Filter Form */
-.wpsecureos-filter-form {
+.maxsafe-filter-form, .wpsecureos-filter-form {
 	display: flex;
 	align-items: center;
 	gap: 10px;
 	flex-wrap: wrap;
 }
 
-.wpsecureos-filter-form input[type="text"] {
+.maxsafe-filter-form, .wpsecureos-filter-form input[type="text"] {
 	width: 220px;
 	max-width: 100%;
 }
@@ -507,7 +507,7 @@
 }
 
 /* Base DataTables Structure */
-table.dataTable.wpsecureos-datatable {
+table.dataTable.maxsafe-datatable, .wpsecureos-datatable {
 	min-width: 0 !important;
 	width: 100% !important;
 	border-collapse: separate !important;
@@ -836,7 +836,7 @@ table.dataTable>tbody>tr.child span.dtr-data {
 /* ==========================================================================
    Telemetry Dark Terminal Console
    ========================================================================== */
-.wpsecureos-terminal {
+.maxsafe-terminal, .wpsecureos-terminal {
 	background: var(--safe-terminal-bg);
 	border: 1px solid var(--safe-border-dark);
 	border-radius: var(--safe-radius);
@@ -849,7 +849,7 @@ table.dataTable>tbody>tr.child span.dtr-data {
 	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
-.wpsecureos-terminal-header {
+.maxsafe-terminal-header, .wpsecureos-terminal-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -911,7 +911,7 @@ table.dataTable>tbody>tr.child span.dtr-data {
 /* ==========================================================================
    State Machine Pipeline Stepper
    ========================================================================== */
-.wpsecureos-stepper {
+.maxsafe-stepper, .wpsecureos-stepper {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -919,7 +919,7 @@ table.dataTable>tbody>tr.child span.dtr-data {
 	position: relative;
 }
 
-.wpsecureos-step-item {
+.maxsafe-step-item, .wpsecureos-step-item {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -928,7 +928,7 @@ table.dataTable>tbody>tr.child span.dtr-data {
 	flex: 1;
 }
 
-.wpsecureos-step-circle {
+.maxsafe-step-circle, .wpsecureos-step-circle {
 	width: 34px;
 	height: 34px;
 	border-radius: 50%;
@@ -944,34 +944,34 @@ table.dataTable>tbody>tr.child span.dtr-data {
 	transition: all 0.3s;
 }
 
-.wpsecureos-step-item.active .wpsecureos-step-circle {
+.maxsafe-step-item, .wpsecureos-step-item.active .maxsafe-step-circle, .wpsecureos-step-circle {
 	background: var(--safe-cyan);
 	border-color: var(--safe-cyan-hover);
 	color: #ffffff;
 	box-shadow: 0 0 0 4px var(--safe-cyan-glow);
 }
 
-.wpsecureos-step-item.completed .wpsecureos-step-circle {
+.maxsafe-step-item, .wpsecureos-step-item.completed .maxsafe-step-circle, .wpsecureos-step-circle {
 	background: #10b981;
 	border-color: #059669;
 	color: #ffffff;
 }
 
-.wpsecureos-step-label {
+.maxsafe-step-label, .wpsecureos-step-label {
 	font-size: 11px;
 	font-weight: 600;
 	color: var(--safe-text-muted);
 	text-align: center;
 }
 
-.wpsecureos-step-item.active .wpsecureos-step-label {
+.maxsafe-step-item, .wpsecureos-step-item.active .maxsafe-step-label, .wpsecureos-step-label {
 	color: var(--safe-text);
 }
 
 /* ==========================================================================
    Interactive Modal Dialogs
    ========================================================================== */
-.wpsecureos-modal-overlay {
+.maxsafe-modal-overlay, .wpsecureos-modal-overlay {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -985,7 +985,7 @@ table.dataTable>tbody>tr.child span.dtr-data {
 	z-index: 99999;
 }
 
-.wpsecureos-modal-box {
+.maxsafe-modal-box, .wpsecureos-modal-box {
 	background: var(--safe-surface);
 	border-radius: var(--safe-radius);
 	width: 90%;
@@ -1009,7 +1009,7 @@ table.dataTable>tbody>tr.child span.dtr-data {
 	}
 }
 
-.wpsecureos-modal-header {
+.maxsafe-modal-header, .wpsecureos-modal-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -1017,14 +1017,14 @@ table.dataTable>tbody>tr.child span.dtr-data {
 	border-bottom: 1px solid var(--safe-border);
 }
 
-.wpsecureos-modal-title {
+.maxsafe-modal-title, .wpsecureos-modal-title {
 	font-size: 16px;
 	font-weight: 700;
 	margin: 0;
 	color: var(--safe-text);
 }
 
-.wpsecureos-modal-close {
+.maxsafe-modal-close, .wpsecureos-modal-close {
 	background: none;
 	border: none;
 	font-size: 20px;
@@ -1032,11 +1032,11 @@ table.dataTable>tbody>tr.child span.dtr-data {
 	color: var(--safe-text-muted);
 }
 
-.wpsecureos-modal-body {
+.maxsafe-modal-body, .wpsecureos-modal-body {
 	padding: 24px;
 }
 
-.wpsecureos-modal-footer {
+.maxsafe-modal-footer, .wpsecureos-modal-footer {
 	padding: 16px 24px;
 	background: #f8fafc;
 	border-top: 1px solid var(--safe-border);
@@ -1082,7 +1082,7 @@ table.dataTable>tbody>tr.child span.dtr-data {
 }
 
 /* Toast Notifications */
-.wpsecureos-toast {
+.maxsafe-toast, .wpsecureos-toast {
 	position: fixed;
 	bottom: 24px;
 	right: 24px;
@@ -1106,7 +1106,7 @@ table.dataTable>tbody>tr.child span.dtr-data {
 
 /* 1. Large Screens & Laptops (<= 1200px) */
 @media (max-width: 1200px) {
-	.wpsecureos-two-col {
+	.maxsafe-two-col, .wpsecureos-two-col {
 		grid-template-columns: minmax(0, 1fr);
 		gap: 20px;
 	}
@@ -1114,17 +1114,17 @@ table.dataTable>tbody>tr.child span.dtr-data {
 
 /* 2. Tablets & Medium Screens (<= 1024px) */
 @media (max-width: 1024px) {
-	.wpsecureos-header {
+	.maxsafe-header, .wpsecureos-header {
 		padding: 18px 20px;
 	}
 
-	.wpsecureos-nav-tabs {
+	.maxsafe-nav-tabs, .wpsecureos-nav-tabs {
 		flex-wrap: wrap;
 		gap: 6px;
 		padding: 8px;
 	}
 
-	.wpsecureos-nav-tab {
+	.maxsafe-nav-tab, .wpsecureos-nav-tab {
 		flex: 1 1 auto;
 		justify-content: center;
 		text-align: center;
@@ -1132,18 +1132,18 @@ table.dataTable>tbody>tr.child span.dtr-data {
 		font-size: 12px;
 	}
 
-	.wpsecureos-header-actions {
+	.maxsafe-header-actions, .wpsecureos-header-actions {
 		justify-content: flex-start;
 	}
 }
 
 /* 3. WordPress Admin Mobile Breakpoint (<= 782px) */
 @media (max-width: 782px) {
-	.wpsecureos-wrap {
+	.maxsafe-wrap, .wpsecureos-wrap {
 		margin: 12px 10px 0 0;
 	}
 
-	.wpsecureos-header {
+	.maxsafe-header, .wpsecureos-header {
 		flex-direction: column;
 		align-items: stretch;
 		gap: 14px;
@@ -1151,29 +1151,29 @@ table.dataTable>tbody>tr.child span.dtr-data {
 		margin-bottom: 18px;
 	}
 
-	.wpsecureos-brand {
+	.maxsafe-brand, .wpsecureos-brand {
 		width: 100%;
 	}
 
-	.wpsecureos-header-actions {
+	.maxsafe-header-actions, .wpsecureos-header-actions {
 		width: 100%;
 		flex-wrap: wrap;
 		gap: 10px;
 		justify-content: flex-start;
 	}
 
-	.wpsecureos-equal-cols {
+	.maxsafe-equal-cols, .wpsecureos-equal-cols {
 		grid-template-columns: minmax(0, 1fr);
 		gap: 16px;
 	}
 
-	.wpsecureos-panel {
+	.maxsafe-panel, .wpsecureos-panel {
 		padding: 18px 16px;
 		margin-bottom: 18px;
 		border-radius: 10px;
 	}
 
-	.wpsecureos-panel-header {
+	.maxsafe-panel-header, .wpsecureos-panel-header {
 		flex-direction: column;
 		align-items: flex-start;
 		gap: 12px;
@@ -1181,42 +1181,42 @@ table.dataTable>tbody>tr.child span.dtr-data {
 		margin-bottom: 16px;
 	}
 
-	.wpsecureos-panel-header>* {
+	.maxsafe-panel-header, .wpsecureos-panel-header>* {
 		width: 100%;
 	}
 
-	.wpsecureos-filter-form {
+	.maxsafe-filter-form, .wpsecureos-filter-form {
 		width: 100%;
 		flex-direction: column;
 		align-items: stretch;
 		gap: 8px;
 	}
 
-	.wpsecureos-filter-form select,
-	.wpsecureos-filter-form input[type="text"],
-	.wpsecureos-filter-form button {
+	.maxsafe-filter-form, .wpsecureos-filter-form select,
+	.maxsafe-filter-form, .wpsecureos-filter-form input[type="text"],
+	.maxsafe-filter-form, .wpsecureos-filter-form button {
 		width: 100% !important;
 	}
 
-	.wpsecureos-grid {
+	.maxsafe-grid, .wpsecureos-grid {
 		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 		gap: 14px;
 		margin-bottom: 18px;
 	}
 
-	.wpsecureos-modal-box {
+	.maxsafe-modal-box, .wpsecureos-modal-box {
 		width: 95%;
 		max-height: 90vh;
 		margin: 10px;
 	}
 
-	.wpsecureos-modal-header,
-	.wpsecureos-modal-body,
-	.wpsecureos-modal-footer {
+	.maxsafe-modal-header, .wpsecureos-modal-header,
+	.maxsafe-modal-body, .wpsecureos-modal-body,
+	.maxsafe-modal-footer, .wpsecureos-modal-footer {
 		padding: 16px;
 	}
 
-	.wpsecureos-stepper {
+	.maxsafe-stepper, .wpsecureos-stepper {
 		overflow-x: auto;
 		-webkit-overflow-scrolling: touch;
 		padding-bottom: 8px;
@@ -1224,87 +1224,87 @@ table.dataTable>tbody>tr.child span.dtr-data {
 		gap: 16px;
 	}
 
-	.wpsecureos-step-item {
+	.maxsafe-step-item, .wpsecureos-step-item {
 		min-width: 70px;
 	}
 
-	.wpsecureos-terminal {
+	.maxsafe-terminal, .wpsecureos-terminal {
 		padding: 14px;
 		font-size: 11px;
 	}
 
-	.wpsecureos-admin-notice {
+	.maxsafe-admin-notice, .wpsecureos-admin-notice {
 		margin: 10px 10px 10px 0 !important;
 	}
 }
 
 /* 4. Small Mobile Phones (<= 540px) */
 @media (max-width: 540px) {
-	.wpsecureos-header {
+	.maxsafe-header, .wpsecureos-header {
 		padding: 14px;
 	}
 
-	.wpsecureos-brand {
+	.maxsafe-brand, .wpsecureos-brand {
 		align-items: flex-start;
 		gap: 10px;
 	}
 
-	.wpsecureos-brand img {
+	.maxsafe-brand, .wpsecureos-brand img {
 		width: 28px;
 		height: 28px;
 	}
 
-	.wpsecureos-brand-title {
+	.maxsafe-brand-title, .wpsecureos-brand-title {
 		font-size: 16px;
 		flex-wrap: wrap;
 		gap: 6px;
 	}
 
-	.wpsecureos-brand-subtitle {
+	.maxsafe-brand-subtitle, .wpsecureos-brand-subtitle {
 		font-size: 11px;
 	}
 
-	.wpsecureos-header-actions {
+	.maxsafe-header-actions, .wpsecureos-header-actions {
 		flex-direction: column;
 		align-items: stretch;
 	}
 
-	.wpsecureos-header-actions .safe-btn,
-	.wpsecureos-header-actions .wpsecureos-live-status {
+	.maxsafe-header-actions, .wpsecureos-header-actions .safe-btn,
+	.maxsafe-header-actions, .wpsecureos-header-actions .maxsafe-live-status, .wpsecureos-live-status {
 		width: 100%;
 		justify-content: center;
 		text-align: center;
 	}
 
-	.wpsecureos-nav-tabs {
+	.maxsafe-nav-tabs, .wpsecureos-nav-tabs {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 6px;
 	}
 
-	.wpsecureos-nav-tab {
+	.maxsafe-nav-tab, .wpsecureos-nav-tab {
 		padding: 8px 8px;
 		font-size: 11px;
 		justify-content: center;
 		gap: 5px;
 	}
 
-	.wpsecureos-nav-tab span.dashicons {
+	.maxsafe-nav-tab, .wpsecureos-nav-tab span.dashicons {
 		font-size: 15px;
 		width: 15px;
 		height: 15px;
 	}
 
-	.wpsecureos-grid {
+	.maxsafe-grid, .wpsecureos-grid {
 		grid-template-columns: 1fr;
 		gap: 12px;
 	}
 
-	.wpsecureos-kpi-card {
+	.maxsafe-kpi-card, .wpsecureos-kpi-card {
 		padding: 16px;
 	}
 
-	.wpsecureos-kpi-value {
+	.maxsafe-kpi-value, .wpsecureos-kpi-value {
 		font-size: 22px;
 	}
 
@@ -1318,7 +1318,7 @@ table.dataTable>tbody>tr.child span.dtr-data {
 		padding: 10px;
 	}
 
-	.wpsecureos-toast {
+	.maxsafe-toast, .wpsecureos-toast {
 		left: 16px;
 		right: 16px;
 		bottom: 16px;
@@ -1326,12 +1326,12 @@ table.dataTable>tbody>tr.child span.dtr-data {
 		text-align: center;
 	}
 
-	.wpsecureos-wrap input[type="text"],
-	.wpsecureos-wrap input[type="password"],
-	.wpsecureos-wrap input[type="url"],
-	.wpsecureos-wrap input[type="number"],
-	.wpsecureos-wrap select,
-	.wpsecureos-wrap textarea {
+	.maxsafe-wrap, .wpsecureos-wrap input[type="text"],
+	.maxsafe-wrap, .wpsecureos-wrap input[type="password"],
+	.maxsafe-wrap, .wpsecureos-wrap input[type="url"],
+	.maxsafe-wrap, .wpsecureos-wrap input[type="number"],
+	.maxsafe-wrap, .wpsecureos-wrap select,
+	.maxsafe-wrap, .wpsecureos-wrap textarea {
 		width: 100% !important;
 		max-width: 100% !important;
 	}
@@ -1340,7 +1340,7 @@ table.dataTable>tbody>tr.child span.dtr-data {
 /* ==========================================================================
    Pricing, Subscription & License Management Module Styles
    ========================================================================== */
-.wpsecureos-license-container {
+.maxsafe-license-container, .wpsecureos-license-container {
 	margin-top: 10px;
 }
 

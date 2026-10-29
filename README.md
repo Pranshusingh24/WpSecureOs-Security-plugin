@@ -1,7 +1,7 @@
-# WpSecureOs
+# MaxSafe
 
 <p align="center">
-  <img src="assets/images/wpsecureos-security-logo.png" alt="WpSecureOs Logo" width="120" height="120" />
+  <img src="assets/images/maxsafe-security-logo.png" alt="MaxSafe Logo" width="120" height="120" />
 </p>
 
 <p align="center">
@@ -20,9 +20,9 @@
 
 ## Overview
 
-**WpSecureOs** is an enterprise-grade security operations and safe update orchestration platform designed specifically for WordPress developers, agency engineers, and mission-critical enterprise environments.
+**MaxSafe** is an enterprise-grade security operations and safe update orchestration platform designed specifically for WordPress developers, agency engineers, and mission-critical enterprise environments.
 
-Traditional updates rely on blind trust, often breaking production sites, failing silently, or introducing unreviewed vulnerabilities. WpSecureOs establishes an explainable, evidence-backed workflow:
+Traditional updates rely on blind trust, often breaking production sites, failing silently, or introducing unreviewed vulnerabilities. MaxSafe establishes an explainable, evidence-backed workflow:
 
 $$\text{Assess} \longrightarrow \text{Back up} \longrightarrow \text{Stage} \longrightarrow \text{Test} \longrightarrow \text{Approve} \longrightarrow \text{Deploy} \longrightarrow \text{Verify} \longrightarrow \text{Recover}$$
 
@@ -30,7 +30,7 @@ $$\text{Assess} \longrightarrow \text{Back up} \longrightarrow \text{Stage} \lon
 
 ## Telemetry Dashboard Preview
 
-![WpSecureOs Overview Dashboard](assets/images/screenshot-1.png)
+![MaxSafe Overview Dashboard](assets/images/screenshot-1.png)
 
 ---
 
@@ -79,7 +79,7 @@ $$\text{Assess} \longrightarrow \text{Back up} \longrightarrow \text{Stage} \lon
 This repository contains the complete structure required by the [WordPress.org Plugin Guidelines](https://developer.wordpress.org/plugins/wordpress-org/):
 
 ```
-wpsecureos/
+maxsafe/
 ├── assets/                     # Plugin assets (CSS, JS, images, vendor)
 │   ├── css/
 │   ├── js/
@@ -103,7 +103,7 @@ wpsecureos/
 ├── composer.json               # Package definitions
 ├── readme.txt                  # Official WordPress.org validated readme
 ├── uninstall.php               # Safe uninstallation lifecycle
-└── wpsecureos.php              # Main bootstrap & plugin header definitions
+└── maxsafe.php                 # Main bootstrap & plugin header definitions
 ```
 
 ---
@@ -111,11 +111,11 @@ wpsecureos/
 ## Submitting to WordPress.org
 
 1. **Upload Form:** Navigate to [WordPress.org Plugin Submission](https://wordpress.org/plugins/developers/add/).
-2. **Zip Package:** Upload the generated `wpsecureos.zip` (created via `build.ps1` or `build.php`).
+2. **Zip Package:** Upload the generated `maxsafe.zip` (created via `build.ps1` or `build.php`).
 3. **SVN Repository Setup:** Once approved, commit the `wporg-assets/` directory to the root `/assets/` folder of your WordPress.org SVN repository, and the plugin code to `/trunk/` and `/tags/1.1.0/`.
 
 ---
 
 ## License
 
-WpSecureOs is open-source software licensed under the [GNU General Public License v2.0 or later](https://www.gnu.org/licenses/gpl-2.0.html).
+MaxSafe is open-source software licensed under the [GNU General Public License v2.0 or later](https://www.gnu.org/licenses/gpl-2.0.html).

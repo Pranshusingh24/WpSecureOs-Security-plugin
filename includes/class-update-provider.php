@@ -2,14 +2,14 @@
 /**
  * Core, plugin, and theme update provider.
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WpSecureOs_Update_Provider {
+class MaxSafe_Update_Provider {
 
 	/**
 	 * Get all pending updates across Core, Plugins, Themes along with explainable risk assessment.
@@ -22,13 +22,14 @@ class WpSecureOs_Update_Provider {
 			wp_version_check();
 			wp_update_plugins();
 			wp_update_themes();
+			delete_transient( 'maxsafe_inventory_cache' );
 			delete_transient( 'wpsecureos_inventory_cache' );
 		}
 
-		$inventory = WpSecureOs_Inventory::get_inventory( $force_check );
+		$inventory = MaxSafe_Inventory::get_inventory( $force_check );
 
 		// Retrieve backup health context
-		$last_backup = WpSecureOs_Backup_Adapter::get_latest_verified_backup();
+		$last_backup = MaxSafe_Backup_Adapter::get_latest_verified_backup();
 		$backup_hours = null;
 		if ( $last_backup ) {
 			$backup_time = strtotime( $last_backup['created_at'] );
@@ -36,7 +37,7 @@ class WpSecureOs_Update_Provider {
 		}
 
 		// Retrieve vulnerability intelligence context
-		$vulns = WpSecureOs_Security_Scanner::get_known_vulnerabilities();
+		$vulns = MaxSafe_Security_Scanner::get_known_vulnerabilities();
 
 		// Check if WooCommerce is installed and active
 		$has_woocommerce = class_exists( 'WooCommerce' ) || in_array( 'woocommerce/woocommerce.php', (array) get_option( 'active_plugins', array() ), true );
@@ -61,7 +62,7 @@ class WpSecureOs_Update_Provider {
 				'new_version'       => $inventory['wordpress']['new_version'],
 				'is_active'         => true,
 			);
-			$assessment = WpSecureOs_Risk_Assessor::assess_component( $core_item, $context );
+			$assessment = MaxSafe_Risk_Assessor::assess_component( $core_item, $context );
 			$assessed_updates[] = array_merge( $core_item, array( 'assessment' => $assessment ) );
 		}
 
@@ -69,7 +70,7 @@ class WpSecureOs_Update_Provider {
 		if ( ! empty( $inventory['plugins'] ) ) {
 			foreach ( $inventory['plugins'] as $plugin_file => $plugin_data ) {
 				if ( ! empty( $plugin_data['has_update'] ) ) {
-					$assessment = WpSecureOs_Risk_Assessor::assess_component( $plugin_data, $context );
+					$assessment = MaxSafe_Risk_Assessor::assess_component( $plugin_data, $context );
 					$assessed_updates[] = array_merge(
 						$plugin_data,
 						array(
@@ -85,7 +86,7 @@ class WpSecureOs_Update_Provider {
 		if ( ! empty( $inventory['themes'] ) ) {
 			foreach ( $inventory['themes'] as $theme_slug => $theme_data ) {
 				if ( ! empty( $theme_data['has_update'] ) ) {
-					$assessment = WpSecureOs_Risk_Assessor::assess_component( $theme_data, $context );
+					$assessment = MaxSafe_Risk_Assessor::assess_component( $theme_data, $context );
 					$assessed_updates[] = array_merge(
 						$theme_data,
 						array(

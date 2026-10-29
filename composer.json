@@ -1,12 +1,12 @@
 {
-  "name": "wpsecureos/wpsecureos",
+  "name": "maxsafe/maxsafe",
   "description": "Enterprise-grade WordPress Security, Continuous Validation, Safe Updates, and Recovery Platform.",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
   "authors": [
     {
       "name": "Pranshu Singh",
-      "homepage": "https://wpsecureos-plugin.netlify.app/"
+      "homepage": "https://maxsafe-plugin.netlify.app/"
     }
   ],
   "require": {

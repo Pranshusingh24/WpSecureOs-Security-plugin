@@ -2,14 +2,14 @@
 /**
  * Explainable Update Risk Assessment Engine.
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WpSecureOs_Risk_Assessor {
+class MaxSafe_Risk_Assessor {
 
 	// Security Urgency Labels
 	const URGENCY_ROUTINE   = 'Routine';
@@ -45,19 +45,19 @@ class WpSecureOs_Risk_Assessor {
 		if ( 'major' === $version_diff ) {
 			$reasons[] = sprintf(
 				/* translators: 1: Old version, 2: New version */
-				__( 'Major version upgrade detected (%1$s -> %2$s), which often introduces breaking architectural API changes.', 'wpsecureos' ),
+				__( 'Major version upgrade detected (%1$s -> %2$s), which often introduces breaking architectural API changes.', 'maxsafe' ),
 				$installed_ver,
 				$new_ver
 			);
-			$evidence_sources[] = __( 'Semantic Versioning Analysis', 'wpsecureos' );
+			$evidence_sources[] = __( 'Semantic Versioning Analysis', 'maxsafe' );
 		} elseif ( 'minor' === $version_diff ) {
 			$reasons[] = sprintf(
 				/* translators: 1: Old version, 2: New version */
-				__( 'Minor feature release (%1$s -> %2$s). New functionality introduced.', 'wpsecureos' ),
+				__( 'Minor feature release (%1$s -> %2$s). New functionality introduced.', 'maxsafe' ),
 				$installed_ver,
 				$new_ver
 			);
-			$evidence_sources[] = __( 'Semantic Versioning Analysis', 'wpsecureos' );
+			$evidence_sources[] = __( 'Semantic Versioning Analysis', 'maxsafe' );
 		}
 
 		// 2. Vulnerability & Security Urgency Check
@@ -75,18 +75,18 @@ class WpSecureOs_Risk_Assessor {
 				$urgency   = self::URGENCY_CRITICAL;
 				$reasons[] = sprintf(
 					/* translators: %d: Number of security advisories */
-					__( 'ACTIVE SECURITY VULNERABILITY: Installed version has %d reported CVE advisories requiring remediation.', 'wpsecureos' ),
+					__( 'ACTIVE SECURITY VULNERABILITY: Installed version has %d reported CVE advisories requiring remediation.', 'maxsafe' ),
 					count( $known_cves )
 				);
 			} else {
 				$urgency   = self::URGENCY_IMPORTANT;
 				$reasons[] = sprintf(
 					/* translators: %d: Number of security advisories */
-					__( 'Security advisory exists for installed version (%d advisories). Update recommended.', 'wpsecureos' ),
+					__( 'Security advisory exists for installed version (%d advisories). Update recommended.', 'maxsafe' ),
 					count( $known_cves )
 				);
 			}
-			$evidence_sources[] = __( 'Vulnerability Intelligence Feed', 'wpsecureos' );
+			$evidence_sources[] = __( 'Vulnerability Intelligence Feed', 'maxsafe' );
 		}
 
 		// 3. PHP Runtime Compatibility Check
@@ -95,42 +95,42 @@ class WpSecureOs_Risk_Assessor {
 			if ( version_compare( PHP_VERSION, $requires_php, '<' ) ) {
 				$reasons[] = sprintf(
 					/* translators: 1: Component requirement, 2: Server PHP version */
-					__( 'INCOMPATIBLE: Requires PHP %1$s but server runtime is %2$s. Update will trigger fatal error.', 'wpsecureos' ),
+					__( 'INCOMPATIBLE: Requires PHP %1$s but server runtime is %2$s. Update will trigger fatal error.', 'maxsafe' ),
 					$requires_php,
 					PHP_VERSION
 				);
 				$confidence = self::CONFIDENCE_LOW;
-				$evidence_sources[] = __( 'Component Metadata: RequiresPHP', 'wpsecureos' );
+				$evidence_sources[] = __( 'Component Metadata: RequiresPHP', 'maxsafe' );
 			} else {
 				$reasons[] = sprintf(
 					/* translators: 1: Component requirement, 2: Server PHP version */
-					__( 'PHP compatibility verified: Component declared PHP %1$s+ requirement matches runtime %2$s.', 'wpsecureos' ),
+					__( 'PHP compatibility verified: Component declared PHP %1$s+ requirement matches runtime %2$s.', 'maxsafe' ),
 					$requires_php,
 					PHP_VERSION
 				);
-				$evidence_sources[] = __( 'Component Metadata: RequiresPHP', 'wpsecureos' );
+				$evidence_sources[] = __( 'Component Metadata: RequiresPHP', 'maxsafe' );
 			}
 		}
 
 		// 4. Critical Business Path: WooCommerce check
 		$has_woocommerce = ! empty( $context['has_woocommerce'] );
 		if ( $has_woocommerce && ( 'woocommerce' === $slug || $is_active ) ) {
-			$reasons[] = __( 'Critical e-commerce path detected. Checkout funnel must be validated in staging prior to production deploy.', 'wpsecureos' );
-			$evidence_sources[] = __( 'Site Inventory: WooCommerce Active', 'wpsecureos' );
+			$reasons[] = __( 'Critical e-commerce path detected. Checkout funnel must be validated in staging prior to production deploy.', 'maxsafe' );
+			$evidence_sources[] = __( 'Site Inventory: WooCommerce Active', 'maxsafe' );
 		}
 
 		// 5. Backup Verification Status
 		$backup_freshness_hours = isset( $context['recent_verified_backup_hours'] ) ? $context['recent_verified_backup_hours'] : null;
 		if ( null === $backup_freshness_hours || $backup_freshness_hours > 24 ) {
-			$reasons[] = __( 'No verified backup archive found within the last 24 hours. A fresh, restorable backup must be taken first.', 'wpsecureos' );
-			$evidence_sources[] = __( 'WpSecureOs Backup Adapter', 'wpsecureos' );
+			$reasons[] = __( 'No verified backup archive found within the last 24 hours. A fresh, restorable backup must be taken first.', 'maxsafe' );
+			$evidence_sources[] = __( 'MaxSafe Backup Adapter', 'maxsafe' );
 		} else {
 			$reasons[] = sprintf(
 				/* translators: %d: Hours since last backup */
-				__( 'Verified restorable backup exists (%d hours old).', 'wpsecureos' ),
+				__( 'Verified restorable backup exists (%d hours old).', 'maxsafe' ),
 				$backup_freshness_hours
 			);
-			$evidence_sources[] = __( 'WpSecureOs Backup Adapter', 'wpsecureos' );
+			$evidence_sources[] = __( 'MaxSafe Backup Adapter', 'maxsafe' );
 		}
 
 		// 6. Staging & Visual Test Status
@@ -139,18 +139,18 @@ class WpSecureOs_Risk_Assessor {
 
 		if ( $staging_failed ) {
 			$confidence = self::CONFIDENCE_LOW;
-			$reasons[]  = __( 'STAGING REGRESSION DETECTED: Automated smoke tests or visual regression failed on staging snapshot.', 'wpsecureos' );
-			$evidence_sources[] = __( 'WpSecureOs Staging Test Runner', 'wpsecureos' );
+			$reasons[]  = __( 'STAGING REGRESSION DETECTED: Automated smoke tests or visual regression failed on staging snapshot.', 'maxsafe' );
+			$evidence_sources[] = __( 'MaxSafe Staging Test Runner', 'maxsafe' );
 		} elseif ( $staging_tested ) {
 			$confidence = self::CONFIDENCE_HIGH;
-			$reasons[]  = __( 'Staging smoke tests passed and visual regression thresholds validated successfully.', 'wpsecureos' );
-			$evidence_sources[] = __( 'WpSecureOs Staging Test Runner', 'wpsecureos' );
+			$reasons[]  = __( 'Staging smoke tests passed and visual regression thresholds validated successfully.', 'maxsafe' );
+			$evidence_sources[] = __( 'MaxSafe Staging Test Runner', 'maxsafe' );
 		} else {
 			// No staging test executed yet
 			if ( self::CONFIDENCE_LOW !== $confidence ) {
 				$confidence = ( 'major' === $version_diff ) ? self::CONFIDENCE_LOW : self::CONFIDENCE_MODERATE;
 			}
-			$reasons[] = __( 'Staging validation has not yet run for this candidate update version.', 'wpsecureos' );
+			$reasons[] = __( 'Staging validation has not yet run for this candidate update version.', 'maxsafe' );
 		}
 
 		// Determine Next Recommended Step
@@ -199,15 +199,15 @@ class WpSecureOs_Risk_Assessor {
 	 */
 	private static function determine_next_action( $urgency, $confidence, $backup_hours, $staging_tested ) {
 		if ( null === $backup_hours || $backup_hours > 24 ) {
-			return __( 'Create and verify fresh full-site backup archive.', 'wpsecureos' );
+			return __( 'Create and verify fresh full-site backup archive.', 'maxsafe' );
 		}
 		if ( ! $staging_tested ) {
-			return __( 'Launch Staging Clone and run automated smoke & visual regression tests.', 'wpsecureos' );
+			return __( 'Launch Staging Clone and run automated smoke & visual regression tests.', 'maxsafe' );
 		}
 		if ( self::CONFIDENCE_LOW === $confidence ) {
-			return __( 'Review staging failure logs and consult plugin changelog before proceeding.', 'wpsecureos' );
+			return __( 'Review staging failure logs and consult plugin changelog before proceeding.', 'maxsafe' );
 		}
-		return __( 'Ready for administrator approval and controlled production deployment.', 'wpsecureos' );
+		return __( 'Ready for administrator approval and controlled production deployment.', 'maxsafe' );
 	}
 
 	/**
