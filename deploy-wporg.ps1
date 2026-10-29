@@ -40,12 +40,12 @@ Write-Host "[2/4] Syncing assets, trunk, tags, and branches..." -ForegroundColor
 Copy-Item (Join-Path $sourceSvn "assets\*") (Join-Path $WorkingDir "assets") -Recurse -Force
 # Copy trunk
 Copy-Item (Join-Path $sourceSvn "trunk\*") (Join-Path $WorkingDir "trunk") -Recurse -Force
-# Copy tags/1.1.0
-$destTag = Join-Path $WorkingDir "tags\1.1.0"
+# Copy tags/1.2.0
+$destTag = Join-Path $WorkingDir "tags\1.2.0"
 if (-not (Test-Path $destTag)) {
     New-Item -ItemType Directory -Path $destTag -Force | Out-Null
 }
-Copy-Item (Join-Path $sourceSvn "tags\1.1.0\*") $destTag -Recurse -Force
+Copy-Item (Join-Path $sourceSvn "tags\1.2.0\*") $destTag -Recurse -Force
 
 Write-Host "[3/4] Adding new files to Subversion tracking..." -ForegroundColor White
 Push-Location $WorkingDir

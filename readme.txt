@@ -4,7 +4,7 @@ Tags: security, safe updates, staging, backup, vulnerability scanner
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,8 +60,13 @@ Plugin screenshots are stored in the WordPress.org Subversion `/assets/` directo
 
 == Changelog ==
 
+= 1.2.0 =
+* WordPress.org Directory Compliance: Rebranded plugin to MaxSafe with unique slug maxsafe.
+* Architecture Refactor: Updated all classes to MaxSafe namespace and database tables to maxsafe prefix.
+* Zero-downtime automatic legacy database migration from wpsecureos to maxsafe.
+* Clean WordPress.org directory compliant assets and package structure.
+
 = 1.1.0 =
-* WordPress.org Directory Compliance: Renamed plugin to MaxSafe with unique slug maxsafe.
 * Production Release: Pricing, Subscription, and License Management System.
 * Support for Free, Pro, Agency, and Business tier entitlements.
 * Core security preservation invariant: emergency recovery runbooks and file integrity scans remain permanently active upon expiry.
@@ -90,5 +95,5 @@ Plugin screenshots are stored in the WordPress.org Subversion `/assets/` directo
 
 == Upgrade Notice ==
 
-= 1.1.0 =
-Production Release: Renamed to MaxSafe for WordPress.org compliance. Enhanced licensing architecture, cryptographic verification, and complete responsive telemetry console. Recommended update for all installations.
+= 1.2.0 =
+Production Release: Rebranded to MaxSafe for WordPress.org compliance. Enhanced licensing architecture, cryptographic verification, and complete responsive telemetry console. Recommended update for all installations.

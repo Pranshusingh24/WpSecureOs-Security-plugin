@@ -3,7 +3,7 @@
  * Plugin Name:       MaxSafe
  * Plugin URI:        https://wpsecureos-plugin.netlify.app/
  * Description:       Enterprise-grade WordPress Security, Continuous Validation, Safe Updates, and Recovery Platform.
- * Version:           1.1.0
+ * Version:           1.2.0
  * Requires at least: 6.2
  * Requires PHP:      7.4
  * Author:            Pranshu Singh
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Plugin constants.
-define( 'MAXSAFE_VERSION', '1.1.0' );
+define( 'MAXSAFE_VERSION', '1.2.0' );
 define( 'MAXSAFE_PLUGIN_FILE', __FILE__ );
 define( 'MAXSAFE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MAXSAFE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
