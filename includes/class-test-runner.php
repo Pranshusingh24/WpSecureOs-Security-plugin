@@ -173,10 +173,10 @@ class MaxSafe_Test_Runner {
 		}
 
 		global $wpdb;
+		$table_jobs = $wpdb->prefix . 'maxsafe_jobs';
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$job = $wpdb->get_row(
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}maxsafe_jobs WHERE idempotency_key = %s", $idempotency_key ),
+			$wpdb->prepare( 'SELECT * FROM %i WHERE idempotency_key = %s', $table_jobs, $idempotency_key ),
 			ARRAY_A
 		);
 

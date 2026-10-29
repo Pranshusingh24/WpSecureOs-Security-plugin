@@ -312,10 +312,10 @@ class MaxSafe_Plugin {
 		check_admin_referer( 'maxsafe_download_backup_' . $backup_id );
 
 		global $wpdb;
+		$table_name = $wpdb->prefix . 'maxsafe_backups';
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$backup = $wpdb->get_row(
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}maxsafe_backups WHERE id = %d", $backup_id ),
+			$wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $table_name, $backup_id ),
 			ARRAY_A
 		);
 
@@ -347,8 +347,14 @@ class MaxSafe_Plugin {
 		header( 'Pragma: public' );
 		header( 'Content-Length: ' . filesize( $real_path ) );
 
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile -- Direct file read is required to stream large binary backup archives without memory exhaustion.
-		readfile( $real_path );
+		global $wp_filesystem;
+		if ( empty( $wp_filesystem ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $wp_filesystem->get_contents( $real_path );
 		exit;
 	}
 }

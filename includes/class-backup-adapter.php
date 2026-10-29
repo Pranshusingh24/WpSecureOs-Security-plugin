@@ -192,8 +192,12 @@ class MaxSafe_Backup_Adapter {
 	 */
 	public static function get_latest_verified_backup() {
 		global $wpdb;
+		$table_name = $wpdb->prefix . 'maxsafe_backups';
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}maxsafe_backups WHERE is_verified = 1 ORDER BY id DESC LIMIT 1", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$row = $wpdb->get_row(
+			$wpdb->prepare( 'SELECT * FROM %i WHERE is_verified = 1 ORDER BY id DESC LIMIT 1', $table_name ),
+			ARRAY_A
+		);
 		return $row ? $row : null;
 	}
 
@@ -204,8 +208,12 @@ class MaxSafe_Backup_Adapter {
 	 */
 	public static function get_all_backups() {
 		global $wpdb;
+		$table_name = $wpdb->prefix . 'maxsafe_backups';
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}maxsafe_backups ORDER BY id DESC LIMIT 50", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$rows = $wpdb->get_results(
+			$wpdb->prepare( 'SELECT * FROM %i ORDER BY id DESC LIMIT 50', $table_name ),
+			ARRAY_A
+		);
 		return $rows ? $rows : array();
 	}
 
