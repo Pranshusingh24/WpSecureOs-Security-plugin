@@ -35,8 +35,9 @@ class MaxSafe_Integrity_Monitor {
 		$table_integrity = $wpdb->prefix . 'maxsafe_integrity';
 
 		foreach ( $core_check['modified'] as $m_file ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->replace(
-				$table_integrity,
+				$wpdb->prefix . 'maxsafe_integrity',
 				array(
 					'file_path_relative' => sanitize_text_field( $m_file ),
 					'hash_algorithm'     => 'md5',

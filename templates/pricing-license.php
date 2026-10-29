@@ -9,15 +9,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$license_data = class_exists( 'MaxSafe_License_Manager' ) ? MaxSafe_License_Manager::get_license() : ( class_exists( 'WpSecureOs_License_Manager' ) ? WpSecureOs_License_Manager::get_license() : array() );
-$all_plans    = class_exists( 'MaxSafe_Plan_Entitlements' ) ? MaxSafe_Plan_Entitlements::get_all_plans() : ( class_exists( 'WpSecureOs_Plan_Entitlements' ) ? WpSecureOs_Plan_Entitlements::get_all_plans() : array() );
-$current_plan = isset( $license_data['plan'] ) ? $license_data['plan'] : 'free';
-$status       = isset( $license_data['status'] ) ? $license_data['status'] : 'unlicensed';
-$is_active    = class_exists( 'MaxSafe_License_Manager' ) ? MaxSafe_License_Manager::is_active() : ( class_exists( 'WpSecureOs_License_Manager' ) ? WpSecureOs_License_Manager::is_active() : false );
-$in_grace     = class_exists( 'MaxSafe_License_Manager' ) ? MaxSafe_License_Manager::is_in_grace_period() : ( class_exists( 'WpSecureOs_License_Manager' ) ? WpSecureOs_License_Manager::is_in_grace_period() : false );
+$maxsafe_license_data = class_exists( 'MaxSafe_License_Manager' ) ? MaxSafe_License_Manager::get_license() : ( class_exists( 'WpSecureOs_License_Manager' ) ? WpSecureOs_License_Manager::get_license() : array() );
+$maxsafe_all_plans    = class_exists( 'MaxSafe_Plan_Entitlements' ) ? MaxSafe_Plan_Entitlements::get_all_plans() : ( class_exists( 'WpSecureOs_Plan_Entitlements' ) ? WpSecureOs_Plan_Entitlements::get_all_plans() : array() );
+$maxsafe_current_plan = isset( $maxsafe_license_data['plan'] ) ? $maxsafe_license_data['plan'] : 'free';
+$maxsafe_status       = isset( $maxsafe_license_data['status'] ) ? $maxsafe_license_data['status'] : 'unlicensed';
+$maxsafe_is_active    = class_exists( 'MaxSafe_License_Manager' ) ? MaxSafe_License_Manager::is_active() : ( class_exists( 'WpSecureOs_License_Manager' ) ? WpSecureOs_License_Manager::is_active() : false );
+$maxsafe_in_grace     = class_exists( 'MaxSafe_License_Manager' ) ? MaxSafe_License_Manager::is_in_grace_period() : ( class_exists( 'WpSecureOs_License_Manager' ) ? WpSecureOs_License_Manager::is_in_grace_period() : false );
 
-$plan_obj     = class_exists( 'MaxSafe_Plan_Entitlements' ) ? MaxSafe_Plan_Entitlements::get_plan( $current_plan ) : ( class_exists( 'WpSecureOs_Plan_Entitlements' ) ? WpSecureOs_Plan_Entitlements::get_plan( $current_plan ) : array( 'name' => 'Free', 'tagline' => '', 'badge_class' => '' ) );
-$site_domain  = class_exists( 'MaxSafe_License_Manager' ) ? MaxSafe_License_Manager::get_site_domain() : ( class_exists( 'WpSecureOs_License_Manager' ) ? WpSecureOs_License_Manager::get_site_domain() : home_url() );
+$maxsafe_plan_obj     = class_exists( 'MaxSafe_Plan_Entitlements' ) ? MaxSafe_Plan_Entitlements::get_plan( $maxsafe_current_plan ) : ( class_exists( 'WpSecureOs_Plan_Entitlements' ) ? WpSecureOs_Plan_Entitlements::get_plan( $maxsafe_current_plan ) : array( 'name' => 'Free', 'tagline' => '', 'badge_class' => '' ) );
+$maxsafe_site_domain  = class_exists( 'MaxSafe_License_Manager' ) ? MaxSafe_License_Manager::get_site_domain() : ( class_exists( 'WpSecureOs_License_Manager' ) ? WpSecureOs_License_Manager::get_site_domain() : home_url() );
 ?>
 
 <div class="maxsafe-license-container wpsecureos-license-container">
@@ -61,16 +61,16 @@ $site_domain  = class_exists( 'MaxSafe_License_Manager' ) ? MaxSafe_License_Mana
 								name="license_key"
 								class="license-key-input"
 								placeholder="MAXSAFE-PRO-XXXX-XXXX-XXXX"
-								value="<?php echo esc_attr( $license_data['license_key'] ?? '' ); ?>"
+								value="<?php echo esc_attr( $maxsafe_license_data['license_key'] ?? '' ); ?>"
 								spellcheck="false"
 								autocomplete="off"
 							/>
 							<button type="button" id="btn-activate-license" class="safe-btn safe-btn-primary">
 								<span class="dashicons dashicons-admin-network"></span>
-								<?php echo ! empty( $license_data['license_key'] ) ? esc_html__( 'Change / Re-activate', 'maxsafe' ) : esc_html__( 'Activate Key', 'maxsafe' ); ?>
+								<?php echo ! empty( $maxsafe_license_data['license_key'] ) ? esc_html__( 'Change / Re-activate', 'maxsafe' ) : esc_html__( 'Activate Key', 'maxsafe' ); ?>
 							</button>
 
-							<?php if ( ! empty( $license_data['license_key'] ) && $is_active ) : ?>
+							<?php if ( ! empty( $maxsafe_license_data['license_key'] ) && $maxsafe_is_active ) : ?>
 								<button type="button" id="btn-refresh-license" class="safe-btn safe-btn-dark" title="<?php esc_attr_e( 'Refresh entitlements and check validity', 'maxsafe' ); ?>">
 									<span class="dashicons dashicons-update"></span>
 									<?php esc_html_e( 'Sync Status', 'maxsafe' ); ?>
@@ -92,7 +92,7 @@ $site_domain  = class_exists( 'MaxSafe_License_Manager' ) ? MaxSafe_License_Mana
 
 				<div class="license-telemetry-row">
 					<span class="telemetry-label"><?php esc_html_e( 'Bound Site Domain', 'maxsafe' ); ?></span>
-					<span class="telemetry-val mono"><?php echo esc_html( $site_domain ); ?></span>
+					<span class="telemetry-val mono"><?php echo esc_html( $maxsafe_site_domain ); ?></span>
 				</div>
 
 				<div class="license-telemetry-row">
@@ -114,7 +114,7 @@ $site_domain  = class_exists( 'MaxSafe_License_Manager' ) ? MaxSafe_License_Mana
 				<div class="license-telemetry-row">
 					<span class="telemetry-label"><?php esc_html_e( 'Last Heartbeat Check', 'maxsafe' ); ?></span>
 					<span class="telemetry-val mono">
-						<?php echo esc_html( ! empty( $license_data['last_validated'] ) ? substr( $license_data['last_validated'], 0, 16 ) : current_time( 'Y-m-d H:i' ) ); ?>
+						<?php echo esc_html( ! empty( $maxsafe_license_data['last_validated'] ) ? substr( $maxsafe_license_data['last_validated'], 0, 16 ) : current_time( 'Y-m-d H:i' ) ); ?>
 					</span>
 				</div>
 

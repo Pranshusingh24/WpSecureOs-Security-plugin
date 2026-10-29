@@ -48,9 +48,9 @@ class MaxSafe_Security_Scanner {
 
 		// Record in scans table
 		global $wpdb;
-		$table_scans = $wpdb->prefix . 'maxsafe_scans';
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert(
-			$table_scans,
+			$wpdb->prefix . 'maxsafe_scans',
 			array(
 				'scan_type'      => 'full_security',
 				'status'         => 'completed',

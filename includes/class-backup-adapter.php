@@ -87,9 +87,9 @@ class MaxSafe_Backup_Adapter {
 
 		// Save record in database
 		global $wpdb;
-		$table = $wpdb->prefix . 'maxsafe_backups';
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert(
-			$table,
+			$wpdb->prefix . 'maxsafe_backups',
 			array(
 				'backup_name'        => $backup_name,
 				'file_path'          => $zip_path,
@@ -192,9 +192,8 @@ class MaxSafe_Backup_Adapter {
 	 */
 	public static function get_latest_verified_backup() {
 		global $wpdb;
-		$table = $wpdb->prefix . 'maxsafe_backups';
-
-		$row = $wpdb->get_row( "SELECT * FROM {$table} WHERE is_verified = 1 ORDER BY id DESC LIMIT 1", ARRAY_A );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$row = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}maxsafe_backups WHERE is_verified = 1 ORDER BY id DESC LIMIT 1", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		return $row ? $row : null;
 	}
 
@@ -205,8 +204,8 @@ class MaxSafe_Backup_Adapter {
 	 */
 	public static function get_all_backups() {
 		global $wpdb;
-		$table = $wpdb->prefix . 'maxsafe_backups';
-		$rows  = $wpdb->get_results( "SELECT * FROM {$table} ORDER BY id DESC LIMIT 50", ARRAY_A );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}maxsafe_backups ORDER BY id DESC LIMIT 50", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		return $rows ? $rows : array();
 	}
 
@@ -220,8 +219,13 @@ class MaxSafe_Backup_Adapter {
 		$dump .= "-- Generated: " . current_time( 'mysql' ) . "\n\n";
 		$dump .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$tables = $wpdb->get_col( "SHOW TABLES LIKE '{$wpdb->prefix}%'" );
 		foreach ( $tables as $table ) {
+			$table = preg_replace( '/[^a-zA-Z0-9_]/', '', $table );
+			if ( empty( $table ) ) {
+				continue;
+			}
 			$create_table = $wpdb->get_row( "SHOW CREATE TABLE `{$table}`", ARRAY_N );
 			if ( ! empty( $create_table[1] ) ) {
 				$dump .= "DROP TABLE IF EXISTS `{$table}`;\n";
@@ -242,6 +246,7 @@ class MaxSafe_Backup_Adapter {
 				$dump .= "\n";
 			}
 		}
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		$dump .= "SET FOREIGN_KEY_CHECKS=1;\n";
 		return $dump;

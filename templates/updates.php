@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$updates = MaxSafe_Update_Provider::get_updates_with_assessment();
+$maxsafe_updates = MaxSafe_Update_Provider::get_updates_with_assessment();
 ?>
 
 <div class="maxsafe-panel wpsecureos-panel">
@@ -31,7 +31,7 @@ $updates = MaxSafe_Update_Provider::get_updates_with_assessment();
 		</div>
 	</div>
 
-	<?php if ( empty( $updates ) ) : ?>
+	<?php if ( empty( $maxsafe_updates ) ) : ?>
 		<div style="text-align:center; padding:40px 0; color:#64748b;">
 			<span class="dashicons dashicons-saved" style="font-size:48px; width:48px; height:48px; color:#10b981; margin-bottom:12px;"></span>
 			<h3 style="margin:0 0 6px 0; color:#0f172a; font-size:16px;">
@@ -55,60 +55,60 @@ $updates = MaxSafe_Update_Provider::get_updates_with_assessment();
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ( $updates as $u ) : ?>
+					<?php foreach ( $maxsafe_updates as $maxsafe_u ) : ?>
 						<?php
-						$assessment = $u['assessment'];
-						$urgency = $assessment['security_urgency'];
-						$confidence = $assessment['deployment_confidence'];
+						$maxsafe_assessment = $maxsafe_u['assessment'];
+						$maxsafe_urgency    = $maxsafe_assessment['security_urgency'];
+						$maxsafe_confidence = $maxsafe_assessment['deployment_confidence'];
 
-						$urgency_cls = ( 'Critical' === $urgency ) ? 'badge-critical' : ( ( 'Important' === $urgency ) ? 'badge-high' : 'badge-routine' );
-						$conf_cls    = ( 'High' === $confidence ) ? 'badge-clean' : ( ( 'Moderate' === $confidence ) ? 'badge-medium' : ( ( 'Low' === $confidence ) ? 'badge-critical' : 'badge-unknown' ) );
+						$maxsafe_urgency_cls = ( 'Critical' === $maxsafe_urgency ) ? 'badge-critical' : ( ( 'Important' === $maxsafe_urgency ) ? 'badge-high' : 'badge-routine' );
+						$maxsafe_conf_cls    = ( 'High' === $maxsafe_confidence ) ? 'badge-clean' : ( ( 'Moderate' === $maxsafe_confidence ) ? 'badge-medium' : ( ( 'Low' === $maxsafe_confidence ) ? 'badge-critical' : 'badge-unknown' ) );
 						?>
 						<tr>
 							<td>
-								<strong><?php echo esc_html( $u['name'] ); ?></strong>
+								<strong><?php echo esc_html( $maxsafe_u['name'] ); ?></strong>
 								<div style="color:#64748b; font-size:11px;">
-									<span class="mono-tag"><?php echo esc_html( $u['slug'] ); ?></span> &bull;
-									<span style="text-transform:uppercase;"><?php echo esc_html( $u['type'] ); ?></span>
+									<span class="mono-tag"><?php echo esc_html( $maxsafe_u['slug'] ); ?></span> &bull;
+									<span style="text-transform:uppercase;"><?php echo esc_html( $maxsafe_u['type'] ); ?></span>
 								</div>
 							</td>
 							<td>
-								<span class="mono-tag"><?php echo esc_html( $u['installed_version'] ); ?></span> &rarr;
+								<span class="mono-tag"><?php echo esc_html( $maxsafe_u['installed_version'] ); ?></span> &rarr;
 								<span class="mono-tag" style="background:#e0f2fe; color:#0369a1; border-color:#bae6fd; font-weight:700;">
-									<?php echo esc_html( $u['new_version'] ); ?>
+									<?php echo esc_html( $maxsafe_u['new_version'] ); ?>
 								</span>
 								<div style="font-size:11px; color:#64748b; margin-top:3px;">
-									<?php printf( /* translators: %s: bump type */ esc_html__( 'Bump: %s', 'maxsafe' ), esc_html( strtoupper( $assessment['version_bump'] ) ) ); ?>
+									<?php printf( /* translators: %s: bump type */ esc_html__( 'Bump: %s', 'maxsafe' ), esc_html( strtoupper( $maxsafe_assessment['version_bump'] ) ) ); ?>
 								</div>
 							</td>
 							<td>
-								<span class="safe-badge <?php echo esc_attr( $urgency_cls ); ?>">
-									<?php echo esc_html( $urgency ); ?>
+								<span class="safe-badge <?php echo esc_attr( $maxsafe_urgency_cls ); ?>">
+									<?php echo esc_html( $maxsafe_urgency ); ?>
 								</span>
 							</td>
 							<td>
-								<span class="safe-badge <?php echo esc_attr( $conf_cls ); ?>">
-									<?php echo esc_html( $confidence ); ?>
+								<span class="safe-badge <?php echo esc_attr( $maxsafe_conf_cls ); ?>">
+									<?php echo esc_html( $maxsafe_confidence ); ?>
 								</span>
 							</td>
 							<td>
 								<ul style="margin:0; padding-left:14px; font-size:12px; color:#334155;">
-									<?php foreach ( $assessment['reasons'] as $r ) : ?>
-										<li style="margin-bottom:2px;"><?php echo esc_html( $r ); ?></li>
+									<?php foreach ( $maxsafe_assessment['reasons'] as $maxsafe_r ) : ?>
+										<li style="margin-bottom:2px;"><?php echo esc_html( $maxsafe_r ); ?></li>
 									<?php endforeach; ?>
 								</ul>
 								<div style="margin-top:6px; font-size:11px; color:#64748b;">
 									<strong><?php esc_html_e( 'Recommended Next Step:', 'maxsafe' ); ?></strong>
-									<span style="color:#0284c7;"><?php echo esc_html( $assessment['next_action'] ); ?></span>
+									<span style="color:#0284c7;"><?php echo esc_html( $maxsafe_assessment['next_action'] ); ?></span>
 								</div>
 							</td>
 							<td>
 								<button type="button"
 									class="safe-btn safe-btn-primary btn-start-pipeline"
-									data-type="<?php echo esc_attr( $u['type'] ); ?>"
-									data-slug="<?php echo esc_attr( $u['slug'] ); ?>"
-									data-name="<?php echo esc_attr( $u['name'] ); ?>"
-									data-version="<?php echo esc_attr( $u['new_version'] ); ?>">
+									data-type="<?php echo esc_attr( $maxsafe_u['type'] ); ?>"
+									data-slug="<?php echo esc_attr( $maxsafe_u['slug'] ); ?>"
+									data-name="<?php echo esc_attr( $maxsafe_u['name'] ); ?>"
+									data-version="<?php echo esc_attr( $maxsafe_u['new_version'] ); ?>">
 									<span class="dashicons dashicons-shield"></span>
 									<?php esc_html_e( 'Prepare Safe Update', 'maxsafe' ); ?>
 								</button>

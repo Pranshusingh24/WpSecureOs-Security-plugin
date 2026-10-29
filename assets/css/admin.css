@@ -397,8 +397,8 @@
 	width: 100%;
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
-	border: 1px solid var(--safe-border);
-	border-radius: var(--safe-radius-sm);
+	/* border: 1px solid var(--safe-border); */
+	/* border-radius: var(--safe-radius-sm); */
 	background: var(--safe-surface);
 	scrollbar-width: thin;
 	scrollbar-color: #cbd5e1 #f8fafc;

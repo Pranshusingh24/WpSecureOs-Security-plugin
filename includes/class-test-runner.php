@@ -91,8 +91,9 @@ class MaxSafe_Test_Runner {
 			'test_results'   => $test_results,
 		);
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->replace(
-			$table_jobs,
+			$wpdb->prefix . 'maxsafe_jobs',
 			array(
 				'job_type'        => 'safe_update_pipeline',
 				'status'          => $next_state,
@@ -172,8 +173,12 @@ class MaxSafe_Test_Runner {
 		}
 
 		global $wpdb;
-		$table_jobs = $wpdb->prefix . 'maxsafe_jobs';
-		$job = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table_jobs} WHERE idempotency_key = %s", $idempotency_key ), ARRAY_A );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$job = $wpdb->get_row(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}maxsafe_jobs WHERE idempotency_key = %s", $idempotency_key ),
+			ARRAY_A
+		);
 
 		if ( ! $job ) {
 			return array(
@@ -198,8 +203,9 @@ class MaxSafe_Test_Runner {
 		$post_verify = MaxSafe_Visual_Test_Adapter::run_smoke_checks();
 		$final_state = ( $deploy_status['success'] && $post_verify['rest_api_functional'] ) ? self::STATE_COMPLETED : self::STATE_RECOVERY_REQUIRED;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->update(
-			$table_jobs,
+			$wpdb->prefix . 'maxsafe_jobs',
 			array(
 				'status'       => $final_state,
 				'current_step' => $final_state,

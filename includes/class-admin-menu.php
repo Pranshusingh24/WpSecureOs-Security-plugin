@@ -21,8 +21,10 @@ class MaxSafe_Admin_Menu {
 		}
 
 		// Seamlessly redirect legacy bookmarked URLs (?page=wpsecureos* -> ?page=maxsafe*)
-		if ( is_admin() && isset( $_GET['page'] ) && is_string( $_GET['page'] ) && 0 === strpos( $_GET['page'], 'wpsecureos' ) ) {
-			$new_page = str_replace( 'wpsecureos', 'maxsafe', sanitize_text_field( wp_unslash( $_GET['page'] ) ) );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Page query argument used solely for admin URL routing redirect.
+		$current_page = ( is_admin() && isset( $_GET['page'] ) && is_string( $_GET['page'] ) ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+		if ( '' !== $current_page && 0 === strpos( $current_page, 'wpsecureos' ) ) {
+			$new_page = str_replace( 'wpsecureos', 'maxsafe', $current_page );
 			wp_safe_redirect( admin_url( 'admin.php?page=' . $new_page ) );
 			exit;
 		}

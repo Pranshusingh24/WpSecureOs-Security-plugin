@@ -130,13 +130,6 @@ function maxsafe_init() {
 	return MaxSafe_Plugin::instance();
 }
 
-// Backwards-compatible bootstrap helper.
-if ( ! function_exists( 'wpsecureos_init' ) ) {
-	function wpsecureos_init() {
-		return maxsafe_init();
-	}
-}
-
 // Launch plugin after plugins loaded.
 add_action( 'plugins_loaded', 'maxsafe_init' );
 

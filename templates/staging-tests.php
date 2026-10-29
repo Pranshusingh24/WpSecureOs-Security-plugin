@@ -9,8 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$test_suite = class_exists( 'MaxSafe_Visual_Test_Adapter' ) ? MaxSafe_Visual_Test_Adapter::run_smoke_and_visual_suite() : ( class_exists( 'WpSecureOs_Visual_Test_Adapter' ) ? WpSecureOs_Visual_Test_Adapter::run_smoke_and_visual_suite() : array() );
-$staging    = class_exists( 'MaxSafe_Staging_Adapter' ) ? MaxSafe_Staging_Adapter::prepare_staging_environment() : ( class_exists( 'WpSecureOs_Staging_Adapter' ) ? WpSecureOs_Staging_Adapter::prepare_staging_environment() : array() );
+$maxsafe_test_suite = class_exists( 'MaxSafe_Visual_Test_Adapter' ) ? MaxSafe_Visual_Test_Adapter::run_smoke_and_visual_suite() : ( class_exists( 'WpSecureOs_Visual_Test_Adapter' ) ? WpSecureOs_Visual_Test_Adapter::run_smoke_and_visual_suite() : array() );
+$maxsafe_staging    = class_exists( 'MaxSafe_Staging_Adapter' ) ? MaxSafe_Staging_Adapter::prepare_staging_environment() : ( class_exists( 'WpSecureOs_Staging_Adapter' ) ? WpSecureOs_Staging_Adapter::prepare_staging_environment() : array() );
 ?>
 
 <!-- 1. Staging Sandbox Safety Posture -->
@@ -100,8 +100,8 @@ $staging    = class_exists( 'MaxSafe_Staging_Adapter' ) ? MaxSafe_Staging_Adapte
 				<tr>
 					<td><strong><?php esc_html_e( 'WordPress Core REST API Endpoints', 'maxsafe' ); ?></strong></td>
 					<td>
-						<span class="safe-badge <?php echo ! empty( $test_suite['smoke_tests']['rest_api_functional'] ) ? 'badge-clean' : 'badge-critical'; ?>" style="white-space:nowrap;">
-							<?php echo ! empty( $test_suite['smoke_tests']['rest_api_functional'] ) ? '200 OK PASSED' : 'FAILED (500)'; ?>
+						<span class="safe-badge <?php echo ! empty( $maxsafe_test_suite['smoke_tests']['rest_api_functional'] ) ? 'badge-clean' : 'badge-critical'; ?>" style="white-space:nowrap;">
+							<?php echo ! empty( $maxsafe_test_suite['smoke_tests']['rest_api_functional'] ) ? '200 OK PASSED' : 'FAILED (500)'; ?>
 						</span>
 					</td>
 					<td style="font-size:12px; color:#475569;">
@@ -111,8 +111,8 @@ $staging    = class_exists( 'MaxSafe_Staging_Adapter' ) ? MaxSafe_Staging_Adapte
 				<tr>
 					<td><strong><?php esc_html_e( 'PHP Error Log Inspection', 'maxsafe' ); ?></strong></td>
 					<td>
-						<span class="safe-badge <?php echo ! empty( $test_suite['smoke_tests']['no_php_fatals'] ) ? 'badge-clean' : 'badge-critical'; ?>" style="white-space:nowrap;">
-							<?php echo ! empty( $test_suite['smoke_tests']['no_php_fatals'] ) ? 'CLEAN (0 Fatals)' : 'FATAL ERRORS DETECTED'; ?>
+						<span class="safe-badge <?php echo ! empty( $maxsafe_test_suite['smoke_tests']['no_php_fatals'] ) ? 'badge-clean' : 'badge-critical'; ?>" style="white-space:nowrap;">
+							<?php echo ! empty( $maxsafe_test_suite['smoke_tests']['no_php_fatals'] ) ? 'CLEAN (0 Fatals)' : 'FATAL ERRORS DETECTED'; ?>
 						</span>
 					</td>
 					<td style="font-size:12px; color:#475569;">
@@ -122,12 +122,12 @@ $staging    = class_exists( 'MaxSafe_Staging_Adapter' ) ? MaxSafe_Staging_Adapte
 				<tr>
 					<td><strong><?php esc_html_e( 'WooCommerce E-Commerce Funnel', 'maxsafe' ); ?></strong></td>
 					<td>
-						<span class="safe-badge <?php echo ( empty( $test_suite['woocommerce_tests']['is_applicable'] ) || ( isset( $test_suite['woocommerce_tests']['mock_checkout_status'] ) && 'passed' === $test_suite['woocommerce_tests']['mock_checkout_status'] ) ) ? 'badge-clean' : 'badge-critical'; ?>" style="white-space:nowrap;">
-							<?php echo ! empty( $test_suite['woocommerce_tests']['is_applicable'] ) ? 'PASSED (SANDBOX)' : 'NOT APPLICABLE'; ?>
+						<span class="safe-badge <?php echo ( empty( $maxsafe_test_suite['woocommerce_tests']['is_applicable'] ) || ( isset( $maxsafe_test_suite['woocommerce_tests']['mock_checkout_status'] ) && 'passed' === $maxsafe_test_suite['woocommerce_tests']['mock_checkout_status'] ) ) ? 'badge-clean' : 'badge-critical'; ?>" style="white-space:nowrap;">
+							<?php echo ! empty( $maxsafe_test_suite['woocommerce_tests']['is_applicable'] ) ? 'PASSED (SANDBOX)' : 'NOT APPLICABLE'; ?>
 						</span>
 					</td>
 					<td style="font-size:12px; color:#475569;">
-						<?php echo esc_html( $test_suite['woocommerce_tests']['notes'] ?? __( 'WooCommerce not active.', 'maxsafe' ) ); ?>
+						<?php echo esc_html( $maxsafe_test_suite['woocommerce_tests']['notes'] ?? __( 'WooCommerce not active.', 'maxsafe' ) ); ?>
 					</td>
 				</tr>
 			</tbody>
@@ -149,20 +149,20 @@ $staging    = class_exists( 'MaxSafe_Staging_Adapter' ) ? MaxSafe_Staging_Adapte
 		</div>
 	</div>
 
-	<?php if ( ! empty( $test_suite['urls_tested'] ) && is_array( $test_suite['urls_tested'] ) ) : ?>
-		<?php foreach ( $test_suite['urls_tested'] as $tested ) : ?>
+	<?php if ( ! empty( $maxsafe_test_suite['urls_tested'] ) && is_array( $maxsafe_test_suite['urls_tested'] ) ) : ?>
+		<?php foreach ( $maxsafe_test_suite['urls_tested'] as $maxsafe_tested ) : ?>
 			<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px; margin-bottom:18px;">
 				<div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
 					<div style="min-width:240px; flex:1 1 auto;">
-						<strong style="font-size:14px; color:#0f172a; word-break:break-all;"><?php echo esc_html( $tested['url'] ); ?></strong>
+						<strong style="font-size:14px; color:#0f172a; word-break:break-all;"><?php echo esc_html( $maxsafe_tested['url'] ); ?></strong>
 						<div style="font-size:12px; color:#64748b; margin-top:2px;">
-							<?php printf( /* translators: 1: ms, 2: pixels */ esc_html__( 'Response: %1$dms | Pixels Changed: %2$d | Masked: %3$s', 'maxsafe' ), (int) $tested['response_time_ms'], (int) $tested['diff_pixels'], esc_html( implode( ', ', array_keys( $tested['masked_regions'] ) ) ) ); ?>
+							<?php printf( /* translators: 1: ms, 2: pixels */ esc_html__( 'Response: %1$dms | Pixels Changed: %2$d | Masked: %3$s', 'maxsafe' ), (int) $maxsafe_tested['response_time_ms'], (int) $maxsafe_tested['diff_pixels'], esc_html( implode( ', ', array_keys( $maxsafe_tested['masked_regions'] ) ) ) ); ?>
 						</div>
 					</div>
 					<div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
-						<span class="mono-tag" style="font-size:12px; white-space:nowrap;">Diff: <?php echo esc_html( $tested['diff_percentage'] ); ?></span>
-						<span class="safe-badge <?php echo ! empty( $tested['passed'] ) ? 'badge-clean' : 'badge-critical'; ?>" style="white-space:nowrap;">
-							<?php echo ! empty( $tested['passed'] ) ? esc_html__( 'WITHIN TOLERANCE (&le;5%)', 'maxsafe' ) : esc_html__( 'THRESHOLD EXCEEDED', 'maxsafe' ); ?>
+						<span class="mono-tag" style="font-size:12px; white-space:nowrap;">Diff: <?php echo esc_html( $maxsafe_tested['diff_percentage'] ); ?></span>
+						<span class="safe-badge <?php echo ! empty( $maxsafe_tested['passed'] ) ? 'badge-clean' : 'badge-critical'; ?>" style="white-space:nowrap;">
+							<?php echo ! empty( $maxsafe_tested['passed'] ) ? esc_html__( 'WITHIN TOLERANCE (&le;5%)', 'maxsafe' ) : esc_html__( 'THRESHOLD EXCEEDED', 'maxsafe' ); ?>
 						</span>
 					</div>
 				</div>
@@ -174,7 +174,7 @@ $staging    = class_exists( 'MaxSafe_Staging_Adapter' ) ? MaxSafe_Staging_Adapte
 							<span class="dashicons dashicons-desktop" style="font-size:40px; width:40px; height:40px; color:#38bdf8;"></span>
 							<span><?php esc_html_e( 'VIEWPORT COMPARISON CANVAS: 1440x900 DESKTOP', 'maxsafe' ); ?></span>
 							<span style="font-size:11px; color:#64748b;">
-								Baseline (Left) vs Staged Update (Right) &bull; Dynamic Mask Active &bull; Diff: <?php echo esc_html( $tested['diff_percentage'] ); ?>
+								Baseline (Left) vs Staged Update (Right) &bull; Dynamic Mask Active &bull; Diff: <?php echo esc_html( $maxsafe_tested['diff_percentage'] ); ?>
 							</span>
 						</div>
 					</div>

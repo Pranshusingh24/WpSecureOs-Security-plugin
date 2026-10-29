@@ -38,18 +38,17 @@ class MaxSafe_Activator {
 			'wpsecureos_integrity' => 'maxsafe_integrity',
 			'wpsecureos_backups'   => 'maxsafe_backups',
 		);
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 		foreach ( $legacy_tables as $old_name => $new_name ) {
-			$old_table = $wpdb->prefix . $old_name;
-			$new_table = $wpdb->prefix . $new_name;
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$has_old = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $old_table ) );
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$has_new = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $new_table ) );
+			$old_table = preg_replace( '/[^a-zA-Z0-9_]/', '', $wpdb->prefix . $old_name );
+			$new_table = preg_replace( '/[^a-zA-Z0-9_]/', '', $wpdb->prefix . $new_name );
+			$has_old   = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $old_table ) );
+			$has_new   = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $new_table ) );
 			if ( $has_old === $old_table && $has_new !== $new_table ) {
-				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$wpdb->query( "RENAME TABLE `{$old_table}` TO `{$new_table}`" );
 			}
 		}
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		// 1. Audit and security events log.
 		$table_events = $wpdb->prefix . 'maxsafe_events';

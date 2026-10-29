@@ -31,8 +31,9 @@ class MaxSafe_Event_Logger {
 		// Redact any accidental credentials or secrets in metadata
 		$clean_metadata = self::redact_secrets( $metadata );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$inserted = $wpdb->insert(
-			$table,
+			$wpdb->prefix . 'maxsafe_events',
 			array(
 				'event_type'    => sanitize_text_field( $event_type ),
 				'severity'      => sanitize_text_field( $severity ),
@@ -81,25 +82,24 @@ class MaxSafe_Event_Logger {
 		$where_clause = implode( ' AND ', $where );
 		$offset       = ( $page - 1 ) * $per_page;
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
 		// Count total
 		if ( ! empty( $args ) ) {
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
-			$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$table} WHERE {$where_clause}", $args ) );
+			$total = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$wpdb->prefix}maxsafe_events WHERE {$where_clause}", ...$args ) );
 		} else {
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$total = (int) $wpdb->get_var( "SELECT COUNT(id) FROM {$table} WHERE 1=1" );
+			$total = (int) $wpdb->get_var( "SELECT COUNT(id) FROM {$wpdb->prefix}maxsafe_events WHERE 1=1" );
 		}
 
 		// Query records
 		$query_args = array_merge( $args, array( $per_page, $offset ) );
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
-		$rows = $wpdb->get_results(
+		$rows       = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM {$table} WHERE {$where_clause} ORDER BY id DESC LIMIT %d OFFSET %d",
-				$query_args
+				"SELECT * FROM {$wpdb->prefix}maxsafe_events WHERE {$where_clause} ORDER BY id DESC LIMIT %d OFFSET %d",
+				...$query_args
 			),
 			ARRAY_A
 		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		return array(
 			'items'       => $rows ? $rows : array(),

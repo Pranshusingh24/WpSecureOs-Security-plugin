@@ -308,12 +308,16 @@ class MaxSafe_Plugin {
 			wp_die( esc_html__( 'Unauthorized: You do not have permission to download backup archives.', 'maxsafe' ), 403 );
 		}
 
-		$backup_id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
+		$backup_id = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
 		check_admin_referer( 'maxsafe_download_backup_' . $backup_id );
 
 		global $wpdb;
-		$table  = $wpdb->prefix . 'maxsafe_backups';
-		$backup = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $backup_id ), ARRAY_A );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$backup = $wpdb->get_row(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}maxsafe_backups WHERE id = %d", $backup_id ),
+			ARRAY_A
+		);
 
 		if ( ! $backup || empty( $backup['file_path'] ) ) {
 			wp_die( esc_html__( 'Backup record not found.', 'maxsafe' ), 404 );
@@ -343,6 +347,7 @@ class MaxSafe_Plugin {
 		header( 'Pragma: public' );
 		header( 'Content-Length: ' . filesize( $real_path ) );
 
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile -- Direct file read is required to stream large binary backup archives without memory exhaustion.
 		readfile( $real_path );
 		exit;
 	}

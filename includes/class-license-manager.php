@@ -412,7 +412,6 @@ class MaxSafe_License_Manager {
 		if ( defined( 'WPSECUREOS_LICENSING_SERVER_URL' ) ) {
 			return rtrim( WPSECUREOS_LICENSING_SERVER_URL, '/' );
 		}
-		$url = apply_filters( 'maxsafe_licensing_server_url', self::DEFAULT_SERVER_URL );
-		return apply_filters( 'wpsecureos_licensing_server_url', $url );
+		return apply_filters( 'maxsafe_licensing_server_url', self::DEFAULT_SERVER_URL );
 	}
 }

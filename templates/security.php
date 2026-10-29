@@ -9,10 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$integrity       = MaxSafe_Integrity_Monitor::run_integrity_check();
-$hardening       = MaxSafe_Security_Scanner::run_hardening_checks();
-$vulnerabilities = MaxSafe_Security_Scanner::get_known_vulnerabilities();
-$php_runtime     = MaxSafe_Php_Advisor::analyze_current_runtime();
+$maxsafe_integrity       = MaxSafe_Integrity_Monitor::run_integrity_check();
+$maxsafe_hardening       = MaxSafe_Security_Scanner::run_hardening_checks();
+$maxsafe_vulnerabilities = MaxSafe_Security_Scanner::get_known_vulnerabilities();
+$maxsafe_php_runtime     = MaxSafe_Php_Advisor::analyze_current_runtime();
 ?>
 
 <!-- 1. WordPress Official Core File Checksums -->
@@ -28,13 +28,13 @@ $php_runtime     = MaxSafe_Php_Advisor::analyze_current_runtime();
 			</p>
 		</div>
 		<div>
-			<span class="safe-badge <?php echo $integrity['is_clean'] ? 'badge-clean' : 'badge-critical'; ?>" style="font-size:12px; padding:6px 14px;">
-				<?php echo $integrity['is_clean'] ? esc_html__( 'CORE INTEGRITY: CLEAN', 'maxsafe' ) : esc_html__( 'CORE INTEGRITY: MODIFIED FILES DETECTED', 'maxsafe' ); ?>
+			<span class="safe-badge <?php echo $maxsafe_integrity['is_clean'] ? 'badge-clean' : 'badge-critical'; ?>" style="font-size:12px; padding:6px 14px;">
+				<?php echo $maxsafe_integrity['is_clean'] ? esc_html__( 'CORE INTEGRITY: CLEAN', 'maxsafe' ) : esc_html__( 'CORE INTEGRITY: MODIFIED FILES DETECTED', 'maxsafe' ); ?>
 			</span>
 		</div>
 	</div>
 
-	<?php if ( ! empty( $integrity['core_modified'] ) || ! empty( $integrity['core_missing'] ) ) : ?>
+	<?php if ( ! empty( $maxsafe_integrity['core_modified'] ) || ! empty( $maxsafe_integrity['core_missing'] ) ) : ?>
 		<div style="background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:16px; margin-bottom:20px;">
 			<h4 style="margin:0 0 8px 0; color:#b91c1c; font-size:14px;">
 				<span class="dashicons dashicons-warning" style="color:#b91c1c;"></span>
@@ -44,11 +44,11 @@ $php_runtime     = MaxSafe_Php_Advisor::analyze_current_runtime();
 				<?php esc_html_e( 'The following files do not match the official WordPress release signatures. This may indicate unauthorized modification, corrupted installation, or web shell infection:', 'maxsafe' ); ?>
 			</p>
 			<ul style="margin:0; padding-left:20px; font-family:var(--safe-font-mono); font-size:12px; color:#991b1b;">
-				<?php foreach ( $integrity['core_modified'] as $m ) : ?>
-					<li>[MODIFIED] <?php echo esc_html( $m ); ?></li>
+				<?php foreach ( $maxsafe_integrity['core_modified'] as $maxsafe_m ) : ?>
+					<li>[MODIFIED] <?php echo esc_html( $maxsafe_m ); ?></li>
 				<?php endforeach; ?>
-				<?php foreach ( $integrity['core_missing'] as $mis ) : ?>
-					<li>[MISSING] <?php echo esc_html( $mis ); ?></li>
+				<?php foreach ( $maxsafe_integrity['core_missing'] as $maxsafe_mis ) : ?>
+					<li>[MISSING] <?php echo esc_html( $maxsafe_mis ); ?></li>
 				<?php endforeach; ?>
 			</ul>
 		</div>
@@ -56,7 +56,7 @@ $php_runtime     = MaxSafe_Php_Advisor::analyze_current_runtime();
 		<div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:16px; margin-bottom:14px; display:flex; align-items:center; gap:12px;">
 			<span class="dashicons dashicons-yes-alt" style="color:#16a34a; font-size:24px;"></span>
 			<span style="font-size:13px; color:#166534;">
-				<?php printf( /* translators: %d: count */ esc_html__( 'All %d checked core WordPress files perfectly match official cryptographic release signatures.', 'maxsafe' ), (int) $integrity['core_total_files'] ); ?>
+				<?php printf( /* translators: %d: count */ esc_html__( 'All %d checked core WordPress files perfectly match official cryptographic release signatures.', 'maxsafe' ), (int) $maxsafe_integrity['core_total_files'] ); ?>
 			</span>
 		</div>
 	<?php endif; ?>
@@ -79,7 +79,7 @@ $php_runtime     = MaxSafe_Php_Advisor::analyze_current_runtime();
 		</span>
 	</div>
 
-	<?php if ( empty( $integrity['suspicious_uploads'] ) ) : ?>
+	<?php if ( empty( $maxsafe_integrity['suspicious_uploads'] ) ) : ?>
 		<p style="margin:0; font-size:13px; color:#16a34a; display:flex; align-items:center; gap:6px;">
 			<span class="dashicons dashicons-yes-alt"></span>
 			<?php esc_html_e( 'No executable PHP, CGI, or shell scripts found in the public wp-content/uploads/ hierarchy.', 'maxsafe' ); ?>
@@ -96,14 +96,14 @@ $php_runtime     = MaxSafe_Php_Advisor::analyze_current_runtime();
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ( $integrity['suspicious_uploads'] as $s_file ) : ?>
+					<?php foreach ( $maxsafe_integrity['suspicious_uploads'] as $maxsafe_s_file ) : ?>
 						<tr>
 							<td class="maxsafe-code-path wpsecureos-code-path">
-								<?php echo esc_html( $s_file['path'] ); ?>
+								<?php echo esc_html( $maxsafe_s_file['path'] ); ?>
 							</td>
-							<td><span class="mono-tag"><?php echo esc_html( size_format( $s_file['size'] ) ); ?></span></td>
-							<td style="font-size:12px; color:#64748b; white-space:nowrap;"><?php echo esc_html( $s_file['modified_at'] ); ?></td>
-							<td><span class="safe-badge badge-critical" style="white-space:nowrap;"><?php echo esc_html( $s_file['reason'] ); ?></span></td>
+							<td><span class="mono-tag"><?php echo esc_html( size_format( $maxsafe_s_file['size'] ) ); ?></span></td>
+							<td style="font-size:12px; color:#64748b; white-space:nowrap;"><?php echo esc_html( $maxsafe_s_file['modified_at'] ); ?></td>
+							<td><span class="safe-badge badge-critical" style="white-space:nowrap;"><?php echo esc_html( $maxsafe_s_file['reason'] ); ?></span></td>
 						</tr>
 					<?php endforeach; ?>
 				</tbody>
@@ -126,7 +126,7 @@ $php_runtime     = MaxSafe_Php_Advisor::analyze_current_runtime();
 		</div>
 	</div>
 
-	<?php if ( empty( $vulnerabilities ) ) : ?>
+	<?php if ( empty( $maxsafe_vulnerabilities ) ) : ?>
 		<p style="margin:0; font-size:13px; color:#16a34a; display:flex; align-items:center; gap:6px;">
 			<span class="dashicons dashicons-yes-alt"></span>
 			<?php esc_html_e( 'Zero known vulnerabilities currently reported for your active WordPress core and plugin versions.', 'maxsafe' ); ?>
@@ -145,23 +145,23 @@ $php_runtime     = MaxSafe_Php_Advisor::analyze_current_runtime();
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ( $vulnerabilities as $slug => $items ) : ?>
-						<?php foreach ( $items as $advisory ) : ?>
+					<?php foreach ( $maxsafe_vulnerabilities as $maxsafe_slug => $maxsafe_items ) : ?>
+						<?php foreach ( $maxsafe_items as $maxsafe_advisory ) : ?>
 							<?php
-							$sev_cls = 'badge-medium';
-							if ( 'critical' === strtolower( $advisory['severity'] ) ) $sev_cls = 'badge-critical';
-							if ( 'high' === strtolower( $advisory['severity'] ) ) $sev_cls = 'badge-high';
-							if ( 'low' === strtolower( $advisory['severity'] ) ) $sev_cls = 'badge-low';
+							$maxsafe_sev_cls = 'badge-medium';
+							if ( 'critical' === strtolower( $maxsafe_advisory['severity'] ) ) $maxsafe_sev_cls = 'badge-critical';
+							if ( 'high' === strtolower( $maxsafe_advisory['severity'] ) )     $maxsafe_sev_cls = 'badge-high';
+							if ( 'low' === strtolower( $maxsafe_advisory['severity'] ) )      $maxsafe_sev_cls = 'badge-low';
 							?>
 							<tr>
-								<td><strong><?php echo esc_html( $slug ); ?></strong></td>
-								<td><span class="mono-tag" style="font-weight:600; color:#0f172a;"><?php echo esc_html( $advisory['id'] ); ?></span></td>
-								<td><span class="safe-badge <?php echo esc_attr( $sev_cls ); ?>"><?php echo esc_html( strtoupper( $advisory['severity'] ) ); ?></span></td>
-								<td><span class="mono-tag"><?php echo esc_html( $advisory['affected_versions'] ); ?></span></td>
-								<td><span class="mono-tag" style="background:#dcfce7; color:#15803d; border-color:#bbf7d0;"><?php echo esc_html( $advisory['fixed_in'] ); ?></span></td>
+								<td><strong><?php echo esc_html( $maxsafe_slug ); ?></strong></td>
+								<td><span class="mono-tag" style="font-weight:600; color:#0f172a;"><?php echo esc_html( $maxsafe_advisory['id'] ); ?></span></td>
+								<td><span class="safe-badge <?php echo esc_attr( $maxsafe_sev_cls ); ?>"><?php echo esc_html( strtoupper( $maxsafe_advisory['severity'] ) ); ?></span></td>
+								<td><span class="mono-tag"><?php echo esc_html( $maxsafe_advisory['affected_versions'] ); ?></span></td>
+								<td><span class="mono-tag" style="background:#dcfce7; color:#15803d; border-color:#bbf7d0;"><?php echo esc_html( $maxsafe_advisory['fixed_in'] ); ?></span></td>
 								<td>
-									<?php if ( ! empty( $advisory['references'][0] ) ) : ?>
-										<a href="<?php echo esc_url( $advisory['references'][0] ); ?>" target="_blank" rel="noopener noreferrer" style="color:#0ea5e9; text-decoration:none; font-size:12px; white-space:nowrap;">
+									<?php if ( ! empty( $maxsafe_advisory['references'][0] ) ) : ?>
+										<a href="<?php echo esc_url( $maxsafe_advisory['references'][0] ); ?>" target="_blank" rel="noopener noreferrer" style="color:#0ea5e9; text-decoration:none; font-size:12px; white-space:nowrap;">
 											<?php esc_html_e( 'View Advisory', 'maxsafe' ); ?> &rarr;
 										</a>
 									<?php endif; ?>
@@ -200,18 +200,18 @@ $php_runtime     = MaxSafe_Php_Advisor::analyze_current_runtime();
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ( $hardening as $check ) : ?>
+				<?php foreach ( $maxsafe_hardening as $maxsafe_check ) : ?>
 					<?php
-					$h_badge = 'badge-clean';
-					if ( 'warning' === $check['status'] ) $h_badge = 'badge-medium';
-					if ( 'failed' === $check['status'] )  $h_badge = 'badge-critical';
-					if ( 'info' === $check['status'] )    $h_badge = 'badge-unknown';
+					$maxsafe_h_badge = 'badge-clean';
+					if ( 'warning' === $maxsafe_check['status'] ) $maxsafe_h_badge = 'badge-medium';
+					if ( 'failed' === $maxsafe_check['status'] )  $maxsafe_h_badge = 'badge-critical';
+					if ( 'info' === $maxsafe_check['status'] )    $maxsafe_h_badge = 'badge-unknown';
 					?>
 					<tr>
-						<td><strong><?php echo esc_html( $check['title'] ); ?></strong></td>
-						<td><span class="safe-badge <?php echo esc_attr( $h_badge ); ?>"><?php echo esc_html( strtoupper( $check['status'] ) ); ?></span></td>
-						<td style="color:#334155; font-size:12px;"><?php echo esc_html( $check['description'] ); ?></td>
-						<td style="font-size:12px; color:#64748b;"><?php echo esc_html( $check['fix_guide'] ); ?></td>
+						<td><strong><?php echo esc_html( $maxsafe_check['title'] ); ?></strong></td>
+						<td><span class="safe-badge <?php echo esc_attr( $maxsafe_h_badge ); ?>"><?php echo esc_html( strtoupper( $maxsafe_check['status'] ) ); ?></span></td>
+						<td style="color:#334155; font-size:12px;"><?php echo esc_html( $maxsafe_check['description'] ); ?></td>
+						<td style="font-size:12px; color:#64748b;"><?php echo esc_html( $maxsafe_check['fix_guide'] ); ?></td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>

@@ -9,26 +9,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$inventory       = MaxSafe_Inventory::get_inventory();
-$vulns           = MaxSafe_Security_Scanner::get_known_vulnerabilities();
-$pending_updates = MaxSafe_Update_Provider::get_updates_with_assessment();
-$latest_backup   = MaxSafe_Backup_Adapter::get_latest_verified_backup();
-$license_info    = MaxSafe_License_Manager::get_license();
-$plan_badge      = isset( $license_info['plan'] ) ? strtoupper( $license_info['plan'] ) : 'FREE';
-$plan_slug       = isset( $license_info['plan'] ) ? strtolower( $license_info['plan'] ) : 'free';
+$maxsafe_inventory       = MaxSafe_Inventory::get_inventory();
+$maxsafe_vulns           = MaxSafe_Security_Scanner::get_known_vulnerabilities();
+$maxsafe_pending_updates = MaxSafe_Update_Provider::get_updates_with_assessment();
+$maxsafe_latest_backup   = MaxSafe_Backup_Adapter::get_latest_verified_backup();
+$maxsafe_license_info    = MaxSafe_License_Manager::get_license();
+$maxsafe_plan_badge      = isset( $maxsafe_license_info['plan'] ) ? strtoupper( $maxsafe_license_info['plan'] ) : 'FREE';
+$maxsafe_plan_slug       = isset( $maxsafe_license_info['plan'] ) ? strtolower( $maxsafe_license_info['plan'] ) : 'free';
 
-$critical_vulns_count = 0;
-foreach ( $vulns as $items ) {
-	foreach ( $items as $v ) {
-		if ( 'critical' === strtolower( $v['severity'] ) ) {
-			$critical_vulns_count++;
+$maxsafe_critical_vulns_count = 0;
+foreach ( $maxsafe_vulns as $maxsafe_items ) {
+	foreach ( $maxsafe_items as $maxsafe_v ) {
+		if ( 'critical' === strtolower( $maxsafe_v['severity'] ) ) {
+			$maxsafe_critical_vulns_count++;
 		}
 	}
 }
 
-$updates_count = count( $pending_updates );
+$maxsafe_updates_count = count( $maxsafe_pending_updates );
 
-$logo_url = file_exists( MAXSAFE_PLUGIN_DIR . 'assets/images/maxsafe-security-logo.png' )
+$maxsafe_logo_url = file_exists( MAXSAFE_PLUGIN_DIR . 'assets/images/maxsafe-security-logo.png' )
 	? MAXSAFE_PLUGIN_URL . 'assets/images/maxsafe-security-logo.png'
 	: ( file_exists( MAXSAFE_PLUGIN_DIR . 'assets/images/logo.png' )
 		? MAXSAFE_PLUGIN_URL . 'assets/images/logo.png'
@@ -41,12 +41,12 @@ $logo_url = file_exists( MAXSAFE_PLUGIN_DIR . 'assets/images/maxsafe-security-lo
 	<!-- MaxSafe Header -->
 	<header class="maxsafe-header wpsecureos-header">
 		<div class="maxsafe-brand wpsecureos-brand">
-			<img src="<?php echo esc_url( $logo_url ); ?>" alt="MaxSafe Logo" />
+			<img src="<?php echo esc_url( $maxsafe_logo_url ); ?>" alt="MaxSafe Logo" />
 			<div>
 				<div class="maxsafe-brand-title wpsecureos-brand-title" role="heading" aria-level="1">
 					MaxSafe
 					<span class="badge-version">v<?php echo esc_html( MAXSAFE_VERSION ); ?></span>
-					<span class="badge-plan badge-<?php echo esc_attr( $plan_slug ); ?>"><?php echo esc_html( $plan_badge ); ?></span>
+					<span class="badge-plan badge-<?php echo esc_attr( $maxsafe_plan_slug ); ?>"><?php echo esc_html( $maxsafe_plan_badge ); ?></span>
 				</div>
 				<p class="maxsafe-brand-subtitle wpsecureos-brand-subtitle">
 					<?php esc_html_e( 'Enterprise-grade WordPress Security, Continuous Validation, Safe Updates, and Recovery Platform', 'maxsafe' ); ?>
@@ -85,15 +85,15 @@ $logo_url = file_exists( MAXSAFE_PLUGIN_DIR . 'assets/images/maxsafe-security-lo
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=maxsafe-updates' ) ); ?>" class="maxsafe-nav-tab wpsecureos-nav-tab <?php echo ( 'updates' === $current_tab ) ? 'active' : ''; ?>">
 			<span class="dashicons dashicons-update"></span>
 			<?php esc_html_e( 'Updates & Safe Deploy', 'maxsafe' ); ?>
-			<?php if ( $updates_count > 0 ) : ?>
-				<span class="tab-badge"><?php echo (int) $updates_count; ?></span>
+			<?php if ( $maxsafe_updates_count > 0 ) : ?>
+				<span class="tab-badge"><?php echo (int) $maxsafe_updates_count; ?></span>
 			<?php endif; ?>
 		</a>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=maxsafe-security' ) ); ?>" class="maxsafe-nav-tab wpsecureos-nav-tab <?php echo ( 'security' === $current_tab ) ? 'active' : ''; ?>">
 			<span class="dashicons dashicons-shield-alt"></span>
 			<?php esc_html_e( 'Security & Integrity', 'maxsafe' ); ?>
-			<?php if ( $critical_vulns_count > 0 ) : ?>
-				<span class="tab-badge" style="background:#ef4444; color:#fff;"><?php echo (int) $critical_vulns_count; ?></span>
+			<?php if ( $maxsafe_critical_vulns_count > 0 ) : ?>
+				<span class="tab-badge" style="background:#ef4444; color:#fff;"><?php echo (int) $maxsafe_critical_vulns_count; ?></span>
 			<?php endif; ?>
 		</a>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=maxsafe-backups' ) ); ?>" class="maxsafe-nav-tab wpsecureos-nav-tab <?php echo ( 'backup-status' === $current_tab ) ? 'active' : ''; ?>">
@@ -142,8 +142,8 @@ $logo_url = file_exists( MAXSAFE_PLUGIN_DIR . 'assets/images/maxsafe-security-lo
 			<div id="maxsafe-live-terminal" class="maxsafe-live-terminal-box">
 				<div class="terminal-line"><span class="term-time">[<?php echo esc_html( gmdate( 'H:i:s' ) ); ?>]</span> <span class="term-info">MaxSafe agent initialized. System environment indexed: PHP <?php echo esc_html( PHP_VERSION ); ?>, WP <?php echo esc_html( get_bloginfo( 'version' ) ); ?>.</span></div>
 				<div class="terminal-line"><span class="term-time">[<?php echo esc_html( gmdate( 'H:i:s' ) ); ?>]</span> <span class="term-success">Continuous Offensive Validation listener armed. Ready for assessment.</span></div>
-				<?php if ( $latest_backup ) : ?>
-					<div class="terminal-line"><span class="term-time">[<?php echo esc_html( gmdate( 'H:i:s', strtotime( $latest_backup['created_at'] ) ) ); ?>]</span> <span class="term-success">Verified backup snapshot present: <?php echo esc_html( $latest_backup['backup_name'] ); ?> (SHA-256 confirmed).</span></div>
+				<?php if ( $maxsafe_latest_backup ) : ?>
+					<div class="terminal-line"><span class="term-time">[<?php echo esc_html( gmdate( 'H:i:s', strtotime( $maxsafe_latest_backup['created_at'] ) ) ); ?>]</span> <span class="term-success">Verified backup snapshot present: <?php echo esc_html( $maxsafe_latest_backup['backup_name'] ); ?> (SHA-256 confirmed).</span></div>
 				<?php endif; ?>
 			</div>
 		</div>
