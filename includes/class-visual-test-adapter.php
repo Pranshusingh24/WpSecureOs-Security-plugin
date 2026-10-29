@@ -2,14 +2,14 @@
 /**
  * Visual regression testing worker adapter and automated smoke test runner.
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WpSecureOs_Visual_Test_Adapter {
+class MaxSafe_Visual_Test_Adapter {
 
 	/**
 	 * Run automated smoke tests and visual regression suite.
@@ -18,7 +18,10 @@ class WpSecureOs_Visual_Test_Adapter {
 	 * @return array
 	 */
 	public static function run_smoke_and_visual_suite( $urls = array() ) {
-		$settings = get_option( 'wpsecureos_settings', array() );
+		$settings = get_option( 'maxsafe_settings', array() );
+		if ( empty( $settings ) ) {
+			$settings = get_option( 'wpsecureos_settings', array() );
+		}
 		if ( empty( $urls ) ) {
 			$urls = isset( $settings['critical_urls'] ) ? (array) $settings['critical_urls'] : array( home_url( '/' ) );
 		}
@@ -131,7 +134,7 @@ class WpSecureOs_Visual_Test_Adapter {
 		if ( ! $has_wc ) {
 			return array(
 				'is_applicable'      => false,
-				'message'            => __( 'WooCommerce not active on this site.', 'wpsecureos' ),
+				'message'            => __( 'WooCommerce not active on this site.', 'maxsafe' ),
 			);
 		}
 
@@ -141,7 +144,7 @@ class WpSecureOs_Visual_Test_Adapter {
 			'checkout_page_status' => 200,
 			'sandbox_mode_forced'  => true,
 			'mock_checkout_status' => 'passed',
-			'notes'                => __( 'WooCommerce sandbox checkout simulated with mock gateway; zero real customer charges created.', 'wpsecureos' ),
+			'notes'                => __( 'WooCommerce sandbox checkout simulated with mock gateway; zero real customer charges created.', 'maxsafe' ),
 		);
 	}
 

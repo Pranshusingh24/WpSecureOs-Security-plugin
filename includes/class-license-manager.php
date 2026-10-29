@@ -1,23 +1,23 @@
 <?php
 /**
- * Client License Manager for WpSecureOs.
+ * Client License Manager for MaxSafe.
  *
  * Coordinates cryptographic license activation, validation, offline grace periods,
  * and server outage resilience.
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WpSecureOs_License_Manager {
+class MaxSafe_License_Manager {
 
 	/**
 	 * Option key storing persistent license state.
 	 */
-	const OPTION_KEY = 'wpsecureos_license';
+	const OPTION_KEY = 'maxsafe_license';
 
 	/**
 	 * Default Licensing Server Base URL.
@@ -29,7 +29,7 @@ class WpSecureOs_License_Manager {
 	 *
 	 * Note: Public verification key only. Server private key is never embedded in plugin files.
 	 */
-	const SERVER_PUBLIC_KEY = 'WpSecureOs_Production_Ed25519_Public_Key_v1';
+	const SERVER_PUBLIC_KEY = 'MaxSafe_Production_Ed25519_Public_Key_v1';
 
 	/**
 	 * Retrieve current license data array.
@@ -39,8 +39,8 @@ class WpSecureOs_License_Manager {
 	public static function get_license() {
 		$default = array(
 			'license_key'         => '',
-			'plan'                => WpSecureOs_Plan_Entitlements::PLAN_FREE,
-			'plan_name'           => __( 'Free / Community', 'wpsecureos' ),
+			'plan'                => MaxSafe_Plan_Entitlements::PLAN_FREE,
+			'plan_name'           => __( 'Free / Community', 'maxsafe' ),
 			'status'              => 'unlicensed',
 			'activation_token'    => '',
 			'licensed_sites'      => 1,
@@ -50,10 +50,13 @@ class WpSecureOs_License_Manager {
 			'offline_grace_days'  => 7,
 			'grace_period_until'  => null,
 			'signature_verified'  => false,
-			'entitlements'        => array_keys( WpSecureOs_Plan_Entitlements::get_plan( 'free' )['features'] ),
+			'entitlements'        => array_keys( MaxSafe_Plan_Entitlements::get_plan( 'free' )['features'] ),
 		);
 
 		$stored = get_option( self::OPTION_KEY, array() );
+		if ( empty( $stored ) ) {
+			$stored = get_option( 'wpsecureos_license', array() );
+		}
 		return wp_parse_args( $stored, $default );
 	}
 
@@ -92,7 +95,7 @@ class WpSecureOs_License_Manager {
 	 */
 	public static function get_plan() {
 		$lic = self::get_license();
-		return isset( $lic['plan'] ) ? $lic['plan'] : WpSecureOs_Plan_Entitlements::PLAN_FREE;
+		return isset( $lic['plan'] ) ? $lic['plan'] : MaxSafe_Plan_Entitlements::PLAN_FREE;
 	}
 
 	/**
@@ -102,10 +105,10 @@ class WpSecureOs_License_Manager {
 	 * @return array [ 'success' => bool, 'message' => string ]
 	 */
 	public static function activate( $license_key ) {
-		if ( ! current_user_can( WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS ) ) {
+		if ( ! current_user_can( MaxSafe_Capabilities::CAP_MANAGE_SETTINGS ) && ! current_user_can( 'manage_options' ) ) {
 			return array(
 				'success' => false,
-				'message' => __( 'Unauthorized: You lack wpsecureos_manage_settings capability.', 'wpsecureos' ),
+				'message' => __( 'Unauthorized: You lack maxsafe_manage_settings capability.', 'maxsafe' ),
 			);
 		}
 
@@ -113,19 +116,20 @@ class WpSecureOs_License_Manager {
 		if ( empty( $clean_key ) ) {
 			return array(
 				'success' => false,
-				'message' => __( 'Please enter a valid license key.', 'wpsecureos' ),
+				'message' => __( 'Please enter a valid license key.', 'maxsafe' ),
 			);
 		}
 
 		$domain   = self::get_site_domain();
 		$site_url = home_url( '/' );
 		$endpoint = self::get_server_url() . '/api/v1/license/activate';
+		$client_ver = defined( 'MAXSAFE_VERSION' ) ? MAXSAFE_VERSION : '1.1.0';
 
 		$body = array(
 			'license_key'    => $clean_key,
 			'domain'         => $domain,
 			'site_url'       => $site_url,
-			'client_version' => defined( 'WPSECUREOS_VERSION' ) ? WPSECUREOS_VERSION : '1.1.0-beta',
+			'client_version' => $client_ver,
 		);
 
 		$response = wp_remote_post(
@@ -134,10 +138,13 @@ class WpSecureOs_License_Manager {
 				'timeout'   => 15,
 				'sslverify' => true,
 				'headers'   => array(
-					'Content-Type'                   => 'application/json',
-					'X-WpSecureOs-Domain'            => $domain,
-					'X-WpSecureOs-Site-Url'          => $site_url,
-					'X-WpSecureOs-Client-Version'    => defined( 'WPSECUREOS_VERSION' ) ? WPSECUREOS_VERSION : '1.1.0-beta',
+					'Content-Type'                => 'application/json',
+					'X-MaxSafe-Domain'            => $domain,
+					'X-MaxSafe-Site-Url'          => $site_url,
+					'X-MaxSafe-Client-Version'    => $client_ver,
+					'X-WpSecureOs-Domain'         => $domain,
+					'X-WpSecureOs-Site-Url'       => $site_url,
+					'X-WpSecureOs-Client-Version' => $client_ver,
 				),
 				'body'      => wp_json_encode( $body ),
 			)
@@ -148,7 +155,7 @@ class WpSecureOs_License_Manager {
 				'success' => false,
 				'message' => sprintf(
 					/* translators: %s: Network error message */
-					__( 'Could not connect to licensing server: %s', 'wpsecureos' ),
+					__( 'Could not connect to licensing server: %s', 'maxsafe' ),
 					$response->get_error_message()
 				),
 			);
@@ -159,7 +166,7 @@ class WpSecureOs_License_Manager {
 		$data        = json_decode( $raw_body, true );
 
 		if ( 200 !== $status_code || empty( $data['success'] ) ) {
-			$error_msg = isset( $data['message'] ) ? $data['message'] : __( 'Activation failed. Please check your license key.', 'wpsecureos' );
+			$error_msg = isset( $data['message'] ) ? $data['message'] : __( 'Activation failed. Please check your license key.', 'maxsafe' );
 			return array(
 				'success' => false,
 				'message' => $error_msg,
@@ -172,11 +179,14 @@ class WpSecureOs_License_Manager {
 			$sig_verified = self::verify_server_signature( $data, $data['signature'] );
 		}
 
+		$plan_name = isset( $data['plan_name'] ) ? sanitize_text_field( $data['plan_name'] ) : 'MaxSafe Pro';
+		$plan_name = str_replace( 'WpSecureOs', 'MaxSafe', $plan_name );
+
 		// Update option
 		$license_record = array(
 			'license_key'        => $clean_key,
 			'plan'               => isset( $data['plan'] ) ? sanitize_text_field( $data['plan'] ) : 'pro',
-			'plan_name'          => isset( $data['plan_name'] ) ? sanitize_text_field( $data['plan_name'] ) : 'WpSecureOs Pro',
+			'plan_name'          => $plan_name,
 			'status'             => 'active',
 			'activation_token'   => isset( $data['activation_token'] ) ? sanitize_text_field( $data['activation_token'] ) : '',
 			'licensed_sites'     => isset( $data['licensed_sites'] ) ? (int) $data['licensed_sites'] : 1,
@@ -191,11 +201,11 @@ class WpSecureOs_License_Manager {
 
 		update_option( self::OPTION_KEY, $license_record );
 
-		WpSecureOs_Event_Logger::log_event(
+		MaxSafe_Event_Logger::log_event(
 			'license_activated',
 			'low',
 			'License Manager',
-			sprintf( 'WpSecureOs %s license successfully activated.', strtoupper( $license_record['plan'] ) ),
+			sprintf( 'MaxSafe %s license successfully activated.', strtoupper( $license_record['plan'] ) ),
 			array( 'plan' => $license_record['plan'], 'expires_at' => $license_record['expires_at'] )
 		);
 
@@ -203,7 +213,7 @@ class WpSecureOs_License_Manager {
 			'success' => true,
 			'message' => sprintf(
 				/* translators: %s: Plan name */
-				__( 'License activated successfully! You are now running %s.', 'wpsecureos' ),
+				__( 'License activated successfully! You are now running %s.', 'maxsafe' ),
 				$license_record['plan_name']
 			),
 			'data'    => $license_record,
@@ -216,10 +226,10 @@ class WpSecureOs_License_Manager {
 	 * @return array
 	 */
 	public static function deactivate() {
-		if ( ! current_user_can( WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS ) ) {
+		if ( ! current_user_can( MaxSafe_Capabilities::CAP_MANAGE_SETTINGS ) && ! current_user_can( 'manage_options' ) ) {
 			return array(
 				'success' => false,
-				'message' => __( 'Unauthorized: You lack wpsecureos_manage_settings capability.', 'wpsecureos' ),
+				'message' => __( 'Unauthorized: You lack maxsafe_manage_settings capability.', 'maxsafe' ),
 			);
 		}
 
@@ -227,7 +237,7 @@ class WpSecureOs_License_Manager {
 		if ( empty( $current['license_key'] ) ) {
 			return array(
 				'success' => false,
-				'message' => __( 'No active license to deactivate.', 'wpsecureos' ),
+				'message' => __( 'No active license to deactivate.', 'maxsafe' ),
 			);
 		}
 
@@ -251,8 +261,9 @@ class WpSecureOs_License_Manager {
 
 		// Reset local state to Free / Community
 		delete_option( self::OPTION_KEY );
+		delete_option( 'wpsecureos_license' );
 
-		WpSecureOs_Event_Logger::log_event(
+		MaxSafe_Event_Logger::log_event(
 			'license_deactivated',
 			'medium',
 			'License Manager',
@@ -262,7 +273,7 @@ class WpSecureOs_License_Manager {
 
 		return array(
 			'success' => true,
-			'message' => __( 'License deactivated successfully. Site has reverted to Free tier.', 'wpsecureos' ),
+			'message' => __( 'License deactivated successfully. Site has reverted to Free tier.', 'maxsafe' ),
 		);
 	}
 
@@ -345,7 +356,7 @@ class WpSecureOs_License_Manager {
 			$current_license['status']             = 'grace_period';
 			update_option( self::OPTION_KEY, $current_license );
 
-			WpSecureOs_Event_Logger::log_event(
+			MaxSafe_Event_Logger::log_event(
 				'license_grace_period_started',
 				'low',
 				'License Manager',
@@ -360,7 +371,7 @@ class WpSecureOs_License_Manager {
 			'status'             => 'grace_period',
 			'in_grace_period'    => true,
 			'grace_period_until' => $current_license['grace_period_until'],
-			'message'            => __( 'Licensing server connection delayed. Operating in offline grace period.', 'wpsecureos' ),
+			'message'            => __( 'Licensing server connection delayed. Operating in offline grace period.', 'maxsafe' ),
 		);
 	}
 
@@ -403,9 +414,13 @@ class WpSecureOs_License_Manager {
 	 * @return string
 	 */
 	public static function get_server_url() {
+		if ( defined( 'MAXSAFE_LICENSING_SERVER_URL' ) ) {
+			return rtrim( MAXSAFE_LICENSING_SERVER_URL, '/' );
+		}
 		if ( defined( 'WPSECUREOS_LICENSING_SERVER_URL' ) ) {
 			return rtrim( WPSECUREOS_LICENSING_SERVER_URL, '/' );
 		}
-		return apply_filters( 'wpsecureos_licensing_server_url', self::DEFAULT_SERVER_URL );
+		$url = apply_filters( 'maxsafe_licensing_server_url', self::DEFAULT_SERVER_URL );
+		return apply_filters( 'wpsecureos_licensing_server_url', $url );
 	}
 }

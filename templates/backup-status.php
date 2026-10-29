@@ -2,33 +2,33 @@
 /**
  * Backups & Recovery Runbook View
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$backups       = WpSecureOs_Backup_Adapter::get_all_backups();
-$latest_backup = WpSecureOs_Backup_Adapter::get_latest_verified_backup();
+$backups       = class_exists( 'MaxSafe_Backup_Adapter' ) ? MaxSafe_Backup_Adapter::get_all_backups() : ( class_exists( 'WpSecureOs_Backup_Adapter' ) ? WpSecureOs_Backup_Adapter::get_all_backups() : array() );
+$latest_backup = class_exists( 'MaxSafe_Backup_Adapter' ) ? MaxSafe_Backup_Adapter::get_latest_verified_backup() : ( class_exists( 'WpSecureOs_Backup_Adapter' ) ? WpSecureOs_Backup_Adapter::get_latest_verified_backup() : false );
 ?>
 
 <!-- Verified Backups Overview -->
-<div class="wpsecureos-panel">
-	<div class="wpsecureos-panel-header">
+<div class="maxsafe-panel wpsecureos-panel">
+	<div class="maxsafe-panel-header wpsecureos-panel-header">
 		<div>
-			<h2 class="wpsecureos-panel-title">
+			<h2 class="maxsafe-panel-title wpsecureos-panel-title">
 				<span class="dashicons dashicons-backup"></span>
-				<?php esc_html_e( 'Verified Backups & Archive Integrity', 'wpsecureos' ); ?>
+				<?php esc_html_e( 'Verified Backups & Archive Integrity', 'maxsafe' ); ?>
 			</h2>
 			<p style="margin:4px 0 0 0; font-size:13px; color:#64748b;">
-				<?php esc_html_e( 'An archive is only marked VERIFIED after passing archive readability and consistency validation. Never rely on unverified backup creation.', 'wpsecureos' ); ?>
+				<?php esc_html_e( 'An archive is only marked VERIFIED after passing archive readability and consistency validation. Never rely on unverified backup creation.', 'maxsafe' ); ?>
 			</p>
 		</div>
 		<div>
 			<button type="button" id="btn-create-backup-page" class="safe-btn safe-btn-primary" onclick="jQuery('#btn-create-backup').click();">
 				<span class="dashicons dashicons-database-add"></span>
-				<?php esc_html_e( 'Create Verified Backup Now', 'wpsecureos' ); ?>
+				<?php esc_html_e( 'Create Verified Backup Now', 'maxsafe' ); ?>
 			</button>
 		</div>
 	</div>
@@ -37,23 +37,23 @@ $latest_backup = WpSecureOs_Backup_Adapter::get_latest_verified_backup();
 		<div style="text-align:center; padding:30px 0; color:#64748b;">
 			<span class="dashicons dashicons-warning" style="font-size:42px; width:42px; height:42px; color:#f59e0b; margin-bottom:12px;"></span>
 			<h3 style="margin:0 0 6px 0; color:#0f172a; font-size:15px;">
-				<?php esc_html_e( 'No backup archives on record.', 'wpsecureos' ); ?>
+				<?php esc_html_e( 'No backup archives on record.', 'maxsafe' ); ?>
 			</h3>
 			<p style="margin:0; font-size:13px;">
-				<?php esc_html_e( 'Create a verified backup before applying any pending candidate updates.', 'wpsecureos' ); ?>
+				<?php esc_html_e( 'Create a verified backup before applying any pending candidate updates.', 'maxsafe' ); ?>
 			</p>
 		</div>
 	<?php else : ?>
-		<div class="wpsecureos-table-responsive">
-			<table class="wpsecureos-table wpsecureos-datatable display responsive" id="wpsecureos-backups-table" style="width:100%;">
+		<div class="maxsafe-table-responsive wpsecureos-table-responsive">
+			<table class="maxsafe-table wpsecureos-table maxsafe-datatable wpsecureos-datatable display responsive" id="maxsafe-backups-table" style="width:100%;">
 				<thead>
 					<tr>
-						<th data-priority="1"><?php esc_html_e( 'Archive Name', 'wpsecureos' ); ?></th>
-						<th data-priority="2"><?php esc_html_e( 'Size', 'wpsecureos' ); ?></th>
-						<th data-priority="3"><?php esc_html_e( 'SHA-256 Checksum', 'wpsecureos' ); ?></th>
-						<th data-priority="1"><?php esc_html_e( 'Integrity Test', 'wpsecureos' ); ?></th>
-						<th data-priority="2"><?php esc_html_e( 'Created At', 'wpsecureos' ); ?></th>
-						<th data-priority="4"><?php esc_html_e( 'Verification Notes', 'wpsecureos' ); ?></th>
+						<th data-priority="1"><?php esc_html_e( 'Archive Name', 'maxsafe' ); ?></th>
+						<th data-priority="2"><?php esc_html_e( 'Size', 'maxsafe' ); ?></th>
+						<th data-priority="3"><?php esc_html_e( 'SHA-256 Checksum', 'maxsafe' ); ?></th>
+						<th data-priority="1"><?php esc_html_e( 'Integrity Test', 'maxsafe' ); ?></th>
+						<th data-priority="2"><?php esc_html_e( 'Created At', 'maxsafe' ); ?></th>
+						<th data-priority="4"><?php esc_html_e( 'Verification Notes', 'maxsafe' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -70,7 +70,7 @@ $latest_backup = WpSecureOs_Backup_Adapter::get_latest_verified_backup();
 							</td>
 							<td>
 								<span class="safe-badge <?php echo $b['is_verified'] ? 'badge-clean' : 'badge-critical'; ?>" style="white-space:nowrap;">
-									<?php echo $b['is_verified'] ? esc_html__( 'VERIFIED', 'wpsecureos' ) : esc_html__( 'UNVERIFIED', 'wpsecureos' ); ?>
+									<?php echo $b['is_verified'] ? esc_html__( 'VERIFIED', 'maxsafe' ) : esc_html__( 'UNVERIFIED', 'maxsafe' ); ?>
 								</span>
 							</td>
 							<td style="font-size:12px; color:#64748b; white-space:nowrap;">
@@ -88,15 +88,15 @@ $latest_backup = WpSecureOs_Backup_Adapter::get_latest_verified_backup();
 </div>
 
 <!-- Point-in-Time Recovery Runbook -->
-<div class="wpsecureos-panel">
-	<div class="wpsecureos-panel-header">
+<div class="maxsafe-panel wpsecureos-panel">
+	<div class="maxsafe-panel-header wpsecureos-panel-header">
 		<div>
-			<h2 class="wpsecureos-panel-title">
+			<h2 class="maxsafe-panel-title wpsecureos-panel-title">
 				<span class="dashicons dashicons-sos"></span>
-				<?php esc_html_e( 'Point-in-Time Recovery Runbook & Database Safety Warning', 'wpsecureos' ); ?>
+				<?php esc_html_e( 'Point-in-Time Recovery Runbook & Database Safety Warning', 'maxsafe' ); ?>
 			</h2>
 			<p style="margin:4px 0 0 0; font-size:13px; color:#64748b;">
-				<?php esc_html_e( 'Follow this documented operational runbook in the event of an update failure or broken production state.', 'wpsecureos' ); ?>
+				<?php esc_html_e( 'Follow this documented operational runbook in the event of an update failure or broken production state.', 'maxsafe' ); ?>
 			</p>
 		</div>
 	</div>
@@ -104,38 +104,38 @@ $latest_backup = WpSecureOs_Backup_Adapter::get_latest_verified_backup();
 	<div style="background:#fffbeb; border:1px solid #fef3c7; border-radius:8px; padding:16px; margin-bottom:20px;">
 		<h4 style="margin:0 0 6px 0; color:#b45309; font-size:13px; display:flex; align-items:center; gap:6px;">
 			<span class="dashicons dashicons-info" style="color:#b45309;"></span>
-			<?php esc_html_e( 'CRITICAL: Database Rollback Risks for Active E-Commerce & Membership Sites', 'wpsecureos' ); ?>
+			<?php esc_html_e( 'CRITICAL: Database Rollback Risks for Active E-Commerce & Membership Sites', 'maxsafe' ); ?>
 		</h4>
 		<p style="margin:0; font-size:13px; color:#92400e; line-height:1.5;">
-			<?php esc_html_e( 'Restoring an old production database will overwrite orders, payments, subscriptions, and new user accounts created since the backup. ALWAYS attempt a Code Rollback (/wp-content/plugins/ or /wp-content/themes/) first to preserve your live customer transaction records.', 'wpsecureos' ); ?>
+			<?php esc_html_e( 'Restoring an old production database will overwrite orders, payments, subscriptions, and new user accounts created since the backup. ALWAYS attempt a Code Rollback (/wp-content/plugins/ or /wp-content/themes/) first to preserve your live customer transaction records.', 'maxsafe' ); ?>
 		</p>
 	</div>
 
-	<div class="wpsecureos-equal-cols">
+	<div class="maxsafe-equal-cols wpsecureos-equal-cols">
 		<!-- Step A: Code Rollback -->
 		<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:18px;">
 			<h4 style="margin:0 0 10px 0; font-size:14px; font-weight:700; color:#0f172a;">
-				<?php esc_html_e( 'Phase 1: Code-Level Rollback (Safe for Live Orders)', 'wpsecureos' ); ?>
+				<?php esc_html_e( 'Phase 1: Code-Level Rollback (Safe for Live Orders)', 'maxsafe' ); ?>
 			</h4>
 			<ol style="margin:0; padding-left:18px; font-size:13px; color:#334155; line-height:1.6;">
-				<li><?php esc_html_e( 'Identify the broken plugin or theme version that caused regression.', 'wpsecureos' ); ?></li>
-				<li><?php esc_html_e( 'Download the previous stable release ZIP from WordPress.org or repository.', 'wpsecureos' ); ?></li>
-				<li><?php esc_html_e( 'Replace the affected component folder in /wp-content/plugins/ via SFTP or WP-CLI.', 'wpsecureos' ); ?></li>
-				<li><?php esc_html_e( 'Verify site health without touching the live database.', 'wpsecureos' ); ?></li>
+				<li><?php esc_html_e( 'Identify the broken plugin or theme version that caused regression.', 'maxsafe' ); ?></li>
+				<li><?php esc_html_e( 'Download the previous stable release ZIP from WordPress.org or repository.', 'maxsafe' ); ?></li>
+				<li><?php esc_html_e( 'Replace the affected component folder in /wp-content/plugins/ via SFTP or WP-CLI.', 'maxsafe' ); ?></li>
+				<li><?php esc_html_e( 'Verify site health without touching the live database.', 'maxsafe' ); ?></li>
 			</ol>
 		</div>
 
 		<!-- Step B: Database Disaster Recovery -->
 		<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:18px;">
 			<h4 style="margin:0 0 10px 0; font-size:14px; font-weight:700; color:#0f172a;">
-				<?php esc_html_e( 'Phase 2: Database Restoration (Disaster Recovery)', 'wpsecureos' ); ?>
+				<?php esc_html_e( 'Phase 2: Database Restoration (Disaster Recovery)', 'maxsafe' ); ?>
 			</h4>
 			<ol style="margin:0; padding-left:18px; font-size:13px; color:#334155; line-height:1.6;">
-				<li><?php esc_html_e( 'Activate WordPress Maintenance Mode: wp maintenance-mode activate', 'wpsecureos' ); ?></li>
-				<li><?php esc_html_e( 'Export current delta records (e.g. recent WooCommerce orders table) for merging.', 'wpsecureos' ); ?></li>
-				<li><?php esc_html_e( 'Extract database_dump.sql from verified WpSecureOs backup archive.', 'wpsecureos' ); ?></li>
-				<li><?php esc_html_e( 'Import schema: wp db import database_dump.sql', 'wpsecureos' ); ?></li>
-				<li><?php esc_html_e( 'Deactivate Maintenance Mode and run post-restore validation tests.', 'wpsecureos' ); ?></li>
+				<li><?php esc_html_e( 'Activate WordPress Maintenance Mode: wp maintenance-mode activate', 'maxsafe' ); ?></li>
+				<li><?php esc_html_e( 'Export current delta records (e.g. recent WooCommerce orders table) for merging.', 'maxsafe' ); ?></li>
+				<li><?php esc_html_e( 'Extract database_dump.sql from verified MaxSafe backup archive.', 'maxsafe' ); ?></li>
+				<li><?php esc_html_e( 'Import schema: wp db import database_dump.sql', 'maxsafe' ); ?></li>
+				<li><?php esc_html_e( 'Deactivate Maintenance Mode and run post-restore validation tests.', 'maxsafe' ); ?></li>
 			</ol>
 		</div>
 	</div>

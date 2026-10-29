@@ -2,14 +2,14 @@
 /**
  * Security Event Logger & Login Rate Limiting.
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WpSecureOs_Event_Logger {
+class MaxSafe_Event_Logger {
 
 	/**
 	 * Log a security or administrative audit event.
@@ -24,7 +24,7 @@ class WpSecureOs_Event_Logger {
 	public static function log_event( $event_type, $severity, $component, $message, $metadata = array() ) {
 		global $wpdb;
 
-		$table = $wpdb->prefix . 'wpsecureos_events';
+		$table = $wpdb->prefix . 'maxsafe_events';
 		$user_id = get_current_user_id();
 		$ip = self::get_client_ip();
 
@@ -60,7 +60,7 @@ class WpSecureOs_Event_Logger {
 	 */
 	public static function get_events( $page = 1, $per_page = 20, $severity = '', $search = '' ) {
 		global $wpdb;
-		$table = $wpdb->prefix . 'wpsecureos_events';
+		$table = $wpdb->prefix . 'maxsafe_events';
 
 		$where = array( '1=1' );
 		$args  = array();
@@ -164,11 +164,14 @@ class WpSecureOs_Event_Logger {
 	 */
 	public static function handle_failed_login( $username ) {
 		$ip = self::get_client_ip();
-		$settings = get_option( 'wpsecureos_settings', array() );
+		$settings = get_option( 'maxsafe_settings', array() );
+		if ( empty( $settings ) ) {
+			$settings = get_option( 'wpsecureos_settings', array() );
+		}
 		$limit    = isset( $settings['rate_limit_login_attempts'] ) ? (int) $settings['rate_limit_login_attempts'] : 5;
 		$lockout  = isset( $settings['rate_limit_lockout_minutes'] ) ? (int) $settings['rate_limit_lockout_minutes'] : 15;
 
-		$transient_key = 'wpsecureos_login_fails_' . md5( $ip );
+		$transient_key = 'maxsafe_login_fails_' . md5( $ip );
 		$fails = (int) get_transient( $transient_key );
 		$fails++;
 		set_transient( $transient_key, $fails, $lockout * MINUTE_IN_SECONDS );
@@ -186,9 +189,15 @@ class WpSecureOs_Event_Logger {
 	 * Check if an IP is currently locked out from logging in.
 	 */
 	public static function is_ip_locked_out( $ip ) {
-		$settings = get_option( 'wpsecureos_settings', array() );
+		$settings = get_option( 'maxsafe_settings', array() );
+		if ( empty( $settings ) ) {
+			$settings = get_option( 'wpsecureos_settings', array() );
+		}
 		$limit    = isset( $settings['rate_limit_login_attempts'] ) ? (int) $settings['rate_limit_login_attempts'] : 5;
-		$fails    = (int) get_transient( 'wpsecureos_login_fails_' . md5( $ip ) );
+		$fails    = (int) get_transient( 'maxsafe_login_fails_' . md5( $ip ) );
+		if ( ! $fails ) {
+			$fails = (int) get_transient( 'wpsecureos_login_fails_' . md5( $ip ) );
+		}
 		return ( $fails >= $limit );
 	}
 }

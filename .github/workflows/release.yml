@@ -1,4 +1,4 @@
-name: WpSecureOs Release Pipeline
+name: MaxSafe Release Pipeline
 
 on:
   push:
@@ -35,36 +35,35 @@ jobs:
 
       - name: Build Production WordPress Plugin ZIP
         run: |
-          mkdir -p dist/wpsecureos
+          mkdir -p dist/maxsafe
           
           # Copy production files and folders
-          cp wpsecureos.php dist/wpsecureos/
-          cp uninstall.php dist/wpsecureos/
-          cp readme.txt dist/wpsecureos/
-          cp composer.json dist/wpsecureos/
-          cp -r assets dist/wpsecureos/
-          cp -r includes dist/wpsecureos/
-          cp -r templates dist/wpsecureos/
-          cp -r languages dist/wpsecureos/
+          cp maxsafe.php dist/maxsafe/
+          cp uninstall.php dist/maxsafe/
+          cp readme.txt dist/maxsafe/
+          cp composer.json dist/maxsafe/
+          cp -r assets dist/maxsafe/
+          cp -r includes dist/maxsafe/
+          cp -r templates dist/maxsafe/
+          cp -r languages dist/maxsafe/
           
           # Create zip archive from dist directory
           cd dist
-          zip -r ../wpsecureos.zip wpsecureos
+          zip -r ../maxsafe.zip maxsafe
           cd ..
           
           # Compute cryptographic SHA-256 checksum
-          sha256sum wpsecureos.zip > checksums.sha256
-          echo "Release archive created: wpsecureos.zip"
+          sha256sum maxsafe.zip > checksums.sha256
+          echo "Release archive created: maxsafe.zip"
           cat checksums.sha256
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            wpsecureos.zip
+            maxsafe.zip
             checksums.sha256
-          name: WpSecureOs ${{ github.ref_name }}
+          name: MaxSafe ${{ github.ref_name }}
           draft: false
           prerelease: ${{ contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') || contains(github.ref_name, 'rc') }}
           generate_release_notes: true
-

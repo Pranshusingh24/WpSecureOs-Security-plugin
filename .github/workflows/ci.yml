@@ -1,4 +1,4 @@
-name: WpSecureOs CI Pipeline
+name: MaxSafe CI Pipeline
 
 on:
   push:

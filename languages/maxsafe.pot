@@ -2,24 +2,24 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WpSecureOs 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wpsecureos.com/\n"
-"Last-Translator: Pranshu Singh <contact@wpsecureos.com>\n"
+"Project-Id-Version: MaxSafe 1.1.0\n"
+"Report-Msgid-Bugs-To: https://maxsafe-plugin.netlify.app/\n"
+"Last-Translator: Pranshu Singh <contact@maxsafe.io>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-23T20:00:00+00:00\n"
+"POT-Creation-Date: 2026-10-29T20:00:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
-"X-Domain: wpsecureos\n"
+"X-Domain: maxsafe\n"
 
-#: wpsecureos.php:5
+#: maxsafe.php:5
 msgid "Enterprise-grade WordPress Security, Continuous Validation, Safe Updates, and Recovery Platform."
 msgstr ""
 
 #: includes/class-capabilities.php:32
-msgid "View WpSecureOs dashboard overview"
+msgid "View MaxSafe dashboard overview"
 msgstr ""
 
 #: includes/class-capabilities.php:33
@@ -27,7 +27,7 @@ msgid "View security signals, CVEs, and file integrity"
 msgstr ""
 
 #: includes/class-capabilities.php:34
-msgid "Configure WpSecureOs settings and integrations"
+msgid "Configure MaxSafe settings and integrations"
 msgstr ""
 
 #: includes/class-capabilities.php:35

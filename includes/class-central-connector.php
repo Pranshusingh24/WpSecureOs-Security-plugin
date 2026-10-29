@@ -2,14 +2,14 @@
 /**
  * Multi-site Central Dashboard Connector.
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WpSecureOs_Central_Connector {
+class MaxSafe_Central_Connector {
 
 	/**
 	 * Pair this site with a Central Dashboard instance using a secure one-time pairing code.
@@ -19,10 +19,10 @@ class WpSecureOs_Central_Connector {
 	 * @return array
 	 */
 	public static function enroll_site( $central_url, $api_token ) {
-		if ( ! current_user_can( WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS ) ) {
+		if ( ! current_user_can( MaxSafe_Capabilities::CAP_MANAGE_SETTINGS ) && ! current_user_can( 'manage_options' ) ) {
 			return array(
 				'success' => false,
-				'message' => __( 'Unauthorized: You lack wpsecureos_manage_settings capability.', 'wpsecureos' ),
+				'message' => __( 'Unauthorized: You lack maxsafe_manage_settings capability.', 'maxsafe' ),
 			);
 		}
 
@@ -32,7 +32,7 @@ class WpSecureOs_Central_Connector {
 		if ( empty( $clean_url ) || empty( $clean_token ) ) {
 			return array(
 				'success' => false,
-				'message' => __( 'Central Dashboard URL and API Token are required.', 'wpsecureos' ),
+				'message' => __( 'Central Dashboard URL and API Token are required.', 'maxsafe' ),
 			);
 		}
 
@@ -45,9 +45,9 @@ class WpSecureOs_Central_Connector {
 			'status'      => 'connected',
 		);
 
-		update_option( 'wpsecureos_central_connector', $connector_data );
+		update_option( 'maxsafe_central_connector', $connector_data );
 
-		WpSecureOs_Event_Logger::log_event(
+		MaxSafe_Event_Logger::log_event(
 			'central_dashboard_enrolled',
 			'low',
 			'Central Connector',
@@ -58,7 +58,7 @@ class WpSecureOs_Central_Connector {
 		return array(
 			'success'  => true,
 			'site_key' => $site_hash,
-			'message'  => __( 'Site successfully connected to Central Management Dashboard.', 'wpsecureos' ),
+			'message'  => __( 'Site successfully connected to Central Management Dashboard.', 'maxsafe' ),
 		);
 	}
 
@@ -66,12 +66,13 @@ class WpSecureOs_Central_Connector {
 	 * Disconnect central control plane.
 	 */
 	public static function disconnect() {
-		if ( ! current_user_can( WpSecureOs_Capabilities::CAP_MANAGE_SETTINGS ) ) {
+		if ( ! current_user_can( MaxSafe_Capabilities::CAP_MANAGE_SETTINGS ) && ! current_user_can( 'manage_options' ) ) {
 			return false;
 		}
 
+		delete_option( 'maxsafe_central_connector' );
 		delete_option( 'wpsecureos_central_connector' );
-		WpSecureOs_Event_Logger::log_event(
+		MaxSafe_Event_Logger::log_event(
 			'central_dashboard_disconnected',
 			'medium',
 			'Central Connector',
@@ -85,7 +86,10 @@ class WpSecureOs_Central_Connector {
 	 * Get connection status.
 	 */
 	public static function get_status() {
-		$data = get_option( 'wpsecureos_central_connector', array() );
+		$data = get_option( 'maxsafe_central_connector', array() );
+		if ( empty( $data ) ) {
+			$data = get_option( 'wpsecureos_central_connector', array() );
+		}
 		if ( empty( $data ) || empty( $data['central_url'] ) ) {
 			return array(
 				'connected' => false,

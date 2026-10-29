@@ -2,14 +2,14 @@
 /**
  * Staging environment adapter and safety isolation rules.
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WpSecureOs_Staging_Adapter {
+class MaxSafe_Staging_Adapter {
 
 	/**
 	 * Prepare staging environment and apply safety sandbox rules.
@@ -32,10 +32,10 @@ class WpSecureOs_Staging_Adapter {
 
 		return array(
 			'status'       => 'ready',
-			'staging_url'  => home_url( '/wpsecureos-staging/' ),
+			'staging_url'  => home_url( '/maxsafe-staging/' ),
 			'safety_rules' => $safety_rules,
 			'prepared_at'  => current_time( 'mysql' ),
-			'message'      => __( 'Staging sandbox prepared with email suppression, noindex headers, and mock payment gateway isolation.', 'wpsecureos' ),
+			'message'      => __( 'Staging sandbox prepared with email suppression, noindex headers, and mock payment gateway isolation.', 'maxsafe' ),
 		);
 	}
 
@@ -49,7 +49,7 @@ class WpSecureOs_Staging_Adapter {
 	 */
 	public static function apply_update_in_staging( $component_type, $slug, $target_version ) {
 		// Log staging update job
-		WpSecureOs_Event_Logger::log_event(
+		MaxSafe_Event_Logger::log_event(
 			'staging_update_applied',
 			'low',
 			'Staging Adapter',
@@ -67,7 +67,7 @@ class WpSecureOs_Staging_Adapter {
 			'slug'           => $slug,
 			'applied_version'=> $target_version,
 			'timestamp'      => current_time( 'mysql' ),
-			'message'        => __( 'Component successfully staged for automated smoke and visual regression testing.', 'wpsecureos' ),
+			'message'        => __( 'Component successfully staged for automated smoke and visual regression testing.', 'maxsafe' ),
 		);
 	}
 
@@ -75,7 +75,7 @@ class WpSecureOs_Staging_Adapter {
 	 * Tear down staging environment after testing or deployment.
 	 */
 	public static function cleanup_staging() {
-		WpSecureOs_Event_Logger::log_event(
+		MaxSafe_Event_Logger::log_event(
 			'staging_cleanup',
 			'low',
 			'Staging Adapter',

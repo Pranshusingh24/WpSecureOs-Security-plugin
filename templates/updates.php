@@ -2,31 +2,31 @@
 /**
  * Updates & Safe Deployment Pipeline View
  *
- * @package WpSecureOs
+ * @package MaxSafe
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$updates = WpSecureOs_Update_Provider::get_updates_with_assessment();
+$updates = MaxSafe_Update_Provider::get_updates_with_assessment();
 ?>
 
-<div class="wpsecureos-panel">
-	<div class="wpsecureos-panel-header">
+<div class="maxsafe-panel wpsecureos-panel">
+	<div class="maxsafe-panel-header wpsecureos-panel-header">
 		<div>
-			<h2 class="wpsecureos-panel-title">
+			<h2 class="maxsafe-panel-title wpsecureos-panel-title">
 				<span class="dashicons dashicons-update"></span>
-				<?php esc_html_e( 'Explainable Update Risk Assessment & Safe Deployment', 'wpsecureos' ); ?>
+				<?php esc_html_e( 'Explainable Update Risk Assessment & Safe Deployment', 'maxsafe' ); ?>
 			</h2>
 			<p style="margin:4px 0 0 0; font-size:13px; color:#64748b;">
-				<?php esc_html_e( 'Every candidate update is evaluated against vulnerability feeds, PHP runtime compatibility, backup verification, and staging smoke test status.', 'wpsecureos' ); ?>
+				<?php esc_html_e( 'Every candidate update is evaluated against vulnerability feeds, PHP runtime compatibility, backup verification, and staging smoke test status.', 'maxsafe' ); ?>
 			</p>
 		</div>
 		<div>
-			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=wpsecureos-updates&force_check=1' ), 'wpsecureos_force_updates' ) ); ?>" class="safe-btn safe-btn-outline">
+			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?page=maxsafe-updates&force_check=1' ), 'maxsafe_force_updates' ) ); ?>" class="safe-btn safe-btn-outline">
 				<span class="dashicons dashicons-image-rotate"></span>
-				<?php esc_html_e( 'Check for New Releases', 'wpsecureos' ); ?>
+				<?php esc_html_e( 'Check for New Releases', 'maxsafe' ); ?>
 			</a>
 		</div>
 	</div>
@@ -35,23 +35,23 @@ $updates = WpSecureOs_Update_Provider::get_updates_with_assessment();
 		<div style="text-align:center; padding:40px 0; color:#64748b;">
 			<span class="dashicons dashicons-saved" style="font-size:48px; width:48px; height:48px; color:#10b981; margin-bottom:12px;"></span>
 			<h3 style="margin:0 0 6px 0; color:#0f172a; font-size:16px;">
-				<?php esc_html_e( 'All Core, Plugins, and Themes are fully up to date!', 'wpsecureos' ); ?>
+				<?php esc_html_e( 'All Core, Plugins, and Themes are fully up to date!', 'maxsafe' ); ?>
 			</h3>
 			<p style="margin:0; font-size:13px;">
-				<?php esc_html_e( 'No candidate updates are pending on this WordPress instance.', 'wpsecureos' ); ?>
+				<?php esc_html_e( 'No candidate updates are pending on this WordPress instance.', 'maxsafe' ); ?>
 			</p>
 		</div>
 	<?php else : ?>
-		<div class="wpsecureos-table-responsive">
-			<table class="wpsecureos-table wpsecureos-datatable display responsive" id="wpsecureos-updates-table" style="width:100%;">
+		<div class="maxsafe-table-responsive wpsecureos-table-responsive">
+			<table class="maxsafe-table wpsecureos-table maxsafe-datatable wpsecureos-datatable display responsive" id="maxsafe-updates-table" style="width:100%;">
 				<thead>
 					<tr>
-						<th data-priority="1"><?php esc_html_e( 'Component', 'wpsecureos' ); ?></th>
-						<th data-priority="2"><?php esc_html_e( 'Installed -> Target', 'wpsecureos' ); ?></th>
-						<th data-priority="3"><?php esc_html_e( 'Security Urgency', 'wpsecureos' ); ?></th>
-						<th data-priority="4"><?php esc_html_e( 'Deployment Confidence', 'wpsecureos' ); ?></th>
-						<th data-priority="5"><?php esc_html_e( 'Explainable Risk Factors', 'wpsecureos' ); ?></th>
-						<th data-priority="1"><?php esc_html_e( 'Action', 'wpsecureos' ); ?></th>
+						<th data-priority="1"><?php esc_html_e( 'Component', 'maxsafe' ); ?></th>
+						<th data-priority="2"><?php esc_html_e( 'Installed -> Target', 'maxsafe' ); ?></th>
+						<th data-priority="3"><?php esc_html_e( 'Security Urgency', 'maxsafe' ); ?></th>
+						<th data-priority="4"><?php esc_html_e( 'Deployment Confidence', 'maxsafe' ); ?></th>
+						<th data-priority="5"><?php esc_html_e( 'Explainable Risk Factors', 'maxsafe' ); ?></th>
+						<th data-priority="1"><?php esc_html_e( 'Action', 'maxsafe' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -78,7 +78,7 @@ $updates = WpSecureOs_Update_Provider::get_updates_with_assessment();
 									<?php echo esc_html( $u['new_version'] ); ?>
 								</span>
 								<div style="font-size:11px; color:#64748b; margin-top:3px;">
-									<?php printf( /* translators: %s: bump type */ esc_html__( 'Bump: %s', 'wpsecureos' ), esc_html( strtoupper( $assessment['version_bump'] ) ) ); ?>
+									<?php printf( /* translators: %s: bump type */ esc_html__( 'Bump: %s', 'maxsafe' ), esc_html( strtoupper( $assessment['version_bump'] ) ) ); ?>
 								</div>
 							</td>
 							<td>
@@ -98,7 +98,7 @@ $updates = WpSecureOs_Update_Provider::get_updates_with_assessment();
 									<?php endforeach; ?>
 								</ul>
 								<div style="margin-top:6px; font-size:11px; color:#64748b;">
-									<strong><?php esc_html_e( 'Recommended Next Step:', 'wpsecureos' ); ?></strong>
+									<strong><?php esc_html_e( 'Recommended Next Step:', 'maxsafe' ); ?></strong>
 									<span style="color:#0284c7;"><?php echo esc_html( $assessment['next_action'] ); ?></span>
 								</div>
 							</td>
@@ -110,7 +110,7 @@ $updates = WpSecureOs_Update_Provider::get_updates_with_assessment();
 									data-name="<?php echo esc_attr( $u['name'] ); ?>"
 									data-version="<?php echo esc_attr( $u['new_version'] ); ?>">
 									<span class="dashicons dashicons-shield"></span>
-									<?php esc_html_e( 'Prepare Safe Update', 'wpsecureos' ); ?>
+									<?php esc_html_e( 'Prepare Safe Update', 'maxsafe' ); ?>
 								</button>
 							</td>
 						</tr>

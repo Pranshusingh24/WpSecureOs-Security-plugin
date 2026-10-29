@@ -1,10 +1,10 @@
-=== WpSecureOs ===
-Contributors: pranshusingh, wpsecureos
+=== MaxSafe ===
+Contributors: pranshusingh
 Tags: security, safe updates, staging, backup, vulnerability scanner
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Enterprise-grade WordPress Security, Continuous Validation, Safe Updates, and Re
 
 == Description ==
 
-**WpSecureOs** is an enterprise-grade security operations and safe update orchestration platform for WordPress. Built for developers, agencies, and enterprise site owners, WpSecureOs assesses update risk with verifiable evidence before touching a live website.
+**MaxSafe** is an enterprise-grade security operations and safe update orchestration platform for WordPress. Built for developers, agencies, and enterprise site owners, MaxSafe assesses update risk with verifiable evidence before touching a live website.
 
 ### Core Workflow:
 **Assess → Back up → Stage → Test → Approve → Deploy → Verify → Recover**
@@ -30,21 +30,21 @@ Enterprise-grade WordPress Security, Continuous Validation, Safe Updates, and Re
 
 == Installation ==
 
-1. Upload the `wpsecureos` folder to your `/wp-content/plugins/` directory.
+1. Upload the `maxsafe` folder to your `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Access the **WpSecureOs** menu in the WordPress dashboard.
+3. Access the **MaxSafe** menu in the WordPress dashboard.
 4. Run your initial system inventory and integrity scan.
 
 == Frequently Asked Questions ==
 
-= Does WpSecureOs guarantee an update is 100% safe? =
-No tool can honestly guarantee an update is safe. WpSecureOs provides explainable risk signals, automated staging tests, verified backups, and approval gates so you make confident, informed decisions.
+= Does MaxSafe guarantee an update is 100% safe? =
+No tool can honestly guarantee an update is safe. MaxSafe provides explainable risk signals, automated staging tests, verified backups, and approval gates so you make confident, informed decisions.
 
-= Does WpSecureOs automatically upgrade PHP on my server? =
-No. A WordPress plugin running inside PHP cannot safely recompile or patch the host runtime. WpSecureOs detects PHP versions, tests compatibility, and provides guided runbooks for your hosting provider.
+= Does MaxSafe automatically upgrade PHP on my server? =
+No. A WordPress plugin running inside PHP cannot safely recompile or patch the host runtime. MaxSafe detects PHP versions, tests compatibility, and provides guided runbooks for your hosting provider.
 
 = Will suspicious files in my uploads directory be deleted automatically? =
-No. WpSecureOs treats unexpected PHP files in upload folders as security signals for human review, never deleting them automatically to prevent false-positive data loss.
+No. MaxSafe treats unexpected PHP files in upload folders as security signals for human review, never deleting them automatically to prevent false-positive data loss.
 
 = Where are screenshots and visual assets located? =
 Plugin screenshots are stored in the WordPress.org Subversion `/assets/` directory and within the plugin's `assets/images/` folder.
@@ -59,6 +59,12 @@ Plugin screenshots are stored in the WordPress.org Subversion `/assets/` directo
 6. Explainable Update Risk Assessment — Multi-factor risk engine showing Security Urgency, Deployment Confidence, granular risk factors, and guided safe deployment workflows.
 
 == Changelog ==
+
+= 1.2.0 =
+* WordPress.org Directory Compliance: Rebranded plugin to MaxSafe with unique slug maxsafe.
+* Architecture Refactor: Updated all classes to MaxSafe namespace and database tables to maxsafe prefix.
+* Zero-downtime automatic legacy database migration from wpsecureos to maxsafe.
+* Clean WordPress.org directory compliant assets and package structure.
 
 = 1.1.0 =
 * Production Release: Pricing, Subscription, and License Management System.
@@ -89,5 +95,5 @@ Plugin screenshots are stored in the WordPress.org Subversion `/assets/` directo
 
 == Upgrade Notice ==
 
-= 1.1.0 =
-Production Release: Enhanced licensing architecture, cryptographic verification, and complete responsive telemetry console. Recommended update for all installations.
+= 1.2.0 =
+Production Release: Rebranded to MaxSafe for WordPress.org compliance. Enhanced licensing architecture, cryptographic verification, and complete responsive telemetry console. Recommended update for all installations.
