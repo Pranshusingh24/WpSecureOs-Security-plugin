@@ -41,6 +41,7 @@
 				}
 
 				$table.DataTable({
+					dom: '<"maxsafe-datatable-top"lf><"maxsafe-table-scroll"rt><"maxsafe-datatable-bottom"ip>',
 					responsive: true,
 					autoWidth: false,
 					pageLength: 10,
@@ -48,7 +49,7 @@
 					columnDefs: columnDefs,
 					order: [], // preserve server rendering order
 					language: {
-						search: '<span class="dashicons dashicons-search" style="font-size:16px; margin-right:4px;"></span>',
+						search: '',
 						searchPlaceholder: 'Filter records...',
 						lengthMenu: 'Show _MENU_ entries',
 						info: 'Showing _START_ to _END_ of _TOTAL_ items',
