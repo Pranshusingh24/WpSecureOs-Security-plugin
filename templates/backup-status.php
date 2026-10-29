@@ -24,6 +24,11 @@ $latest_backup = class_exists( 'MaxSafe_Backup_Adapter' ) ? MaxSafe_Backup_Adapt
 			<p style="margin:4px 0 0 0; font-size:13px; color:#64748b;">
 				<?php esc_html_e( 'An archive is only marked VERIFIED after passing archive readability and consistency validation. Never rely on unverified backup creation.', 'maxsafe' ); ?>
 			</p>
+			<p style="margin:8px 0 0 0; font-size:12px; color:#475569; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+				<span class="dashicons dashicons-category" style="font-size:16px; width:16px; height:16px; color:#0ea5e9;"></span>
+				<strong><?php esc_html_e( 'Server Storage Directory:', 'maxsafe' ); ?></strong>
+				<code style="font-family:var(--safe-font-mono); font-size:11px; color:#0284c7; background:#e0f2fe; padding:2px 8px; border-radius:4px; border:1px solid #bae6fd;">wp-content/uploads/maxsafe-backups/</code>
+			</p>
 		</div>
 		<div>
 			<button type="button" id="btn-create-backup-page" class="safe-btn safe-btn-primary" onclick="jQuery('#btn-create-backup').click();">
@@ -54,6 +59,7 @@ $latest_backup = class_exists( 'MaxSafe_Backup_Adapter' ) ? MaxSafe_Backup_Adapt
 						<th data-priority="1"><?php esc_html_e( 'Integrity Test', 'maxsafe' ); ?></th>
 						<th data-priority="2"><?php esc_html_e( 'Created At', 'maxsafe' ); ?></th>
 						<th data-priority="4"><?php esc_html_e( 'Verification Notes', 'maxsafe' ); ?></th>
+						<th data-priority="1"><?php esc_html_e( 'Action', 'maxsafe' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -78,6 +84,12 @@ $latest_backup = class_exists( 'MaxSafe_Backup_Adapter' ) ? MaxSafe_Backup_Adapt
 							</td>
 							<td style="font-size:12px; color:#475569;">
 								<?php echo esc_html( $b['verification_notes'] ); ?>
+							</td>
+							<td>
+								<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=maxsafe_download_backup&id=' . (int) $b['id'] ), 'maxsafe_download_backup_' . (int) $b['id'] ) ); ?>" class="safe-btn safe-btn-outline" style="padding:4px 10px; font-size:12px; display:inline-flex; align-items:center; gap:5px; text-decoration:none; white-space:nowrap;">
+									<span class="dashicons dashicons-download" style="font-size:14px; width:14px; height:14px; line-height:14px;"></span>
+									<?php esc_html_e( 'Download ZIP', 'maxsafe' ); ?>
+								</a>
 							</td>
 						</tr>
 					<?php endforeach; ?>

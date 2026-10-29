@@ -71,6 +71,10 @@ class MaxSafe_Plugin {
 		add_action( 'wp_ajax_maxsafe_action', array( $this, 'handle_ajax_action' ) );
 		add_action( 'wp_ajax_wpsecureos_action', array( $this, 'handle_ajax_action' ) );
 
+		// Backup File Download Handler
+		add_action( 'admin_post_maxsafe_download_backup', array( $this, 'handle_download_backup' ) );
+		add_action( 'admin_post_wpsecureos_download_backup', array( $this, 'handle_download_backup' ) );
+
 		// Cron Schedule Handler
 		add_action( 'maxsafe_daily_security_scan', array( 'MaxSafe_Security_Scanner', 'run_scan' ) );
 		add_action( 'wpsecureos_daily_security_scan', array( 'MaxSafe_Security_Scanner', 'run_scan' ) );
@@ -294,5 +298,52 @@ class MaxSafe_Plugin {
 				wp_send_json_error( array( 'message' => __( 'Unknown sub-action requested.', 'maxsafe' ) ), 400 );
 				break;
 		}
+	}
+
+	/**
+	 * Secure backup archive download handler for administrators.
+	 */
+	public function handle_download_backup() {
+		if ( ! current_user_can( 'manage_options' ) && ! current_user_can( MaxSafe_Capabilities::CAP_VIEW_DASHBOARD ) ) {
+			wp_die( esc_html__( 'Unauthorized: You do not have permission to download backup archives.', 'maxsafe' ), 403 );
+		}
+
+		$backup_id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
+		check_admin_referer( 'maxsafe_download_backup_' . $backup_id );
+
+		global $wpdb;
+		$table  = $wpdb->prefix . 'maxsafe_backups';
+		$backup = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $backup_id ), ARRAY_A );
+
+		if ( ! $backup || empty( $backup['file_path'] ) ) {
+			wp_die( esc_html__( 'Backup record not found.', 'maxsafe' ), 404 );
+		}
+
+		$file_path  = $backup['file_path'];
+		$upload_dir = wp_upload_dir();
+		$backup_dir = wp_normalize_path( $upload_dir['basedir'] . '/maxsafe-backups' );
+		$real_path  = wp_normalize_path( realpath( $file_path ) );
+
+		// Security: Prevent directory traversal attack - ensure file is inside the backup directory
+		if ( ! $real_path || strpos( $real_path, $backup_dir ) !== 0 || ! file_exists( $real_path ) ) {
+			wp_die( esc_html__( 'Invalid backup file path or file does not exist on disk.', 'maxsafe' ), 404 );
+		}
+
+		// Disable output buffering
+		if ( ob_get_level() ) {
+			ob_end_clean();
+		}
+
+		header( 'Content-Description: File Transfer' );
+		header( 'Content-Type: application/zip' );
+		header( 'Content-Disposition: attachment; filename="' . sanitize_file_name( basename( $file_path ) ) . '"' );
+		header( 'Content-Transfer-Encoding: binary' );
+		header( 'Expires: 0' );
+		header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+		header( 'Pragma: public' );
+		header( 'Content-Length: ' . filesize( $real_path ) );
+
+		readfile( $real_path );
+		exit;
 	}
 }
