@@ -43,14 +43,7 @@ class MaxSafe_Test_Runner {
 			);
 		}
 
-		// Verify subscription entitlement for automated staging pipeline
-		if ( ! MaxSafe_Plan_Entitlements::can( 'staging_pipeline' ) ) {
-			return array(
-				'success' => false,
-				'state'   => self::STATE_FAILED,
-				'message' => __( 'Automated Staging Pipeline requires an active MaxSafe Pro, Agency, or Business subscription.', 'maxsafe' ),
-			);
-		}
+
 
 		$idempotency_key = md5( $component_type . ':' . $slug . ':' . $new_version . ':' . gmdate( 'Ymd' ) );
 

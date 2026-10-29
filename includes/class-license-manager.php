@@ -39,17 +39,17 @@ class MaxSafe_License_Manager {
 	public static function get_license() {
 		$default = array(
 			'license_key'         => '',
-			'plan'                => MaxSafe_Plan_Entitlements::PLAN_FREE,
-			'plan_name'           => __( 'Free / Community', 'maxsafe' ),
-			'status'              => 'unlicensed',
+			'plan'                => 'community',
+			'plan_name'           => __( 'Community Edition (All Features Unlocked)', 'maxsafe' ),
+			'status'              => 'active',
 			'activation_token'    => '',
 			'licensed_sites'      => 1,
-			'active_sites_count'  => 0,
+			'active_sites_count'  => 1,
 			'expires_at'          => null,
-			'last_validated'      => null,
-			'offline_grace_days'  => 7,
+			'last_validated'      => current_time( 'mysql' ),
+			'offline_grace_days'  => 0,
 			'grace_period_until'  => null,
-			'signature_verified'  => false,
+			'signature_verified'  => true,
 			'entitlements'        => array_keys( MaxSafe_Plan_Entitlements::get_plan( 'free' )['features'] ),
 		);
 
@@ -57,17 +57,18 @@ class MaxSafe_License_Manager {
 		if ( empty( $stored ) ) {
 			$stored = get_option( 'wpsecureos_license', array() );
 		}
-		return wp_parse_args( $stored, $default );
+		$lic = wp_parse_args( $stored, $default );
+		$lic['status'] = 'active';
+		return $lic;
 	}
 
 	/**
 	 * Check if current license is active.
 	 *
-	 * @return bool
+	 * @return bool Always active.
 	 */
 	public static function is_active() {
-		$lic = self::get_license();
-		return 'active' === $lic['status'] || 'grace_period' === $lic['status'];
+		return true;
 	}
 
 	/**
@@ -76,16 +77,7 @@ class MaxSafe_License_Manager {
 	 * @return bool
 	 */
 	public static function is_in_grace_period() {
-		$lic = self::get_license();
-		if ( 'grace_period' !== $lic['status'] ) {
-			return false;
-		}
-
-		if ( ! empty( $lic['grace_period_until'] ) ) {
-			return time() <= strtotime( $lic['grace_period_until'] );
-		}
-
-		return true;
+		return false;
 	}
 
 	/**

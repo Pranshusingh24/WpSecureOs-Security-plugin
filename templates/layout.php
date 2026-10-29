@@ -113,9 +113,8 @@ $logo_url = file_exists( MAXSAFE_PLUGIN_DIR . 'assets/images/maxsafe-security-lo
 			<?php esc_html_e( 'Settings', 'maxsafe' ); ?>
 		</a>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=maxsafe-license' ) ); ?>" class="maxsafe-nav-tab wpsecureos-nav-tab <?php echo ( 'pricing-license' === $current_tab ) ? 'active' : ''; ?>">
-			<span class="dashicons dashicons-money-alt"></span>
-			<?php esc_html_e( 'License & Plans', 'maxsafe' ); ?>
-			<span class="tab-badge badge-<?php echo esc_attr( $plan_slug ); ?>"><?php echo esc_html( $plan_badge ); ?></span>
+			<span class="dashicons dashicons-admin-network"></span>
+			<?php esc_html_e( 'License', 'maxsafe' ); ?>
 		</a>
 	</nav>
 

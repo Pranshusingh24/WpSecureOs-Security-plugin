@@ -112,11 +112,11 @@ class MaxSafe_Admin_Menu {
 			array( __CLASS__, 'render_settings_page' )
 		);
 
-		// 9. Submenu: License & Plans
+		// 9. Submenu: License
 		add_submenu_page(
 			'maxsafe',
-			__( 'License & Plans — MaxSafe', 'maxsafe' ),
-			__( 'License & Plans', 'maxsafe' ),
+			__( 'License — MaxSafe', 'maxsafe' ),
+			__( 'License', 'maxsafe' ),
 			MaxSafe_Capabilities::CAP_MANAGE_SETTINGS,
 			'maxsafe-license',
 			array( __CLASS__, 'render_license_page' )
